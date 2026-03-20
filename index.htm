@@ -19,8 +19,8 @@
             /* --- VAULT CONTROLS --- */
             /* Set to 'flex' to lock store and cart. Set to 'none' to unlock. */
             --vault-lock-display: flex; 
-            --vault-blur: 25px;
-            --vault-opacity: 0.2;
+            --vault-blur: 15px;
+            --vault-opacity: 0.1;
         }
 
         * {
@@ -36,6 +36,11 @@
             color: var(--paper);
             font-family: 'Inter', sans-serif;
             overflow: hidden;
+            /* --- HIGHLIGHT PROTECTION --- */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         .serif { font-family: 'Playfair Display', serif; }
@@ -93,11 +98,12 @@
             z-index: 50;
             display: var(--vault-lock-display);
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* Moved content to top */
             align-items: center;
             text-align: center;
             background: rgba(10, 10, 10, 0.2);
             pointer-events: none;
+            padding-top: 180px; /* Adjusted padding for top placement */
         }
 
         .coming-soon-badge {
@@ -119,6 +125,14 @@
             filter: blur(var(--vault-blur));
             opacity: var(--vault-opacity);
             transition: 0.8s var(--bezier);
+            /* --- BUTTON LOCK --- */
+            pointer-events: none; /* Default state when vault is active */
+        }
+
+        /* Logic to enable buttons if the lock display is 'none' (unlocked) */
+        :root[style*="--vault-lock-display: none"] .blur-container,
+        :root:not([style*="--vault-lock-display"]) .blur-container:not([style*="filter: blur(25px)"]) {
+             /* This is handled via JS for more reliability with the variable toggle */
         }
 
         /* --- TRANSITION OVERLAY (COMPLEX) --- */
@@ -339,7 +353,7 @@
                 <p style="font-size: 10px; letter-spacing: 0.4em; color: var(--ash); margin-top: 20px;">VAULT_LOCKED</p>
             </div>
 
-            <div class="blur-container">
+            <div id="shop-container" class="blur-container">
                 <div class="store-grid">
                     <div class="product-card">
                         <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1mfxpAh6DMSXEiWlrh8m5KQ5RGGVpum0t');"></div>
@@ -388,6 +402,7 @@
     <script>
         const overlay = document.getElementById('transition-overlay');
         const cartDrawer = document.getElementById('cart-drawer');
+        const shopContainer = document.getElementById('shop-container');
         const body = document.body;
         let cart = [];
         let shuffleInterval;
@@ -397,7 +412,12 @@
 
         // Helper to check if vault is locked based on CSS variable
         function isLocked() {
-            return getComputedStyle(document.documentElement).getPropertyValue('--vault-lock-display').trim() === 'flex';
+            const locked = getComputedStyle(document.documentElement).getPropertyValue('--vault-lock-display').trim() === 'flex';
+            // Sync pointer events with lock state
+            if (shopContainer) {
+                shopContainer.style.pointerEvents = locked ? 'none' : 'auto';
+            }
+            return locked;
         }
 
         function startCoordShuffle() {
@@ -454,6 +474,7 @@
         }
 
         function selectSize(btn) {
+            if (isLocked()) return; 
             btn.parentElement.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
             btn.classList.add('active');
         }
@@ -481,11 +502,11 @@
             
             if (isLocked()) {
                 toggleEl.innerText = "VAULT_LOCKED";
-                countEl.style.display = 'none';
+                if(countEl) countEl.style.display = 'none';
             } else {
                 toggleEl.innerHTML = `CART (<span id="cart-count">${cart.length}</span>)`;
                 const newCountEl = document.getElementById('cart-count');
-                newCountEl.innerText = cart.length;
+                if(newCountEl) newCountEl.innerText = cart.length;
             }
 
             const items = document.getElementById('cart-items');
@@ -554,7 +575,8 @@
         document.querySelectorAll('.view').forEach(v => v.addEventListener('scroll', handleScroll));
         
         window.onload = () => {
-            updateCartUI(); // Run once to set initial lock state
+            isLocked(); // Run once to set initial pointer events state
+            updateCartUI(); // Run once to set initial lock text state
             setTimeout(() => {
                 document.querySelectorAll('#home-view .reveal').forEach(r => {
                    if(r.getBoundingClientRect().top < window.innerHeight) r.classList.add('active');
