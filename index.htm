@@ -23,10 +23,9 @@
             --radius: 12px; 
             
             /* --- VAULT CONTROLS --- */
-            --vault-lock-display: none; /* Set to 'flex' to lock store */
-            --vault-blur: 0px;      
-            --vault-opacity: 1;   
-            --static-opacity: 1;  
+            --vault-lock-display: flex; /* Set to 'none' to unlock store and enable buttons/cart */
+            --vault-opacity: .1;   
+            --vault-blur: 17px; 
         }
 
         /* -----------------------------------------------------------------------
@@ -82,6 +81,17 @@
             padding: 0;
             cursor: pointer;
         }
+        
+        /* HIDE CART IF VAULT IS LOCKED (Only when display is flex) */
+        @container style(--vault-lock-display: flex) {
+            .cart-toggle { display: none !important; }
+        }
+        
+        /* Fallback selector for browsers without container style queries */
+        body:has(#vault-lock[style*="display: flex"]) .cart-toggle {
+            display: none !important;
+        }
+
         .cart-toggle:hover { color: var(--paper); }
 
         @media (max-width: 600px) {
@@ -102,7 +112,6 @@
         
         .scrolled .nav-logo { left: 20px; padding: 0 20px; }
         .scrolled .cart-toggle { right: 20px; padding: 0 20px; font-size: 9px; color: var(--paper); }
-        .scrolled .cart-toggle:hover { background: rgba(255,255,255,0.15); }
 
         /* -----------------------------------------------------------------------
         [TRANSITION_ENGINE]
@@ -218,7 +227,25 @@
         .enter-btn:hover { color: var(--paper); transform: translateX(10px); }
 
         /* PRODUCT VAULT */
-        .store-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; width: 90%; max-width: 1200px; margin: 0 auto; padding-bottom: 100px; filter: blur(var(--vault-blur)); opacity: var(--vault-opacity); }
+        .store-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 25px; 
+            width: 90%; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding-bottom: 100px; 
+            opacity: 1; /* Default opacity */
+            transition: all 0.3s;
+        }
+
+        /* LOCKED STATE STYLING */
+        body:has(#vault-lock[style*="display: flex"]) .store-grid {
+            pointer-events: none !important;
+            user-select: none !important;
+            opacity: var(--vault-opacity) !important;
+        }
+
         .product-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: var(--radius); display: flex; flex-direction: column; position: relative; }
         
         .product-img { 
@@ -250,9 +277,66 @@
         .add-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--paper); color: var(--paper); font-size: 10px; letter-spacing: 0.2em; border-radius: 8px; cursor: pointer; transition: 0.3s; }
         .add-btn:hover { background: var(--paper); color: var(--obsidian); }
 
-        /* THE VAULT LOCK */
-        #vault-lock { position: fixed; inset: 0; z-index: 50; display: var(--vault-lock-display); flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; }
-        .lock-content { pointer-events: all; max-width: 400px; padding: 40px; }
+        /* THE VAULT LOCK & CCTV EFFECT */
+        #vault-lock { 
+            position: fixed; 
+            inset: 0; 
+            z-index: 50; 
+            display: var(--vault-lock-display); 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            pointer-events: none; 
+            overflow: hidden;
+            backdrop-filter: blur(var(--vault-blur)); 
+        }
+
+        /* CCTV STATIC OVERLAY */
+        .static-noise {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/b1/White_noise.png');
+            opacity: 0.18; 
+            z-index: 49;
+            pointer-events: none;
+            animation: noise-anim 0.1s infinite;
+        }
+
+        .scanline {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.08);
+            z-index: 51;
+            animation: scanline 6s linear infinite;
+        }
+
+        @keyframes noise-anim {
+            0% { transform: translate(0,0) }
+            10% { transform: translate(-2%,-1%) }
+            20% { transform: translate(-3%,2%) }
+            30% { transform: translate(1%,-4%) }
+            40% { transform: translate(-2%,5%) }
+            50% { transform: translate(-1%,2%) }
+            60% { transform: translate(3%,0) }
+            70% { transform: translate(0,4%) }
+            80% { transform: translate(-2%,0) }
+            90% { transform: translate(2%,1%) }
+            100% { transform: translate(1%,0) }
+        }
+
+        @keyframes scanline {
+            0% { top: 0% }
+            100% { top: 100% }
+        }
+
+        .lock-content { pointer-events: all; max-width: 400px; padding: 40px; z-index: 60; }
         .lock-icon { font-size: 40px; margin-bottom: 20px; color: var(--accent-red); opacity: 0.5; }
 
         .page-footer { padding: 60px 0 100px 0; text-align: center; opacity: 0.4; font-size: 10px; letter-spacing: 0.6em; color: var(--ash); }
@@ -330,7 +414,7 @@
             <button class="enter-btn" onclick="switchView('store')">BROWSE_ARCHIVE →</button>
         </section>
 
-         <section class="content-section">
+                <section class="content-section">
             <div class="reveal">
                 <span class="section-label">01 // THE PHILOSOPHY</span>
                 <p class="philosophy-text">
@@ -358,11 +442,15 @@
 
     <!-- STORE VIEW -->
     <div id="store-view" class="view hidden">
-        <div id="vault-lock">
+        <!-- VAULT LOCK ELEMENT: Styles are applied here via the CSS variable -->
+        <div id="vault-lock" style="display: var(--vault-lock-display);">
+            <div class="static-noise"></div>
+            <div class="scanline"></div>
             <div class="lock-content">
                 <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
                 <h2 style="font-size: 12px; letter-spacing: 0.5em; margin-bottom: 10px;">ARCHIVE_LOCKED</h2>
-                <p style="font-size: 10px; color: var(--ash); letter-spacing: 0.1em; line-height: 1.8;">The blueprint vault is currently undergoing structural maintenance. Check back shortly for Summer '26 access.</p>
+                <p style="font-size: 10px; color: var(--ash); letter-spacing: 0.1em; line-height: 1.8;">The blueprint vault is currently undergoing structural maintenance.<br>Dropping <b>EST_S26_W26</b> </p>
+                <p style="font-size: 8px; color: var(--accent-red); margin-top: 20px; letter-spacing: 0.2em; opacity: 0.6;">FEED_ENCRYPTED // CHANNEL_01</p>
             </div>
         </div>
 
@@ -449,7 +537,6 @@
         const body = document.body;
         
         let cart = []; 
-        const INSTA_USER_ID = "18061521530438424"; 
 
         function updateCoordinates() {
             const lat = (0.2942 + (Math.random() * 0.0005 - 0.00025)).toFixed(6);
@@ -489,14 +576,12 @@
                 const nextView = document.getElementById(viewId + '-view');
                 nextView.classList.remove('hidden');
                 
-                // Reset scroll position and re-check reveals for the new view
                 nextView.scrollTop = 0;
                 body.classList.remove('scrolled');
                 
                 setTimeout(() => {
                     overlay.classList.remove('active');
                     bar.style.width = '0%';
-                    // Trigger check reveals after transition
                     checkReveals(nextView);
                 }, 800);
             }, 1000);
@@ -557,29 +642,22 @@
                 document.getElementById('terminal-input-container').style.display = 'none';
                 
                 terminalOutput.innerHTML += `
-                    <div style="color:var(--accent-green); margin-top:10px; font-weight:bold;">[SUCCESS] ORDER_MANIFEST_READY</div>
+                    <div style="color:var(--accent-green); margin-top:10px; font-weight:bold;">[SUCCESS] ORDER_MANIFEST_COPIED</div>
                     <div style="font-size:10px; margin-top:15px; color: #fff; background: rgba(255,255,255,0.05); padding: 18px; border-left: 2px solid var(--accent-green); border-radius: 4px; line-height:1.6;">
-                        <b style="color: var(--accent-yellow); font-size:11px;">FINAL STEP: VERIFICATION</b> 
+                        <b style="color: var(--accent-yellow); font-size:11px;">INSTRUCTIONS:</b> 
                         <br><br>
-                        <span style="opacity:0.8;">A detailed order manifest has been copied to your clipboard. To complete:</span>
-                        <br><br>
-                        1. Press <b>CONFIRM</b> to open Instagram.
+                        1. Exit this browser and go to Instagram.
                         <br>
-                        2. <b>PASTE</b> the manifest into the DM chat.
+                        2. Search for <b>@koce.ke</b> or open our direct messages.
                         <br>
-                        3. Send the message for structural confirmation.
+                        3. <b>PASTE</b> the manifest (it is already on your clipboard).
+                        <br>
+                        4. Send the message to finalize your structural request.
                         <br><br>
-                        <button class="terminal-btn" style="background:var(--paper); color:var(--obsidian);" onclick="confirmAndRedirect()">CONFIRM_AND_REDIRECT</button>
+                        <span style="opacity:0.5; font-style:italic;">Your request ID and specifications are included in the clipboard data.</span>
                     </div>
                 `;
             }
-        }
-
-        function confirmAndRedirect() {
-            const instaDeepLink = `instagram://direct_thread?id=${INSTA_USER_ID}`;
-            const instaWebLink = `https://www.instagram.com/direct/t/${INSTA_USER_ID}`;
-            window.location.href = instaDeepLink;
-            setTimeout(() => { window.open(instaWebLink, '_blank'); }, 1500);
         }
 
         terminalExecute.addEventListener('click', processTerminalInput);
@@ -602,7 +680,7 @@
             manifest += `QUANTITY: ${cart.length} UNIT(S)\n`;
             manifest += `TOTAL: ${document.getElementById('cart-total-value').innerText}\n`;
             manifest += `--------------------------------\n`;
-            manifest += `AWAITING_RESPONCE...`;
+            manifest += `AWAITING_RESPONSE`;
             
             const dummy = document.createElement("textarea");
             document.body.appendChild(dummy);
@@ -612,7 +690,6 @@
             document.body.removeChild(dummy);
         }
 
-        // Scroll Logic Engine
         function checkReveals(view) {
             view.querySelectorAll('.reveal').forEach(r => {
                 const rect = r.getBoundingClientRect();
@@ -624,17 +701,13 @@
 
         document.querySelectorAll('.view').forEach(v => {
             v.addEventListener('scroll', (e) => {
-                // Nav scrolling effect
                 if(e.target.scrollTop > 50) body.classList.add('scrolled');
                 else body.classList.remove('scrolled');
-
-                // Reveal trigger
                 checkReveals(e.target);
             });
         });
 
         window.onload = () => {
-            // Initial check for current view
             const activeView = document.querySelector('.view:not(.hidden)');
             if(activeView) checkReveals(activeView);
         };
