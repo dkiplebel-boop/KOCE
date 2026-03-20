@@ -98,12 +98,12 @@
             z-index: 50;
             display: var(--vault-lock-display);
             flex-direction: column;
-            justify-content: flex-start; /* Moved content to top */
+            justify-content: flex-start;
             align-items: center;
             text-align: center;
             background: rgba(10, 10, 10, 0.2);
             pointer-events: none;
-            padding-top: 180px; /* Adjusted padding for top placement */
+            padding-top: 180px;
         }
 
         .coming-soon-badge {
@@ -125,17 +125,10 @@
             filter: blur(var(--vault-blur));
             opacity: var(--vault-opacity);
             transition: 0.8s var(--bezier);
-            /* --- BUTTON LOCK --- */
-            pointer-events: none; /* Default state when vault is active */
+            pointer-events: none; 
         }
 
-        /* Logic to enable buttons if the lock display is 'none' (unlocked) */
-        :root[style*="--vault-lock-display: none"] .blur-container,
-        :root:not([style*="--vault-lock-display"]) .blur-container:not([style*="filter: blur(25px)"]) {
-             /* This is handled via JS for more reliability with the variable toggle */
-        }
-
-        /* --- TRANSITION OVERLAY (COMPLEX) --- */
+        /* --- TRANSITION OVERLAY --- */
         #transition-overlay {
             position: fixed; inset: 0; background: var(--obsidian); z-index: 1000;
             display: flex; justify-content: flex-end; align-items: flex-end; padding: 40px;
@@ -247,15 +240,17 @@
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;
             width: 90%; max-width: 1200px; margin: 0 auto; padding-bottom: 100px;
         }
-        .product-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: var(--radius); display: flex; flex-direction: column; }
+        .product-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: var(--radius); display: flex; flex-direction: column; transition: border 0.3s ease; }
         .product-img { width: 100%; aspect-ratio: 1; background: #121213; border-radius: 8px; margin-bottom: 20px; background-size: cover; background-position: center; }
         .product-info { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
         .product-info h3 { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
-        .size-picker { display: flex; gap: 8px; margin-bottom: 20px; }
-        .size-opt { width: 32px; height: 32px; border: 1px solid rgba(160, 160, 160, 0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--ash); cursor: pointer; }
+        .size-picker { display: flex; gap: 8px; margin-bottom: 20px; transition: all 0.3s ease; border-radius: 8px; padding: 4px; border: 1px solid transparent; }
+        .size-picker.error { border-color: var(--accent-red); background: rgba(255, 59, 59, 0.05); }
+        .size-opt { width: 32px; height: 32px; border: 1px solid rgba(160, 160, 160, 0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--ash); cursor: pointer; transition: 0.2s; }
         .size-opt.active { background: var(--paper); color: var(--obsidian); border-color: var(--paper); }
         .add-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--paper); color: var(--paper); font-size: 10px; letter-spacing: 0.2em; border-radius: 8px; cursor: pointer; margin-top: auto; transition: 0.3s; }
         .add-btn:hover { background: var(--paper); color: var(--obsidian); }
+        .add-btn.error { border-color: var(--accent-red); color: var(--accent-red); }
 
         .page-footer { padding: 60px 0 100px 0; text-align: center; opacity: 0.4; font-size: 10px; letter-spacing: 0.6em; color: var(--ash); text-transform: uppercase; }
 
@@ -357,41 +352,39 @@
                 <div class="store-grid">
                     <div class="product-card">
                         <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1mfxpAh6DMSXEiWlrh8m5KQ5RGGVpum0t');"></div>
-                        <div class="product-info"><h3>B-01 BLACK_TEE</h3><span>8,500 KSh</span></div>
+                        <div class="product-info"><h3>B-01 BLACK_TEE</h3><span>800 KSh</span></div>
                         <div class="size-picker">
-                            <div class="size-opt active" onclick="selectSize(this)">S</div>
                             <div class="size-opt" onclick="selectSize(this)">M</div>
                             <div class="size-opt" onclick="selectSize(this)">L</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'B-01 BLACK-TEE', 8500)">ADD_TO_ORDER</button>
+                        <button class="add-btn" onclick="addToCart(this, 'B-01 BLACK-TEE', 800)">ADD_TO_ORDER</button>
                     </div>
                     <div class="product-card">
                         <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/16ayCPTTsHTRrIt672FkLHyqyzGjOyzdL');"></div>
-                        <div class="product-info"><h3>W-01 WHITE_TEE</h3><span>12,000 KSh</span></div>
+                        <div class="product-info"><h3>W-01 WHITE_TEE</h3><span>1,000 KSh</span></div>
                         <div class="size-picker">
-                            <div class="size-opt active" onclick="selectSize(this)">30</div>
-                            <div class="size-opt" onclick="selectSize(this)">32</div>
-                            <div class="size-opt" onclick="selectSize(this)">34</div>
+                            <div class="size-opt " onclick="selectSize(this)">M</div>
+                            <div class="size-opt" onclick="selectSize(this)">L</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'W-01 WHITE_TEE', 12000)">ADD_TO_ORDER</button>
+                        <button class="add-btn" onclick="addToCart(this, 'W-01 WHITE_TEE', 1000)">ADD_TO_ORDER</button>
                     </div>
                     <div class="product-card">
                         <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');"></div>
-                        <div class="product-info"><h3>B-02 COLLARED_TEE</h3><span>4,500 KSh</span></div>
+                        <div class="product-info"><h3>B-02 COLLARED_TEE</h3><span>1,000 KSh</span></div>
                         <div class="size-picker">
-                            <div class="size-opt active" onclick="selectSize(this)">M</div>
+                            <div class="size-opt " onclick="selectSize(this)">M</div>
                             <div class="size-opt" onclick="selectSize(this)">L</div>
-                            <div class="size-opt" onclick="selectSize(this)">XL</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'B-02 BLACK_COLLARED_TEE', 4500)">ADD_TO_ORDER</button>
+                        <button class="add-btn" onclick="addToCart(this, 'B-02 BLACK_COLLARED_TEE', 1000)">ADD_TO_ORDER</button>
                     </div>
                     <div class="product-card">
                         <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');"></div>
-                        <div class="product-info"><h3>W-02 COLLARED_TEE</h3><span>18,500 KSh</span></div>
+                        <div class="product-info"><h3>W-02 COLLARED_TEE</h3><span>1,000 KSh</span></div>
                         <div class="size-picker">
-                            <div class="size-opt active" onclick="selectSize(this)">OS</div>
+                            <div class="size-opt " onclick="selectSize(this)">M</div>
+                            <div class="size-opt " onclick="selectSize(this)">L</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'W-02 WHITE_COLLARED_TEE', 18500)">ADD_TO_ORDER</button>
+                        <button class="add-btn" onclick="addToCart(this, 'W-02 WHITE_COLLARED_TEE', 1000)">ADD_TO_ORDER</button>
                     </div>
                 </div>
             </div>
@@ -410,10 +403,8 @@
         const INSTA_NUMERIC_ID = "107080397421506"; 
         const WHATSAPP_NUM = "254704336717";
 
-        // Helper to check if vault is locked based on CSS variable
         function isLocked() {
             const locked = getComputedStyle(document.documentElement).getPropertyValue('--vault-lock-display').trim() === 'flex';
-            // Sync pointer events with lock state
             if (shopContainer) {
                 shopContainer.style.pointerEvents = locked ? 'none' : 'auto';
             }
@@ -435,13 +426,7 @@
                 const lat = (Math.random() * 90).toFixed(2);
                 const lon = (Math.random() * 180).toFixed(2);
                 coordVal.innerText = `[${lat}, ${lon}]`;
-                
-                if(Math.random() > 0.5) {
-                    coordVal.className = 'val-green';
-                } else {
-                    coordVal.className = 'val-red';
-                }
-
+                coordVal.className = Math.random() > 0.5 ? 'val-green' : 'val-red';
                 bufferVal.innerText = `0X${Math.floor(Math.random()*65535).toString(16).toUpperCase()}`;
                 latencyVal.innerText = `${Math.floor(Math.random() * 40 + 5)}ms`;
                 
@@ -475,15 +460,42 @@
 
         function selectSize(btn) {
             if (isLocked()) return; 
-            btn.parentElement.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
+            const picker = btn.parentElement;
+            picker.classList.remove('error'); // Clear error on interaction
+            picker.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
             btn.classList.add('active');
+            
+            // Clear button error state if it exists
+            const card = btn.closest('.product-card');
+            const addBtn = card.querySelector('.add-btn');
+            addBtn.classList.remove('error');
+            addBtn.innerText = "ADD_TO_ORDER";
         }
 
         function addToCart(btn, name, price) {
-            if (isLocked()) return; // Block adding if locked
+            if (isLocked()) return; 
             
             const card = btn.closest('.product-card');
-            const size = card.querySelector('.size-opt.active').innerText;
+            const sizePicker = card.querySelector('.size-picker');
+            const selectedSizeEl = sizePicker.querySelector('.size-opt.active');
+
+            // --- VALIDATION LOGIC ---
+            if (!selectedSizeEl) {
+                // Apply error styles
+                sizePicker.classList.add('error');
+                btn.classList.add('error');
+                const originalText = btn.innerText;
+                btn.innerText = "SELECT_SIZE";
+                
+                // Shake effect or just let the red ring speak
+                setTimeout(() => {
+                    btn.classList.remove('error');
+                    btn.innerText = "ADD_TO_ORDER";
+                }, 2000);
+                return;
+            }
+
+            const size = selectedSizeEl.innerText;
             cart.push({ id: Date.now(), name, price, size });
             updateCartUI();
             
@@ -497,16 +509,12 @@
         }
 
         function updateCartUI() {
-            const countEl = document.getElementById('cart-count');
             const toggleEl = document.querySelector('.cart-toggle');
             
             if (isLocked()) {
                 toggleEl.innerText = "VAULT_LOCKED";
-                if(countEl) countEl.style.display = 'none';
             } else {
                 toggleEl.innerHTML = `CART (<span id="cart-count">${cart.length}</span>)`;
-                const newCountEl = document.getElementById('cart-count');
-                if(newCountEl) newCountEl.innerText = cart.length;
             }
 
             const items = document.getElementById('cart-items');
@@ -535,7 +543,7 @@
         }
 
         function toggleCart() { 
-            if (isLocked()) return; // Block opening if locked
+            if (isLocked()) return;
             cartDrawer.classList.toggle('open'); 
         }
 
@@ -575,8 +583,8 @@
         document.querySelectorAll('.view').forEach(v => v.addEventListener('scroll', handleScroll));
         
         window.onload = () => {
-            isLocked(); // Run once to set initial pointer events state
-            updateCartUI(); // Run once to set initial lock text state
+            isLocked();
+            updateCartUI();
             setTimeout(() => {
                 document.querySelectorAll('#home-view .reveal').forEach(r => {
                    if(r.getBoundingClientRect().top < window.innerHeight) r.classList.add('active');
