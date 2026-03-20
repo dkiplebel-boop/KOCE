@@ -7,6 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;700;900&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* -----------------------------------------------------------------------
+        [SYSTEM_VARIABLES]
+        -----------------------------------------------------------------------
+        */
         :root {
             --obsidian: #1A1A1B;
             --ash: #888;
@@ -17,12 +21,16 @@
             --radius: 12px; 
             
             /* --- VAULT CONTROLS --- */
-            --vault-lock-display: none; /* Set to 'none' to unlock */
-            --vault-blur: 0px;      
-            --vault-opacity: 1;   
-            --static-opacity: 1;  
+            --vault-lock-display: flex; /* Toggle to 'none' to unlock shop */
+            --vault-blur: 16px;      
+            --vault-opacity: .1;   
+            --static-opacity: .1;  
         }
 
+        /* -----------------------------------------------------------------------
+        [CORE_RESET]
+        -----------------------------------------------------------------------
+        */
         * {
             margin: 0;
             padding: 0;
@@ -42,7 +50,10 @@
 
         .serif { font-family: 'Playfair Display', serif; }
 
-        /* --- UI Overlays --- */
+        /* -----------------------------------------------------------------------
+        [UI_NAVIGATION]
+        -----------------------------------------------------------------------
+        */
         .nav-logo, .cart-toggle {
             position: fixed;
             z-index: 100;
@@ -53,7 +64,7 @@
             justify-content: center;
             background: transparent;
             top: 40px; 
-            height: 40px; /* Explicit height to help alignment */
+            height: 40px; 
         }
 
         .nav-logo { left: 40px; cursor: pointer; border: none; padding: 0; }
@@ -69,18 +80,15 @@
             cursor: pointer;
         }
 
-        /* --- MOBILE ALIGNMENT FIX --- */
+        /* Responsive UI Adjustments */
         @media (max-width: 600px) {
-            .nav-logo, .cart-toggle { 
-                top: 30px; 
-                height: 32px; /* Uniform height for both */
-            }
-            .nav-logo { left: 25px; } /* Brought in slightly from the far left */
-            .cart-toggle { right: 25px; } /* Balanced with left */
+            .nav-logo, .cart-toggle { top: 30px; height: 32px; }
+            .nav-logo { left: 25px; } 
+            .cart-toggle { right: 25px; } 
             .nav-logo h2 { font-size: 11px; letter-spacing: 0.4em; }
         }
 
-        /* Scrolled state alignment */
+        /* Scrolled State UI */
         .scrolled .nav-logo, .scrolled .cart-toggle { 
             top: 20px; 
             height: 36px;
@@ -92,89 +100,43 @@
         
         .scrolled .nav-logo { left: 20px; padding: 0 20px; }
         .scrolled .nav-logo h2 { font-size: 10px; letter-spacing: 0.4em; }
+        .scrolled .cart-toggle { right: 20px; padding: 0 20px; font-size: 9px; color: var(--paper); }
 
-        .scrolled .cart-toggle { 
-            right: 20px; 
-            padding: 0 20px; 
-            font-size: 9px; 
-            color: var(--paper);
-        }
-
-        /* --- STORE SPECIFIC EFFECTS --- */
+        /* -----------------------------------------------------------------------
+        [VISUAL_EFFECTS]
+        -----------------------------------------------------------------------
+        */
         .static-grain {
-            position: absolute;
-            inset: -100%;
+            position: absolute; inset: -100%;
             background-image: repeating-radial-gradient(circle at center, #fff 0, #000 1px, transparent 2px);
-            background-size: 3px 3px;
-            opacity: var(--static-opacity);
-            animation: static-move 0.2s infinite steps(4);
-            z-index: 1;
-            pointer-events: none;
+            background-size: 3px 3px; opacity: var(--static-opacity);
+            animation: static-move 0.2s infinite steps(4); z-index: 1; pointer-events: none;
             display: var(--vault-lock-display);
         }
 
-        @keyframes static-move {
-            0% { transform: translate(0,0); }
-            100% { transform: translate(1%, 1%); }
-        }
+        @keyframes static-move { 0% { transform: translate(0,0); } 100% { transform: translate(1%, 1%); } }
 
         .vault-header {
-            width: 100%;
-            text-align: center;
-            z-index: 10;
-            padding: 140px 0 60px 0;
-            display: var(--vault-lock-display);
-            flex-direction: column;
-            align-items: center;
-            background: transparent;
+            width: 100%; text-align: center; z-index: 10; padding: 140px 0 60px 0;
+            display: var(--vault-lock-display); flex-direction: column; align-items: center; background: transparent;
         }
 
         .status-dot {
-            width: 10px;
-            height: 10px;
-            background: var(--accent-red);
-            border-radius: 50%;
-            margin-bottom: 10px;
-            box-shadow: 0 0 15px var(--accent-red);
-            animation: pulse-red 1.5s infinite;
+            width: 10px; height: 10px; background: var(--accent-red); border-radius: 50%;
+            margin-bottom: 10px; box-shadow: 0 0 15px var(--accent-red); animation: pulse-red 1.5s infinite;
         }
 
-        @keyframes pulse-red {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
-        }
+        @keyframes pulse-red { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
 
-        .coming-soon-badge {
-            font-size: 10px;
-            letter-spacing: 0.8em;
-            color: var(--accent-red);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
+        .coming-soon-badge { font-size: 10px; letter-spacing: 0.8em; color: var(--accent-red); margin-bottom: 10px; text-transform: uppercase; font-weight: 700; }
+        .vault-title { font-size: clamp(24px, 5vw, 48px); font-weight: 200; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper); }
+        .blur-container { position: relative; z-index: 2; transition: 0.8s var(--bezier); }
+        .blur-target { filter: blur(var(--vault-blur)); opacity: var(--vault-opacity); transition: 0.8s var(--bezier); }
 
-        .vault-title {
-            font-size: clamp(24px, 5vw, 48px);
-            font-weight: 200;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--paper);
-        }
-
-        .blur-container {
-            position: relative;
-            z-index: 2;
-            transition: 0.8s var(--bezier);
-        }
-
-        .blur-target {
-            filter: blur(var(--vault-blur));
-            opacity: var(--vault-opacity);
-            transition: 0.8s var(--bezier);
-        }
-
-        /* --- TRANSITION OVERLAY --- */
+        /* -----------------------------------------------------------------------
+        [TRANSITION_ENGINE]
+        -----------------------------------------------------------------------
+        */
         #transition-overlay {
             position: fixed; inset: 0; background: var(--obsidian); z-index: 1000;
             display: flex; justify-content: flex-end; align-items: flex-end; padding: 40px;
@@ -185,15 +147,9 @@
         
         .coord-display { 
             font-family: 'Courier New', Courier, monospace; 
-            font-size: 10px; 
-            letter-spacing: 0.1em; 
-            color: var(--ash); 
-            display: flex; 
-            flex-direction: column; 
-            gap: 6px; 
-            opacity: 0; 
-            transform: translateY(20px); 
-            transition: 0.5s var(--bezier) 0.2s;
+            font-size: 10px; letter-spacing: 0.1em; color: var(--ash); 
+            display: flex; flex-direction: column; gap: 6px; 
+            opacity: 0; transform: translateY(20px); transition: 0.5s var(--bezier) 0.2s;
             width: 250px;
         }
         #transition-overlay.active .coord-display { opacity: 0.9; transform: translateY(0); }
@@ -204,7 +160,10 @@
         .loading-bar { width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0; position: relative; overflow: hidden; }
         .loading-bar-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent-green); width: 0%; transition: width 0.8s linear; }
 
-        /* --- CART SIDEBAR --- */
+        /* -----------------------------------------------------------------------
+        [CART_DRAWER]
+        -----------------------------------------------------------------------
+        */
         #cart-drawer {
             position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100%;
             background: var(--obsidian); z-index: 1001; transition: right 0.6s var(--bezier);
@@ -220,7 +179,10 @@
         .cart-footer { padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); }
         .checkout-btn { width: 100%; padding: 18px; background: var(--paper); color: var(--obsidian); border: none; border-radius: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.3em; cursor: pointer; }
 
-        /* --- TERMINAL MODAL --- */
+        /* -----------------------------------------------------------------------
+        [TERMINAL_SYSTEM]
+        -----------------------------------------------------------------------
+        */
         #terminal-modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000;
             display: none; justify-content: center; align-items: center; backdrop-filter: blur(12px);
@@ -251,90 +213,32 @@
             transition: 0.2s;
             box-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
         }
-        .terminal-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.5);
-        }
-        .terminal-btn:active {
-            transform: scale(0.95);
-        }
+        .terminal-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 255, 102, 0.5); }
 
         .terminal-alert {
-            background: rgba(255, 59, 59, 0.1);
-            border: 1px solid var(--accent-red);
-            padding: 15px;
-            margin: 10px 0;
-            color: var(--paper);
-            text-align: center;
-            border-radius: 4px;
-            animation: pulse-border 1s infinite alternate;
+            background: rgba(255, 59, 59, 0.1); border: 1px solid var(--accent-red);
+            padding: 15px; margin: 10px 0; color: var(--paper); text-align: center;
+            border-radius: 4px; animation: pulse-border 1s infinite alternate;
         }
+        @keyframes pulse-border { from { border-color: var(--accent-red); box-shadow: 0 0 5px var(--accent-red); } to { border-color: #fff; box-shadow: 0 0 15px var(--accent-red); } }
 
-        @keyframes pulse-border {
-            from { border-color: var(--accent-red); box-shadow: 0 0 5px var(--accent-red); }
-            to { border-color: #fff; box-shadow: 0 0 15px var(--accent-red); }
-        }
-
-        /* --- STOCK PULSE --- */
-        .stock-pulse {
-            font-size: 8px;
-            letter-spacing: 0.1em;
-            color: var(--ash);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .pulse-icon {
-            width: 4px;
-            height: 4px;
-            background: var(--accent-green);
-            border-radius: 50%;
-            display: inline-block;
-            animation: mini-pulse 1s infinite;
-        }
-        @keyframes mini-pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        /* -----------------------------------------------------------------------
+        [STORE_GRID_ELEMENTS]
+        -----------------------------------------------------------------------
+        */
+        .stock-pulse { font-size: 8px; letter-spacing: 0.1em; color: var(--ash); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .pulse-icon { width: 4px; height: 4px; background: var(--accent-green); border-radius: 50%; display: inline-block; animation: mini-pulse 1s infinite; }
+        @keyframes mini-pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
 
         .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s var(--bezier); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* --- View Management --- */
         .view { width: 100%; height: 100vh; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; position: relative; }
         .hidden { display: none; }
 
-        /* --- Home Section --- */
-        .hero-section { 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            text-align: center; 
-            position: relative; 
-        }
-        
-        .main-title { 
-            font-size: clamp(80px, 18vw, 200px); 
-            font-weight: 900; 
-            line-height: 1; 
-            letter-spacing: -0.02em; 
-            margin: 0;
-            padding: 0;
-            display: block;
-        }
-
-        .hero-tagline {
-            letter-spacing: 0.8em; 
-            color: var(--ash); 
-            font-size: 9px; 
-            margin-top: 20px; 
-            font-weight: 300;
-            text-transform: uppercase;
-        }
+        .hero-section { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
+        .main-title { font-size: clamp(80px, 18vw, 200px); font-weight: 900; line-height: 1; letter-spacing: -0.02em; margin: 0; padding: 0; }
+        .hero-tagline { letter-spacing: 0.8em; color: var(--ash); font-size: 9px; margin-top: 20px; font-weight: 300; text-transform: uppercase; }
 
         .content-section { padding: 120px 10%; max-width: 1100px; margin: 0 auto; }
         .section-label { font-size: 9px; letter-spacing: 0.5em; color: var(--ash); margin-bottom: 30px; display: block; }
@@ -343,21 +247,23 @@
         .enter-btn { margin-top: 40px; background: none; border: none; color: var(--ash); font-size: 11px; letter-spacing: 0.2em; cursor: pointer; transition: 0.3s; }
         .enter-btn:hover { color: var(--paper); transform: translateX(5px); }
 
-        /* --- Store --- */
-        .store-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;
-            width: 90%; max-width: 1200px; margin: 0 auto; padding-bottom: 100px;
-        }
-        .product-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: var(--radius); display: flex; flex-direction: column; transition: border 0.3s ease; }
-        .product-img { width: 100%; aspect-ratio: 1; background: #121213; border-radius: 8px; margin-bottom: 20px; background-size: cover; background-position: center; }
+        .store-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; width: 90%; max-width: 1200px; margin: 0 auto; padding-bottom: 100px; }
+        .product-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: var(--radius); display: flex; flex-direction: column; transition: border 0.3s ease; position: relative; }
+        .product-img { width: 100%; aspect-ratio: 1; background: #121213; border-radius: 8px; margin-bottom: 20px; background-size: cover; background-position: center; position: relative; overflow: hidden; }
+        
+        .img-blur-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); color: var(--paper); font-size: 9px; letter-spacing: 0.4em; font-weight: 700; text-transform: uppercase; z-index: 2; }
+        
         .product-info { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
         .product-info h3 { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
+        
         .size-picker { display: flex; gap: 8px; margin-bottom: 20px; transition: all 0.3s ease; border-radius: 8px; padding: 4px; border: 1px solid transparent; }
         .size-picker.error { border-color: var(--accent-red); background: rgba(255, 59, 59, 0.05); }
         .size-opt { width: 32px; height: 32px; border: 1px solid rgba(160, 160, 160, 0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--ash); cursor: pointer; transition: 0.2s; }
         .size-opt.active { background: var(--paper); color: var(--obsidian); border-color: var(--paper); }
+        
         .add-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--paper); color: var(--paper); font-size: 10px; letter-spacing: 0.2em; border-radius: 8px; cursor: pointer; margin-top: auto; transition: 0.3s; }
         .add-btn:hover { background: var(--paper); color: var(--obsidian); }
+        .add-btn:disabled { border-color: #333; color: #444; cursor: not-allowed; }
 
         .page-footer { padding: 60px 0 100px 0; text-align: center; opacity: 0.4; font-size: 10px; letter-spacing: 0.6em; color: var(--ash); text-transform: uppercase; }
 
@@ -367,11 +273,17 @@
 </head>
 <body>
 
+    <!-- 
+    -----------------------------------------------------------------------
+    [DOM_STRUCTURE]
+    -----------------------------------------------------------------------
+    -->
     <div id="transition-overlay">
         <div class="coord-display">
             <div class="coord-line"><span>GATE_NODE</span><span class="val-green">ONLINE</span></div>
             <div class="coord-line"><span>SYSTEM_LATENCY</span><span id="latency-val">12ms</span></div>
-            <div class="coord-line"><span>PARSING_COORDS</span><span id="coord-val" class="val-red">[-84.03, -0.97]</span></div>
+            <div class="coord-line"><span>X-PLANE</span><span id="coord-val-x" class="val-red">0.294200</span></div>
+            <div class="coord-line"><span>Y-PLANE</span><span id="coord-val-y" class="val-red">36.067700</span></div>
             <div class="coord-line"><span>BUFFER_ALLOC</span><span id="buffer-val">0XF92A</span></div>
             <div class="coord-line"><span>ENCRYPT_LEVEL</span><span class="val-green">AES_256</span></div>
             <div class="loading-bar"><div id="load-progress" class="loading-bar-fill"></div></div>
@@ -394,7 +306,6 @@
         </div>
     </div>
 
-    <!-- TERMINAL CHECKOUT MODAL -->
     <div id="terminal-modal">
         <div class="terminal-content">
             <div class="terminal-header">
@@ -405,8 +316,6 @@
             </div>
             <div id="terminal-output" class="terminal-body">
                 <div>[SYSTEM] :: Initializing secure transaction protocol...</div>
-                <div>[SYSTEM] :: Warning: All transactions are logged.</div>
-                <div>[SYSTEM] :: Connection established with INSTA_NODE.</div>
                 <br>
                 <div>Type 'YES' to authenticate and transmit order log.</div>
             </div>
@@ -419,9 +328,9 @@
     </div>
 
     <header class="nav-logo" onclick="switchView('home')"><h2>KÖCE</h2></header>
+    <button class="cart-toggle" id="cart-btn" onclick="toggleCart()">CART (<span id="cart-count">0</span>)</button>
     
-    <button class="cart-toggle" onclick="toggleCart()">CART (<span id="cart-count">0</span>)</button>
-    
+    <!-- HOME VIEW -->
     <div id="home-view" class="view">
         <section class="hero-section">
             <h1 class="main-title">KÖCE</h1>
@@ -429,7 +338,7 @@
             <button class="enter-btn" onclick="switchView('store')">BROWSE_ARCHIVE →</button>
         </section>
 
-        <section class="content-section">
+         <section class="content-section">
             <div class="reveal">
                 <span class="section-label">01 // THE PHILOSOPHY</span>
                 <p class="philosophy-text">
@@ -451,27 +360,25 @@
                 </p>
             </div>
         </section>
-        <footer class="page-footer">© 2026 DARREN KC // NAKURU, KE</footer>
+        <footer class="page-footer">© 2026 DARREN KC // KE</footer>
     </div>
 
+    <!-- STORE VIEW -->
     <div id="store-view" class="view hidden">
         <div class="static-grain"></div>
-        
         <div class="blur-container">
             <div class="vault-header">
                 <div class="status-dot"></div>
                 <div class="coming-soon-badge">SEARCHING_SIGNAL // SOON...</div>
                 <h2 class="vault-title serif italic">EST_S26_W26</h2>
             </div>
-
             <div id="shop-container" class="blur-target">
                 <div id="unlocked-spacer" style="height: 100px; display: none;"></div>
-
                 <div style="width: 90%; max-width: 1200px; margin: 0 auto 40px auto;">
                     <h2 style="font-size: 11px; letter-spacing: 0.8em; color: var(--ash); text-transform: uppercase;">01 // ARCHIVE_GRID</h2>
                 </div>
                 <div class="store-grid">
-                    <!-- Products -->
+                    <!-- PRODUCT 1 -->
                     <div class="product-card">
                         <div class="stock-pulse"><span class="pulse-icon"></span>AVAILABILITY: <span class="stock-val">100</span>%</div>
                         <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1mfxpAh6DMSXEiWlrh8m5KQ5RGGVpum0t');"></div>
@@ -482,6 +389,7 @@
                         </div>
                         <button class="add-btn" onclick="addToCart(this, 'B-01 TEE', 800)">ADD_TO_ORDER</button>
                     </div>
+                    <!-- PRODUCT 2 -->
                     <div class="product-card">
                         <div class="stock-pulse"><span class="pulse-icon"></span>AVAILABILITY: <span class="stock-val">100</span>%</div>
                         <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/16ayCPTTsHTRrIt672FkLHyqyzGjOyzdL');"></div>
@@ -492,6 +400,7 @@
                         </div>
                         <button class="add-btn" onclick="addToCart(this, 'W-01 TEE', 1000)">ADD_TO_ORDER</button>
                     </div>
+                    <!-- PRODUCT 3 -->
                     <div class="product-card">
                         <div class="stock-pulse"><span class="pulse-icon"></span>AVAILABILITY: <span class="stock-val">100</span>%</div>
                         <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');"></div>
@@ -502,6 +411,7 @@
                         </div>
                         <button class="add-btn" onclick="addToCart(this, 'B-02 COLLARED_TEE', 1000)">ADD_TO_ORDER</button>
                     </div>
+                    <!-- PRODUCT 4 -->
                     <div class="product-card">
                         <div class="stock-pulse"><span class="pulse-icon"></span>AVAILABILITY: <span class="stock-val">100</span>%</div>
                         <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');"></div>
@@ -512,27 +422,31 @@
                         </div>
                         <button class="add-btn" onclick="addToCart(this, 'W-02 COLLARED_TEE', 1000)">ADD_TO_ORDER</button>
                     </div>
-
+                    <!-- PRODUCT 5 (COMING SOON) -->
                     <div class="product-card">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>AVAILABILITY: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: url('https://img.icons8.com/ios/100/ffffff/t-shirt.png');"></div>
-                        <div class="product-info"><h3>B-01_v2 TEE</h3><span>1,000 KSh</span></div>
-                        <div class="size-picker">
-                            <div class="size-opt" onclick="selectSize(this)">M</div>
-                            <div class="size-opt" onclick="selectSize(this)">L</div>
+                        <div class="stock-pulse"><span class="pulse-icon" style="background: var(--ash);"></span>AVAILABILITY: 0%</div>
+                        <div class="product-img" style="background-color: #121213;">
+                            <div class="img-blur-overlay">COMING_SOON</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'B-01_v2 TEE', 1000)">ADD_TO_ORDER</button>
+                        <div class="product-info"><h3>B-01_v2 TEE</h3><span>TBD</span></div>
+                        <div class="size-picker">
+                            <div class="size-opt" style="cursor: default; opacity: 0.3;">M</div>
+                            <div class="size-opt" style="cursor: default; opacity: 0.3;">L</div>
+                        </div>
+                        <button class="add-btn" disabled>AWAITING_STOCK</button>
                     </div>
-
-                     <div class="product-card">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>AVAILABILITY: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: url('https://img.icons8.com/ios/100/ffffff/t-shirt.png');"></div>
-                        <div class="product-info"><h3>W-01_v2 TEE</h3><span>1,000 KSh</span></div>
-                        <div class="size-picker">
-                            <div class="size-opt" onclick="selectSize(this)">M</div>
-                            <div class="size-opt" onclick="selectSize(this)">L</div>
+                    <!-- PRODUCT 6 (COMING SOON) -->
+                    <div class="product-card">
+                        <div class="stock-pulse"><span class="pulse-icon" style="background: var(--ash);"></span>AVAILABILITY: 0%</div>
+                        <div class="product-img" style="background-color: #222;">
+                            <div class="img-blur-overlay">COMING_SOON</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'W-01_v2 TEE', 1000)">ADD_TO_ORDER</button>
+                        <div class="product-info"><h3>W-01_v2 TEE</h3><span>TBD</span></div>
+                        <div class="size-picker">
+                            <div class="size-opt" style="cursor: default; opacity: 0.3;">M</div>
+                            <div class="size-opt" style="cursor: default; opacity: 0.3;">L</div>
+                        </div>
+                        <button class="add-btn" disabled>AWAITING_STOCK</button>
                     </div>
                 </div>
                 <footer class="page-footer">ESTD 2026</footer>
@@ -540,10 +454,16 @@
         </div>
     </div>
 
+    <!-- 
+    -----------------------------------------------------------------------
+    [CORE_LOGIC]
+    -----------------------------------------------------------------------
+    -->
     <script>
+        /* [CONSTANT_DECLARATIONS] */
         const overlay = document.getElementById('transition-overlay');
         const cartDrawer = document.getElementById('cart-drawer');
-        const shopContainer = document.getElementById('shop-container');
+        const cartBtn = document.getElementById('cart-btn');
         const terminalModal = document.getElementById('terminal-modal');
         const terminalOutput = document.getElementById('terminal-output');
         const terminalInput = document.getElementById('t-input');
@@ -554,59 +474,76 @@
         let cart = []; 
         let shuffleInterval;
         let terminalStep = 0;
-
         const INSTA_USERNAME = "18061521530438424/"; 
 
+        /**
+         * Checks if the site is in "Vault" mode.
+         * Applies 'none' to cart display if vault is locked.
+         */
         function isLocked() {
             const locked = getComputedStyle(document.documentElement).getPropertyValue('--vault-lock-display').trim() === 'flex';
             const spacer = document.getElementById('unlocked-spacer');
             const blurTarget = document.querySelector('.blur-target');
             
-            if (blurTarget) {
-                blurTarget.style.pointerEvents = locked ? 'none' : 'auto';
-            }
-            if (spacer) {
-                spacer.style.display = locked ? 'none' : 'block';
-            }
+            // Apply logic to hide UI elements if locked
+            if (cartBtn) cartBtn.style.display = locked ? 'none' : 'flex';
+            if (cartDrawer && locked) cartDrawer.classList.remove('open');
+            
+            if (blurTarget) blurTarget.style.pointerEvents = locked ? 'none' : 'auto';
+            if (spacer) spacer.style.display = locked ? 'none' : 'block';
+            
             return locked;
         }
 
-        function updateStockPulses() {
-            document.querySelectorAll('.stock-val').forEach(el => {
-                el.innerText = 100;
-            });
-        }
-        setInterval(updateStockPulses, 3000);
-
+        /**
+         * Shuffles coordinate data for transition overlay effect.
+         */
         function startCoordShuffle() {
-            const coordVal = document.getElementById('coord-val');
+            const coordValX = document.getElementById('coord-val-x');
+            const coordValY = document.getElementById('coord-val-y');
             const bufferVal = document.getElementById('buffer-val');
             const latencyVal = document.getElementById('latency-val');
             const diagMsg = document.getElementById('diag-msg');
             const progressBar = document.getElementById('load-progress');
             
-            const messages = ["ESTABLISHING_VPN", "PARSING_MANIFEST", "AUTH_KEY_VERIFIED", "STREAMING_ASSETS"];
+            const messages = [
+                "ESTABLISHING_VPN", 
+                "PARSING_MANIFEST", 
+                "AUTH_KEY_VERIFIED", 
+                "STREAMING_ASSETS", 
+                "MAPPING_NODES", 
+                "CALIBRATING_OPTICS",
+                "SYNCING_STOCK_API",
+                "DECRYPTING_ORDER_LOGS"
+            ];
+            
             let progress = 0;
             progressBar.style.width = '0%';
 
+            if (shuffleInterval) clearInterval(shuffleInterval);
             shuffleInterval = setInterval(() => {
-                const lat = (Math.random() * 90).toFixed(2);
-                const lon = (Math.random() * 180).toFixed(2);
-                if(coordVal) coordVal.innerText = `[${lat}, ${lon}]`;
-                if(bufferVal) bufferVal.innerText = `0X${Math.floor(Math.random()*65535).toString(16).toUpperCase()}`;
-                if(latencyVal) latencyVal.innerText = `${Math.floor(Math.random() * 40 + 5)}ms`;
+                const x = (Math.random() * 2 - 1).toFixed(6); 
+                const y = (Math.random() * 180).toFixed(6);
+                if(coordValX) coordValX.innerText = (parseFloat(x) * 1.5).toFixed(6);
+                if(coordValY) coordValY.innerText = (parseFloat(y) * 1.2).toFixed(6);
+                if(bufferVal) bufferVal.innerText = `0X${Math.floor(Math.random()*0xFFFFFF).toString(16).toUpperCase().padStart(6, '0')}`;
+                if(latencyVal) latencyVal.innerText = `${(Math.random() * 15 + 2).toFixed(2)}ms`;
                 
                 if(progress < 100) {
-                    progress += 2;
+                    progress += 1.5;
                     progressBar.style.width = progress + '%';
-                    diagMsg.innerText = messages[Math.floor(progress/30)] || "FINALIZING...";
+                    diagMsg.innerText = messages[Math.floor(progress / (100 / messages.length))] || "FINALIZING...";
                 }
-            }, 50);
+            }, 45);
         }
 
+        /**
+         * Handles view switching with the complex transition engine.
+         */
         function switchView(viewId) {
             startCoordShuffle();
             overlay.classList.add('active');
+            
             setTimeout(() => {
                 document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
                 const targetView = document.getElementById(viewId + '-view');
@@ -614,8 +551,9 @@
                 targetView.scrollTop = 0;
                 body.classList.remove('scrolled');
                 
+                // Re-check lock status on view switch
                 isLocked();
-
+                
                 setTimeout(() => {
                     overlay.style.clipPath = 'polygon(100% 0, 100% 0, 100% 0, 100% 0)';
                     setTimeout(() => {
@@ -623,12 +561,12 @@
                         overlay.style.clipPath = ''; 
                         clearInterval(shuffleInterval);
                     }, 800);
-                }, 600);
-            }, 800);
+                }, 800);
+            }, 950);
         }
 
         function selectSize(btn) {
-            if (isLocked()) return; 
+            if (isLocked() || btn.style.cursor === 'default') return; 
             const picker = btn.parentElement;
             picker.classList.remove('error');
             picker.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
@@ -636,63 +574,60 @@
         }
 
         function addToCart(btn, name, price) {
-            if (isLocked()) return; 
+            if (isLocked() || btn.disabled) return; 
             const card = btn.closest('.product-card');
             const sizePicker = card.querySelector('.size-picker');
             const selectedSizeEl = sizePicker.querySelector('.size-opt.active');
-
+            
             if (!selectedSizeEl) {
                 sizePicker.classList.add('error');
+                const originalText = btn.innerText;
                 btn.innerText = "SELECT_SIZE";
-                setTimeout(() => { btn.innerText = "ADD_TO_ORDER"; }, 2000);
+                setTimeout(() => { btn.innerText = originalText; }, 2000);
                 return;
             }
-
-            const size = selectedSizeEl.innerText;
-            cart.push({ id: Date.now(), name, price, size });
+            
+            cart.push({ id: Date.now(), name, price, size: selectedSizeEl.innerText });
             updateCartUI();
+            
             btn.innerText = "ADDED_TO_LOG";
             setTimeout(() => { btn.innerText = "ADD_TO_ORDER"; }, 1000);
         }
 
         function updateCartUI() {
-            const toggleEl = document.querySelector('.cart-toggle');
-            if (isLocked()) toggleEl.innerText = "VAULT_LOCKED";
-            else toggleEl.innerHTML = `CART (<span id="cart-count">${cart.length}</span>)`;
-
+            const countEl = document.getElementById('cart-count');
+            if (countEl) countEl.innerText = cart.length;
+            
             const items = document.getElementById('cart-items');
             if(!cart.length) {
                 items.innerHTML = '<div style="text-align: center; color: var(--ash); font-size: 10px; margin-top: 40px;">LOG_EMPTY</div>';
                 document.getElementById('cart-total-value').innerText = '0 KSh';
                 return;
             }
+            
             let total = 0;
             items.innerHTML = cart.map(item => {
                 total += item.price;
-                return `<div class="cart-item">
-                    <div class="cart-item-info">
-                        <h4>${item.name}</h4>
-                        <p>${item.size} | ${item.price.toLocaleString()} KSh</p>
-                    </div>
-                    <button onclick="removeFromCart(${item.id})" style="background:none; border:none; color:var(--accent-red); font-size:10px; cursor:pointer;">REMOVE_LOG</button>
-                </div>`;
+                return `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <p>${item.size} | ${item.price.toLocaleString()} KSh</p>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" style="background:none; border:none; color:var(--accent-red); font-size:10px; cursor:pointer;">REMOVE_LOG</button>
+                    </div>`;
             }).join('');
+            
             document.getElementById('cart-total-value').innerText = `${total.toLocaleString()} KSh`;
         }
 
-        function clearCart() {
-            cart = [];
-            updateCartUI();
-            cartDrawer.classList.remove('open');
-        }
-
-        function removeFromCart(id) {
-            cart = cart.filter(i => i.id !== id);
-            updateCartUI();
+        function removeFromCart(id) { 
+            cart = cart.filter(i => i.id !== id); 
+            updateCartUI(); 
         }
 
         function toggleCart() { 
-            if (isLocked()) return;
+            if (isLocked()) return; 
             cartDrawer.classList.toggle('open'); 
         }
 
@@ -703,140 +638,127 @@
             terminalInput.focus();
             terminalStep = 0;
             terminalOutput.innerHTML = `
-                <div>[SYSTEM] :: Initializing secure transaction protocol...</div>
-                <div>[SYSTEM] :: Warning: All transactions are logged.</div>
-                <div>[SYSTEM] :: Connection established with INSTA_NODE.</div>
+                <div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div>
+                <div>[NODE] :: KENYA // 0.2942 S</div>
                 <br>
-                <div>Type 'YES' to authenticate and transmit order log.</div>
-                <div>Type 'EXIT' to cancel.</div>
-            `;
+                <div>Type 'YES' to authenticate and transmit order log.</div>`;
         }
 
         function processTerminalInput() {
             const val = terminalInput.value.trim().toUpperCase();
             terminalInput.value = '';
             
-            const log = (msg, color = 'var(--accent-green)') => {
+            const logMsg = (msg, color = 'var(--accent-green)') => {
                 const div = document.createElement('div');
                 div.style.color = color;
+                div.style.marginBottom = '4px';
                 div.innerText = `> ${msg}`;
                 terminalOutput.appendChild(div);
                 terminalOutput.scrollTop = terminalOutput.scrollHeight;
             };
 
-            log(val, 'var(--paper)');
-
-            if (val === 'EXIT') {
-                terminalModal.style.display = 'none';
-                return;
+            if (val === 'EXIT' || val === 'CLOSE') { 
+                terminalModal.style.display = 'none'; 
+                return; 
             }
+            
+            if (val) logMsg(val, 'var(--paper)');
 
             if (terminalStep === 0) {
                 if (val === 'YES') {
-                    log("AUTHENTICATING...");
+                    logMsg("AUTHENTICATING...");
                     setTimeout(() => {
-                        log("SUCCESS: USER_ARCHIVE_VERIFIED");
-                        log("TRANSMITTING_ORDER_MANIFEST...");
+                        logMsg("SUCCESS: USER_ARCHIVE_VERIFIED");
+                        logMsg("TRANSMITTING_ORDER_MANIFEST...");
                         terminalStep = 1;
-                        setTimeout(() => {
-                            log("COMPILING_CLIPBOARD_DATA...");
-                            const manifest = finalizeCheckout();
-                            
-                            // Hide input and show Alert
-                            terminalInputContainer.style.display = 'none';
-                            
-                            const alertDiv = document.createElement('div');
-                            alertDiv.className = 'terminal-alert';
-                            alertDiv.innerHTML = `
-                                <div style="font-weight: 900; color: var(--accent-red); margin-bottom: 10px;">ACTION_REQUIRED</div>
-                                <div style="font-size: 11px; margin-bottom: 15px;">Your order manifest has been copied to your clipboard.</div>
-                                <div style="font-size: 10px; opacity: 0.8; margin-bottom: 15px;">PASTE the message in the Instagram chat to confirm your order with KÖCE.</div>
-                                <button class="terminal-btn" id="final-redirect-btn" style="width: 100%; padding: 12px;">I UNDERSTAND - GO TO INSTA</button>
-                                <div style="font-size: 8px; margin-top: 10px; cursor: pointer; text-decoration: underline;" onclick="manualCopyManifest('${manifest.replace(/\n/g, '\\n')}')">MANUAL_COPY_FALLBACK</div>
-                            `;
-                            terminalOutput.appendChild(alertDiv);
-                            terminalOutput.scrollTop = terminalOutput.scrollHeight;
-
-                            document.getElementById('final-redirect-btn').onclick = () => {
-                                window.open(`https://www.instagram.com/direct/t/${INSTA_USERNAME}`, '_blank');
-                                terminalModal.style.display = 'none';
-                                clearCart();
-                            };
-
-                        }, 1000);
-                    }, 800);
-                } else {
-                    log("ERROR: INVALID_COMMAND. Expected 'YES' or 'EXIT'.", 'var(--accent-red)');
+                        
+                        finalizeCheckout();
+                        
+                        terminalInputContainer.style.display = 'none';
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'terminal-alert';
+                        alertDiv.innerHTML = `
+                            <div style="font-weight: 900; color: var(--accent-red); margin-bottom: 10px;">ACTION_REQUIRED</div>
+                            <div style="font-size: 11px; margin-bottom: 15px;">Order manifest copied to clipboard. Make sure you paste the manifet on KÖCE insta direct/messages.</div>
+                            <button class="terminal-btn" id="final-redirect-btn" style="width: 100%; padding: 12px; font-weight: 900;">GO TO INSTAGRAM</button>
+                        `;
+                        terminalOutput.appendChild(alertDiv);
+                        
+                        document.getElementById('final-redirect-btn').onclick = () => {
+                            window.open(`https://www.instagram.com/direct/t/${INSTA_USERNAME}`, '_blank');
+                            terminalModal.style.display = 'none';
+                            cart = []; 
+                            updateCartUI();
+                        };
+                    }, 1200);
+                } else if (val !== '') { 
+                    logMsg("ERROR: INVALID COMMAND", 'var(--accent-red)'); 
                 }
             }
         }
 
-        function manualCopyManifest(text) {
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = text.replace(/\\n/g, '\n');
-            dummy.select();
-            document.execCommand('copy');
-            document.body.removeChild(dummy);
-            const btn = document.querySelector('[onclick^="manualCopyManifest"]');
-            btn.innerText = "COPIED_SUCCESSFULLY";
-            setTimeout(() => { btn.innerText = "MANUAL_COPY_FALLBACK"; }, 2000);
-        }
-
-        terminalInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') processTerminalInput();
+        terminalInput.addEventListener('keydown', (e) => { 
+            if (e.key === 'Enter') processTerminalInput(); 
         });
-
-        terminalExecute.addEventListener('click', processTerminalInput);
+        terminalExecute.onclick = processTerminalInput;
 
         function finalizeCheckout() {
-            const orderId = "KÖCE-" + Math.floor(1000 + Math.random() * 9000);
-            const timestamp = new Date().toLocaleString();
-            const itemsList = cart.map(i => ` - ${i.name} [Size: ${i.size}]`).join('\n');
-            const total = document.getElementById('cart-total-value').innerText;
-            
-            const message = `KÖCE_ORDER_MANIFEST\n` +
-                            `--------------------------\n` +
-                            `ORDER_ID: #${orderId}\n` +
-                            `TIMESTAMP: ${timestamp}\n` +
-                            `--------------------------\n` +
-                            `ITEMS:\n${itemsList}\n` +
-                            `--------------------------\n` +
-                            `TOTAL_VAL: ${total}\n` +
-                            `STATUS: AWAITING_PROCESSING\n\n`;
-            
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = message;
-            dummy.select();
-            document.execCommand('copy');
-            document.body.removeChild(dummy);
+    // Generate Metadata
+    const orderId = Math.floor(100000 + Math.random() * 899999);
+    const timestamp = new Date().toLocaleString('en-GB', { timeZone: 'Africa/Nairobi' });
+    const total = document.getElementById('cart-total-value').innerText;
+    
+    // Build the Detailed Manifest
+    let manifest = `--- KÖCE // STRUCTURAL WEAR ---\n`;
+    manifest += `ORDER_NODE: ANONYMOUS\n`;
+    manifest += `TIMESTAMP: ${timestamp} EAT\n`;
+    manifest += `MANIFEST_ID: #KÖCE-${orderId}\n`;
+    manifest += `-------------------------------\n\n`;
+    manifest += `LOGGED_ITEMS:\n`;
+    
+    // Map items with detail
+    manifest += cart.map(i => ` ${i.name.padEnd(20)} | SIZE: ${i.size} | VAL: ${i.price} KSh`).join('\n');
+    
+    manifest += `\n\n-------------------------------\n`;
+    manifest += `TOTAL_COMMIT: ${total}\n`;
+    manifest += `STATUS: AWAITING_AUTHENTICATION\n`;
+    manifest += `-------------------------------`;
 
-            return message;
-        }
+    // Copy to Clipboard Logic
+    const dummy = document.createElement("textarea");
+    document.body.appendChild(dummy);
+    dummy.value = manifest; 
+    dummy.select();
+    try {
+        document.execCommand('copy');
+    } catch (err) {
+        console.error('Buffer copy failed', err);
+    }
+    document.body.removeChild(dummy);
 
-        function handleScroll(e) {
-            const scrollTop = e.target.scrollTop;
-            if(scrollTop > 50) body.classList.add('scrolled');
-            else body.classList.remove('scrolled');
-            
-            const reveals = e.target.querySelectorAll('.reveal');
-            reveals.forEach(r => {
-                if (r.getBoundingClientRect().top < window.innerHeight - 100) r.classList.add('active');
+    return manifest;
+}
+
+        document.querySelectorAll('.view').forEach(v => v.addEventListener('scroll', (e) => {
+            if(e.target.scrollTop > 50) {
+                body.classList.add('scrolled');
+            } else {
+                body.classList.remove('scrolled');
+            }
+            e.target.querySelectorAll('.reveal').forEach(r => { 
+                if (r.getBoundingClientRect().top < window.innerHeight - 100) {
+                    r.classList.add('active'); 
+                }
             });
-        }
+        }));
 
-        document.querySelectorAll('.view').forEach(v => v.addEventListener('scroll', handleScroll));
-        
-        window.onload = () => {
-            cart = []; 
-            updateCartUI();
-            isLocked();
-            setTimeout(() => {
-                document.querySelectorAll('#home-view .reveal').forEach(r => {
-                   if(r.getBoundingClientRect().top < window.innerHeight) r.classList.add('active');
-                });
-            }, 500);
+        window.onload = () => { 
+            isLocked(); 
+            updateCartUI(); 
+            document.querySelectorAll('.stock-val').forEach(el => {
+                const val = Math.floor(Math.random() * 20) + 80 ;
+                el.innerText = val;
+            });
         };
     </script>
 </body>
