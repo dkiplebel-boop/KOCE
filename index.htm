@@ -17,11 +17,13 @@
             --paper: #f5f5f5;
             --accent-red: #ff3b3b;
             --accent-green: #00ff66;
+            --accent-blue: #00d1ff;
+            --accent-yellow: #ffcc00;
             --bezier: cubic-bezier(0.7, 0, 0.3, 1);
             --radius: 12px; 
             
             /* --- VAULT CONTROLS --- */
-            --vault-lock-display: none; /* Toggle to 'none' to unlock shop */
+            --vault-lock-display: none; /* Set to 'flex' to lock store */
             --vault-blur: 0px;      
             --vault-opacity: 1;   
             --static-opacity: 1;  
@@ -69,6 +71,7 @@
 
         .nav-logo { left: 40px; cursor: pointer; border: none; padding: 0; }
         .nav-logo h2 { font-size: 14px; font-weight: 300; letter-spacing: 0.8em; text-transform: uppercase; margin: 0; }
+        .nav-logo:hover h2 { color: var(--paper); }
 
         .cart-toggle { 
             right: 40px; 
@@ -79,11 +82,12 @@
             padding: 0;
             cursor: pointer;
         }
+        .cart-toggle:hover { color: var(--paper); }
 
         @media (max-width: 600px) {
             .nav-logo, .cart-toggle { top: 30px; height: 32px; }
-            .nav-logo { left: 25px; } 
-            .cart-toggle { right: 25px; } 
+            .nav-logo { left: 20px; } 
+            .cart-toggle { right: 20px; } 
             .nav-logo h2 { font-size: 11px; letter-spacing: 0.4em; }
         }
 
@@ -97,39 +101,8 @@
         }
         
         .scrolled .nav-logo { left: 20px; padding: 0 20px; }
-        .scrolled .nav-logo h2 { font-size: 10px; letter-spacing: 0.4em; }
         .scrolled .cart-toggle { right: 20px; padding: 0 20px; font-size: 9px; color: var(--paper); }
-
-        /* -----------------------------------------------------------------------
-        [VISUAL_EFFECTS]
-        -----------------------------------------------------------------------
-        */
-        .static-grain {
-            position: absolute; inset: -100%;
-            background-image: repeating-radial-gradient(circle at center, #fff 0, #000 1px, transparent 2px);
-            background-size: 3px 3px; opacity: var(--static-opacity);
-            animation: static-move 0.2s infinite steps(4); z-index: 1; pointer-events: none;
-            display: var(--vault-lock-display);
-        }
-
-        @keyframes static-move { 0% { transform: translate(0,0); } 100% { transform: translate(1%, 1%); } }
-
-        .vault-header {
-            width: 100%; text-align: center; z-index: 10; padding: 140px 0 60px 0;
-            display: var(--vault-lock-display); flex-direction: column; align-items: center; background: transparent;
-        }
-
-        .status-dot {
-            width: 10px; height: 10px; background: var(--accent-red); border-radius: 50%;
-            margin-bottom: 10px; box-shadow: 0 0 15px var(--accent-red); animation: pulse-red 1.5s infinite;
-        }
-
-        @keyframes pulse-red { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1); } }
-
-        .coming-soon-badge { font-size: 10px; letter-spacing: 0.8em; color: var(--accent-red); margin-bottom: 10px; text-transform: uppercase; font-weight: 700; }
-        .vault-title { font-size: clamp(24px, 5vw, 48px); font-weight: 200; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper); }
-        .blur-container { position: relative; z-index: 2; transition: 0.8s var(--bezier); }
-        .blur-target { filter: blur(var(--vault-blur)); opacity: var(--vault-opacity); transition: 0.8s var(--bezier); }
+        .scrolled .cart-toggle:hover { background: rgba(255,255,255,0.15); }
 
         /* -----------------------------------------------------------------------
         [TRANSITION_ENGINE]
@@ -146,17 +119,56 @@
         .coord-display { 
             font-family: 'Courier New', Courier, monospace; 
             font-size: 10px; letter-spacing: 0.1em; color: var(--ash); 
-            display: flex; flex-direction: column; gap: 6px; 
+            display: flex; flex-direction: column; gap: 4px; 
             opacity: 0; transform: translateY(20px); transition: 0.5s var(--bezier) 0.2s;
-            width: 250px;
+            width: 320px;
         }
         #transition-overlay.active .coord-display { opacity: 0.9; transform: translateY(0); }
         
-        .coord-line { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
-        .val-red { color: var(--accent-red); }
-        .val-green { color: var(--accent-green); }
+        .diag-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); padding: 2px 0; }
+        .diag-label { color: var(--ash); }
+        .diag-value { font-weight: 700; transition: color 0.1s; }
+        
         .loading-bar { width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0; position: relative; overflow: hidden; }
         .loading-bar-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent-green); width: 0%; transition: width 0.8s linear; }
+
+        /* -----------------------------------------------------------------------
+        [TERMINAL_SYSTEM]
+        -----------------------------------------------------------------------
+        */
+        #terminal-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000;
+            display: none; justify-content: center; align-items: flex-start;
+            padding-top: 20px;
+            backdrop-filter: blur(12px);
+        }
+        .terminal-content {
+            background: #0d0d0d; border: 1px solid #333; width: 95%; max-width: 500px;
+            font-family: 'Courier New', Courier, monospace; padding: 15px; border-radius: 6px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-height: 90vh; display: flex; flex-direction: column;
+        }
+        .terminal-header { display: flex; gap: 6px; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; flex-shrink: 0; }
+        .t-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .terminal-body { font-size: 12px; line-height: 1.6; color: var(--accent-green); flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; min-height: 150px; }
+        
+        .t-input-wrapper { margin-top: 15px; border-top: 1px solid #222; padding-top: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .t-input-line { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+        .t-prompt { color: var(--accent-red); white-space: nowrap; font-size: 11px; }
+        
+        #t-input { 
+            background: #151515; border: 1px solid #333; color: var(--paper); 
+            font-family: inherit; font-size: 16px; 
+            outline: none; flex-grow: 1; padding: 10px; border-radius: 4px;
+        }
+        
+        .terminal-btn {
+            background: var(--accent-green); color: #000; border: none;
+            padding: 14px 15px; font-family: inherit; font-size: 11px;
+            font-weight: 900; text-transform: uppercase; cursor: pointer;
+            border-radius: 4px; transition: 0.2s; width: 100%;
+        }
+        .terminal-btn:hover { background: #fff; }
 
         /* -----------------------------------------------------------------------
         [CART_DRAWER]
@@ -170,65 +182,23 @@
         #cart-drawer.open { right: 0; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
         .cart-header h2 { font-size: 12px; letter-spacing: 0.5em; color: var(--ash); }
-        .close-cart { background: none; border: none; color: var(--ash); cursor: pointer; font-size: 10px; letter-spacing: 0.2em; }
+        .close-cart { background: none; border: none; color: var(--ash); cursor: pointer; font-size: 10px; letter-spacing: 0.2em; transition: 0.3s; }
+        .close-cart:hover { color: var(--paper); }
         #cart-items { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .cart-item-info h4 { font-size: 11px; letter-spacing: 0.1em; margin-bottom: 4px; }
-        .cart-footer { padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .checkout-btn { width: 100%; padding: 18px; background: var(--paper); color: var(--obsidian); border: none; border-radius: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.3em; cursor: pointer; }
+        
+        .remove-btn { background: none; border: none; color: var(--accent-red); cursor: pointer; font-size: 10px; letter-spacing: 0.2em; transition: 0.3s; font-weight: 700; text-transform: uppercase; }
+        .remove-btn:hover { color: #fff; text-decoration: underline; }
 
-        /* -----------------------------------------------------------------------
-        [TERMINAL_SYSTEM]
-        -----------------------------------------------------------------------
-        */
-        #terminal-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000;
-            display: none; justify-content: center; align-items: center; backdrop-filter: blur(12px);
-        }
-        .terminal-content {
-            background: #0d0d0d; border: 1px solid #333; width: 95%; max-width: 500px;
-            font-family: 'Courier New', Courier, monospace; padding: 20px; border-radius: 6px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-        .terminal-header { display: flex; gap: 6px; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; }
-        .t-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .terminal-body { font-size: 12px; line-height: 1.6; color: var(--accent-green); height: 280px; overflow-y: auto; display: flex; flex-direction: column; }
-        .t-input-line { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
-        .t-prompt { color: var(--accent-red); white-space: nowrap; }
-        
-        /* 16px font size on #t-input prevents iOS auto-zoom on focus */
-        #t-input { 
-            background: none; border: none; color: var(--paper); 
-            font-family: inherit; font-size: 16px; 
-            outline: none; flex-grow: 1; width: 50px;
-        }
-        
-        .terminal-btn {
-            background: var(--accent-green);
-            color: #000;
-            border: none;
-            padding: 8px 16px;
-            font-family: inherit;
-            font-size: 10px;
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.2s;
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
-            flex-shrink: 0;
-        }
-        .terminal-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 255, 102, 0.5); }
-        .terminal-btn:active { transform: scale(0.95); }
+        .cart-footer { padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .checkout-btn { width: 100%; padding: 18px; background: var(--paper); color: var(--obsidian); border: none; border-radius: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.3em; cursor: pointer; transition: 0.3s; }
+        .checkout-btn:hover { background: var(--ash); color: var(--paper); }
 
         /* -----------------------------------------------------------------------
         [STORE_GRID_ELEMENTS]
         -----------------------------------------------------------------------
         */
-        .stock-pulse { font-size: 8px; letter-spacing: 0.1em; color: var(--ash); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-        .pulse-icon { width: 4px; height: 4px; background: var(--accent-green); border-radius: 50%; display: inline-block; animation: mini-pulse 1s infinite; }
-        @keyframes mini-pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.5; } 100% { transform: scale(1); opacity: 1; } }
-
         .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s var(--bezier); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
@@ -236,43 +206,59 @@
         .hidden { display: none; }
 
         .hero-section { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
-        .main-title { font-size: clamp(80px, 18vw, 200px); font-weight: 900; line-height: 1; letter-spacing: -0.02em; margin: 0; padding: 0; }
-        .hero-tagline { letter-spacing: 0.8em; color: var(--ash); font-size: 9px; margin-top: 20px; font-weight: 300; text-transform: uppercase; }
+        .main-title { font-size: clamp(80px, 18vw, 200px); font-weight: 900; line-height: 1; letter-spacing: -0.02em; margin: 0; }
+        .hero-tagline { letter-spacing: 0.8em; color: var(--ash); font-size: 9px; margin-top: 20px; text-transform: uppercase; }
 
         .content-section { padding: 120px 10%; max-width: 1100px; margin: 0 auto; }
         .section-label { font-size: 9px; letter-spacing: 0.5em; color: var(--ash); margin-bottom: 30px; display: block; }
         .philosophy-text { font-size: clamp(20px, 3vw, 36px); font-weight: 200; line-height: 1.4; margin-bottom: 120px; color: var(--ash); }
         .philosophy-text b { color: var(--paper); font-weight: 400; }
+        
         .enter-btn { margin-top: 40px; background: none; border: none; color: var(--ash); font-size: 11px; letter-spacing: 0.2em; cursor: pointer; transition: 0.3s; }
-        .enter-btn:hover { color: var(--paper); transform: translateX(5px); }
+        .enter-btn:hover { color: var(--paper); transform: translateX(10px); }
 
-        .store-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; width: 90%; max-width: 1200px; margin: 0 auto; padding-bottom: 100px; }
-        .product-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: var(--radius); display: flex; flex-direction: column; transition: border 0.3s ease; position: relative; }
-        .product-img { width: 100%; aspect-ratio: 1; background: #121213; border-radius: 8px; margin-bottom: 20px; background-size: cover; background-position: center; position: relative; overflow: hidden; }
+        /* PRODUCT VAULT */
+        .store-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; width: 90%; max-width: 1200px; margin: 0 auto; padding-bottom: 100px; filter: blur(var(--vault-blur)); opacity: var(--vault-opacity); }
+        .product-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: var(--radius); display: flex; flex-direction: column; position: relative; }
         
-        /* [COMING_SOON_LOGIC] */
+        .product-img { 
+            width: 100%; 
+            aspect-ratio: 4/5; 
+            max-height: 320px;
+            background: #121213; 
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+            background-size: cover; 
+            background-position: center; 
+            position: relative; 
+            overflow: hidden; 
+        }
+
         .img-overlay { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); color: var(--paper); font-size: 10px; letter-spacing: 0.4em; font-weight: 900; z-index: 5; text-transform: uppercase; }
-        
         .product-card.is-coming-soon .img-overlay { display: flex; }
-        .product-card.is-coming-soon .add-btn { background: rgba(255,255,255,0.05); color: #444; border-color: #333; cursor: not-allowed; pointer-events: none; }
-        .product-card.is-coming-soon .size-opt { opacity: 0.2; cursor: default; pointer-events: none; }
-        .product-card.is-coming-soon .pulse-icon { background: var(--ash); animation: none; }
 
-        .product-info { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .product-info h3 { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
-        
-        .size-picker { display: flex; gap: 8px; margin-bottom: 20px; transition: all 0.3s ease; border-radius: 8px; padding: 4px; border: 1px solid transparent; }
-        .size-picker.error { border-color: var(--accent-red); background: rgba(255, 59, 59, 0.05); }
-        .size-opt { width: 32px; height: 32px; border: 1px solid rgba(160, 160, 160, 0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--ash); cursor: pointer; transition: 0.2s; }
+        .product-info { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .product-info h3 { font-size: 12px; letter-spacing: 0.1em; font-weight: 400; }
+        .product-info span { font-size: 12px; font-weight: 700; color: var(--ash); }
+
+        .size-picker { display: flex; gap: 8px; margin-bottom: 20px; }
+        .size-opt { width: 32px; height: 32px; border: 1px solid rgba(160, 160, 160, 0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--ash); cursor: pointer; transition: 0.3s; }
+        .size-opt:hover { border-color: var(--paper); color: var(--paper); }
         .size-opt.active { background: var(--paper); color: var(--obsidian); border-color: var(--paper); }
-        
-        .add-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--paper); color: var(--paper); font-size: 10px; letter-spacing: 0.2em; border-radius: 8px; cursor: pointer; margin-top: auto; transition: 0.3s; }
+        .size-picker.error { border: 1px solid var(--accent-red); padding: 5px; border-radius: 8px; background: rgba(255,0,0,0.05); }
+
+        .add-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--paper); color: var(--paper); font-size: 10px; letter-spacing: 0.2em; border-radius: 8px; cursor: pointer; transition: 0.3s; }
         .add-btn:hover { background: var(--paper); color: var(--obsidian); }
 
-        .page-footer { padding: 60px 0 100px 0; text-align: center; opacity: 0.4; font-size: 10px; letter-spacing: 0.6em; color: var(--ash); text-transform: uppercase; }
+        /* THE VAULT LOCK */
+        #vault-lock { position: fixed; inset: 0; z-index: 50; display: var(--vault-lock-display); flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; }
+        .lock-content { pointer-events: all; max-width: 400px; padding: 40px; }
+        .lock-icon { font-size: 40px; margin-bottom: 20px; color: var(--accent-red); opacity: 0.5; }
+
+        .page-footer { padding: 60px 0 100px 0; text-align: center; opacity: 0.4; font-size: 10px; letter-spacing: 0.6em; color: var(--ash); }
 
         @media (max-width: 1000px) { .store-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 650px) { .store-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 650px) { .store-grid { grid-template-columns: 1fr; } .product-img { max-height: 280px; } }
     </style>
 </head>
 <body>
@@ -280,14 +266,15 @@
     <!-- TRANSITION OVERLAY -->
     <div id="transition-overlay">
         <div class="coord-display">
-            <div class="coord-line"><span>GATE_NODE</span><span class="val-green">ONLINE</span></div>
-            <div class="coord-line"><span>SYSTEM_LATENCY</span><span id="latency-val">12ms</span></div>
-            <div class="coord-line"><span>X-PLANE</span><span id="coord-val-x" class="val-red">0.294200</span></div>
-            <div class="coord-line"><span>Y-PLANE</span><span id="coord-val-y" class="val-red">36.067700</span></div>
-            <div class="coord-line"><span>BUFFER_ALLOC</span><span id="buffer-val">0XF92A</span></div>
-            <div class="coord-line"><span>ENCRYPT_LEVEL</span><span class="val-green">AES_256</span></div>
+            <div class="diag-row"><span class="diag-label">GEO_LATITUDE</span><span id="coord-lat" class="diag-value" style="color:var(--paper)">0.2942° S</span></div>
+            <div class="diag-row"><span class="diag-label">GEO_LONGITUDE</span><span id="coord-lng" class="diag-value" style="color:var(--paper)">36.0677° E</span></div>
+            <div class="diag-row"><span class="diag-label">GATENODE_X</span><span id="diag-node" class="diag-value" style="color:var(--accent-blue)">0.0000</span></div>
+            <div class="diag-row"><span class="diag-label">Y_PLANE_TRANS</span><span id="diag-plane" class="diag-value" style="color:var(--accent-blue)">0.0000</span></div>
+            <div class="diag-row"><span class="diag-label">SYS_LATENCY</span><span id="diag-latency" class="diag-value">0ms</span></div>
+            <div class="diag-row"><span class="diag-label">BUFFER_ALLOC</span><span id="diag-buffer" class="diag-value" style="color:var(--accent-yellow)">0kb</span></div>
+            <div class="diag-row"><span class="diag-label">ENCRYPTION</span><span id="diag-encryption" class="diag-value" style="color:var(--accent-red)">SECURE_0%</span></div>
             <div class="loading-bar"><div id="load-progress" class="loading-bar-fill"></div></div>
-            <div id="diag-msg" style="font-size: 8px; text-transform: uppercase; opacity: 0.5;">AWAITING_HANDSHAKE...</div>
+            <div id="diag-msg" style="font-size: 8px; text-transform: uppercase; opacity: 0.5; letter-spacing: 0.2em;">PROTOCOL_HANDSHAKE_ACTIVE</div>
         </div>
     </div>
 
@@ -315,15 +302,18 @@
                 <div class="t-dot" style="background: #ffbd2e;"></div>
                 <div class="t-dot" style="background: #27c93f;"></div>
                 <span style="font-size: 9px; color: #555; margin-left: auto;">KÖCE_REMOTE_SHELL</span>
+                <button onclick="document.getElementById('terminal-modal').style.display='none'" style="background:none; border:none; color:#555; margin-left:10px; cursor:pointer;">X</button>
             </div>
             <div id="terminal-output" class="terminal-body">
                 <div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div>
                 <br>
                 <div>Type 'YES' to authenticate and transmit order log.</div>
             </div>
-            <div class="t-input-line" id="terminal-input-container">
-                <span class="t-prompt">admin@koce:~ $</span>
-                <input type="text" id="t-input" autofocus autocomplete="off" placeholder="...">
+            <div class="t-input-wrapper" id="terminal-input-container">
+                <div class="t-input-line">
+                    <span class="t-prompt">admin@koce:~ $</span>
+                    <input type="text" id="t-input" autocomplete="off" placeholder="...">
+                </div>
                 <button class="terminal-btn" id="terminal-execute">Execute</button>
             </div>
         </div>
@@ -362,121 +352,96 @@
                 </p>
             </div>
         </section>
-        <footer class="page-footer">© 2026 DARREN KC</footer>
+
+        <footer class="page-footer">© 2026 DARREN KC // 0.2942° S, 36.0677° E</footer>
     </div>
 
     <!-- STORE VIEW -->
     <div id="store-view" class="view hidden">
-        <div class="static-grain"></div>
-        <div class="blur-container">
-            <div class="vault-header">
-                <div class="status-dot"></div>
-                <div class="coming-soon-badge">SEARCHING_SIGNAL // SOON...</div>
-                <h2 class="vault-title serif italic">EST_S26_W26</h2>
-            </div>
-            
-            <div id="shop-container" class="blur-target">
-                <div style="width: 90%; max-width: 1200px; margin: 0 auto 40px auto; padding-top: 100px;">
-                    <h2 style="font-size: 11px; letter-spacing: 0.8em; color: var(--ash); text-transform: uppercase;">01 // ARCHIVE_GRID</h2>
-                </div>
-                
-                <div class="store-grid">
-                    
-                    <div class="product-card" data-price="700">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1mfxpAh6DMSXEiWlrh8m5KQ5RGGVpum0t');">
-                            <div class="img-overlay">COMING_SOON</div>
-                        </div>
-                        <div class="product-info"><h3>B-01 TEE</h3><span>700 KSh</span></div>
-                        <div class="size-picker">
-                            <div class="size-opt" onclick="selectSize(this)">S</div>
-                            <div class="size-opt" onclick="selectSize(this)">M</div>
-                            <div class="size-opt" onclick="selectSize(this)">L</div>
-                        </div>
-                        <button class="add-btn" onclick="addToCart(this, 'B-01 TEE')">ADD_TO_ORDER</button>
-                    </div>
-
-                    <div class="product-card" data-price="700">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/16ayCPTTsHTRrIt672FkLHyqyzGjOyzdL');">
-                            <div class="img-overlay">COMING_SOON</div>
-                        </div>
-                        <div class="product-info"><h3>W-01 TEE</h3><span>700 KSh</span></div>
-                        <div class="size-picker">
-                            <div class="size-opt" onclick="selectSize(this)">S</div>
-                            <div class="size-opt" onclick="selectSize(this)">M</div>
-                            <div class="size-opt" onclick="selectSize(this)">L</div>
-                        </div>
-                        <button class="add-btn" onclick="addToCart(this, 'W-01 TEE')">ADD_TO_ORDER</button>
-                    </div>
-
-                     <div class="product-card" data-price="800">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');">
-                            <div class="img-overlay">COMING_SOON</div>
-                        </div>
-                        <div class="product-info"><h3>B-01_v2 TEE</h3><span>800 KSh</span></div>
-                        <div class="size-picker">
-                            <div class="size-opt" onclick="selectSize(this)">S</div>
-                            <div class="size-opt" onclick="selectSize(this)">M</div>
-                            <div class="size-opt" onclick="selectSize(this)">L</div>
-                        </div>
-                        <button class="add-btn" onclick="addToCart(this, 'B-02 COLLARED_TEE')">ADD_TO_ORDER</button>
-                    </div>
-
-                    <div class="product-card" data-price="800">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');">
-                            <div class="img-overlay">COMING_SOON</div>
-                        </div>
-                        <div class="product-info"><h3>W-01_v2 TEE</h3><span>800 KSh</span></div>
-                        <div class="size-picker">
-                            <div class="size-opt" onclick="selectSize(this)">S</div>
-                            <div class="size-opt" onclick="selectSize(this)">M</div>
-                            <div class="size-opt" onclick="selectSize(this)">L</div>
-                        </div>
-                        <button class="add-btn" onclick="addToCart(this, 'W-02 COLLARED_TEE')">ADD_TO_ORDER</button>
-                    </div>
-
-                    <div class="product-card is-coming-soon" data-price="0">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">91</span>%</div>
-                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');">
-                            <div class="img-overlay">COMING_SOON</div>
-                        </div>
-                        <div class="product-info"><h3>B-02 COLLARED</h3><span>TBD</span></div>
-                        <div class="size-picker">
-                            <div class="size-opt">S</div>
-                            <div class="size-opt">M</div>
-                            <div class="size-opt">L</div>
-                        </div>
-                        <button class="add-btn">LOCKED</button>
-                    </div>
-
-                    <div class="product-card is-coming-soon" data-price="0">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: 0%</div>
-                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');">
-                            <div class="img-overlay">COMING_SOON</div>
-                        </div>
-                        <div class="product-info"><h3>W-02 COLLARED</h3><span>TBD</span></div>
-                        <div class="size-picker">
-                            <div class="size-opt">S</div>
-                            <div class="size-opt">M</div>
-                            <div class="size-opt">L</div>
-                        </div>
-                        <button class="add-btn">LOCKED</button>
-                    </div>
-
-                </div>
-                <footer class="page-footer">ESTD 2026 // KE</footer>
+        <div id="vault-lock">
+            <div class="lock-content">
+                <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+                <h2 style="font-size: 12px; letter-spacing: 0.5em; margin-bottom: 10px;">ARCHIVE_LOCKED</h2>
+                <p style="font-size: 10px; color: var(--ash); letter-spacing: 0.1em; line-height: 1.8;">The blueprint vault is currently undergoing structural maintenance. Check back shortly for Summer '26 access.</p>
             </div>
         </div>
+
+        <div class="store-grid" style="padding-top: 120px;">
+            <div class="product-card" data-price="700">
+                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1mfxpAh6DMSXEiWlrh8m5KQ5RGGVpum0t');"></div>
+                <div class="product-info"><h3>B-01 TEE</h3><span>700 KSh</span></div>
+                <div class="size-picker">
+                    <div class="size-opt" onclick="selectSize(this)">S</div>
+                    <div class="size-opt" onclick="selectSize(this)">M</div>
+                    <div class="size-opt" onclick="selectSize(this)">L</div>
+                </div>
+                <button class="add-btn" onclick="addToCart(this, 'B-01 TEE')">ADD_TO_ORDER</button>
+            </div>
+
+            <div class="product-card" data-price="700">
+                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/16ayCPTTsHTRrIt672FkLHyqyzGjOyzdL');"></div>
+                <div class="product-info"><h3>W-01 TEE</h3><span>700 KSh</span></div>
+                <div class="size-picker">
+                    <div class="size-opt" onclick="selectSize(this)">S</div>
+                    <div class="size-opt" onclick="selectSize(this)">M</div>
+                    <div class="size-opt" onclick="selectSize(this)">L</div>
+                </div>
+                <button class="add-btn" onclick="addToCart(this, 'W-01 TEE')">ADD_TO_ORDER</button>
+            </div>
+
+            <div class="product-card" data-price="800">
+                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');"></div>
+                <div class="product-info"><h3>B-01_v2 TEE</h3><span>800 KSh</span></div>
+                <div class="size-picker">
+                    <div class="size-opt" onclick="selectSize(this)">S</div>
+                    <div class="size-opt" onclick="selectSize(this)">M</div>
+                    <div class="size-opt" onclick="selectSize(this)">L</div>
+                </div>
+                <button class="add-btn" onclick="addToCart(this, 'B-01_v2 TEE')">ADD_TO_ORDER</button>
+            </div>
+
+            <div class="product-card" data-price="800">
+                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');"></div>
+                <div class="product-info"><h3>W-01_v2 TEE</h3><span>800 KSh</span></div>
+                <div class="size-picker">
+                    <div class="size-opt" onclick="selectSize(this)">S</div>
+                    <div class="size-opt" onclick="selectSize(this)">M</div>
+                    <div class="size-opt" onclick="selectSize(this)">L</div>
+                </div>
+                <button class="add-btn" onclick="addToCart(this, 'W-01_v2 TEE')">ADD_TO_ORDER</button>
+            </div>
+            
+            <div class="product-card is-coming-soon">
+                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');">
+                    <div class="img-overlay">COMING_SOON</div>
+                </div>
+                <div class="product-info"><h3>B-02 COLLARED</h3><span>TBD</span></div>
+                <div class="size-picker">
+                    <div class="size-opt">S</div>
+                    <div class="size-opt">M</div>
+                    <div class="size-opt">L</div>
+                </div>
+                <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+            </div>
+            <div class="product-card is-coming-soon">
+                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');">
+                    <div class="img-overlay">COMING_SOON</div>
+                </div>
+                <div class="product-info"><h3>W-02 COLLARED</h3><span>TBD</span></div>
+                <div class="size-picker">
+                    <div class="size-opt">S</div>
+                    <div class="size-opt">M</div>
+                    <div class="size-opt">L</div>
+                </div>
+                <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+            </div>
+        </div>
+        <footer class="page-footer">ESTD 2026 // KE</footer>
     </div>
 
     <script>
-        // Core variables
         const overlay = document.getElementById('transition-overlay');
         const cartDrawer = document.getElementById('cart-drawer');
-        const cartBtn = document.getElementById('cart-btn');
         const terminalModal = document.getElementById('terminal-modal');
         const terminalOutput = document.getElementById('terminal-output');
         const terminalInput = document.getElementById('t-input');
@@ -484,180 +449,160 @@
         const body = document.body;
         
         let cart = []; 
-        let shuffleInterval;
-        let terminalStep = 0;
-        const INSTA_USERNAME = "koce_structural_wear"; 
+        const INSTA_USER_ID = "18061521530438424"; 
 
-        // Check if vault is locked
-        function isLocked() {
-            const locked = getComputedStyle(document.documentElement).getPropertyValue('--vault-lock-display').trim() === 'flex';
-            if (cartBtn) cartBtn.style.display = locked ? 'none' : 'flex';
-            const blurContainer = document.querySelector('.blur-target');
-            if (blurContainer) blurContainer.style.pointerEvents = locked ? 'none' : 'auto';
-            return locked;
+        function updateCoordinates() {
+            const lat = (0.2942 + (Math.random() * 0.0005 - 0.00025)).toFixed(6);
+            const lng = (36.0677 + (Math.random() * 0.0005 - 0.00025)).toFixed(6);
+            document.getElementById('coord-lat').innerText = `${lat}° S`;
+            document.getElementById('coord-lng').innerText = `${lng}° E`;
+            document.getElementById('diag-node').innerText = (Math.random() * 100).toFixed(4).padStart(7, '0');
+            document.getElementById('diag-plane').innerText = (Math.random() * 50).toFixed(4).padStart(7, '0');
+            const latVal = Math.floor(Math.random() * 80) + 12;
+            const latEl = document.getElementById('diag-latency');
+            latEl.innerText = `${latVal}ms`;
+            latEl.style.color = latVal > 60 ? 'var(--accent-red)' : (latVal > 40 ? 'var(--accent-yellow)' : 'var(--accent-green)');
+            document.getElementById('diag-buffer').innerText = `${Math.floor(Math.random() * 1024 + 128)}kb`;
+            const encryptVal = Math.min(100, Math.floor(Date.now() / 100) % 110);
+            const encEl = document.getElementById('diag-encryption');
+            encEl.innerText = `AES_RSA_${encryptVal}%`;
+            if (encryptVal > 90) encEl.style.color = 'var(--accent-green)';
+            else if (encryptVal > 50) encEl.style.color = 'var(--accent-yellow)';
+            else encEl.style.color = 'var(--accent-red)';
         }
+        setInterval(updateCoordinates, 80); 
 
-        // Animated overlay logic
-        function startCoordShuffle() {
-            const coordValX = document.getElementById('coord-val-x');
-            const coordValY = document.getElementById('coord-val-y');
-            const latencyVal = document.getElementById('latency-val');
-            const diagMsg = document.getElementById('diag-msg');
-            const progressBar = document.getElementById('load-progress');
-            const messages = ["ESTABLISHING_VPN", "PARSING_MANIFEST", "AUTH_KEY_VERIFIED", "STREAMING_ASSETS", "MAPPING_NODES", "CALIBRATING_OPTICS"];
-            let progress = 0;
-            if (shuffleInterval) clearInterval(shuffleInterval);
-            shuffleInterval = setInterval(() => {
-                if(coordValX) coordValX.innerText = (Math.random() * 2).toFixed(6);
-                if(coordValY) coordValY.innerText = (Math.random() * 100).toFixed(6);
-                if(latencyVal) latencyVal.innerText = `${(Math.random() * 15).toFixed(2)}ms`;
-                if(progress < 100) {
-                    progress += 1.5;
-                    progressBar.style.width = progress + '%';
-                    diagMsg.innerText = messages[Math.floor(progress / (100 / messages.length))] || "FINALIZING...";
-                }
-            }, 45);
-        }
-
-        // View switching
         function switchView(viewId) {
-            startCoordShuffle();
             overlay.classList.add('active');
+            updateCoordinates();
+            let progress = 0;
+            const bar = document.getElementById('load-progress');
+            const interval = setInterval(() => {
+                progress += (100 - progress) * 0.15;
+                if(progress > 99) progress = 100;
+                bar.style.width = progress + '%';
+                if(progress >= 100) clearInterval(interval);
+            }, 50);
+
             setTimeout(() => {
                 document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-                document.getElementById(viewId + '-view').classList.remove('hidden');
+                const nextView = document.getElementById(viewId + '-view');
+                nextView.classList.remove('hidden');
+                
+                // Reset scroll position and re-check reveals for the new view
+                nextView.scrollTop = 0;
                 body.classList.remove('scrolled');
-                isLocked();
+                
                 setTimeout(() => {
-                    overlay.style.clipPath = 'polygon(100% 0, 100% 0, 100% 0, 100% 0)';
-                    setTimeout(() => {
-                        overlay.classList.remove('active');
-                        overlay.style.clipPath = ''; 
-                        clearInterval(shuffleInterval);
-                    }, 800);
+                    overlay.classList.remove('active');
+                    bar.style.width = '0%';
+                    // Trigger check reveals after transition
+                    checkReveals(nextView);
                 }, 800);
-            }, 950);
+            }, 1000);
         }
 
-        // Size picking
         function selectSize(btn) {
-            const card = btn.closest('.product-card');
-            if (card.classList.contains('is-coming-soon')) return;
-            const picker = btn.parentElement;
-            picker.classList.remove('error');
-            picker.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
+            btn.parentElement.classList.remove('error');
+            btn.parentElement.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
             btn.classList.add('active');
         }
 
-        // Cart logic
         function addToCart(btn, name) {
             const card = btn.closest('.product-card');
-            if (card.classList.contains('is-coming-soon')) return;
-            
-            const sizePicker = card.querySelector('.size-picker');
-            const selectedSizeEl = sizePicker.querySelector('.size-opt.active');
+            const selectedSizeEl = card.querySelector('.size-opt.active');
             const price = parseInt(card.getAttribute('data-price'));
-            
             if (!selectedSizeEl) {
-                sizePicker.classList.add('error');
-                const originalText = btn.innerText;
-                btn.innerText = "SELECT_SIZE";
-                setTimeout(() => { btn.innerText = originalText; }, 1500);
+                card.querySelector('.size-picker').classList.add('error');
                 return;
             }
-            
             cart.push({ id: Date.now(), name, price, size: selectedSizeEl.innerText });
             updateCartUI();
-            btn.innerText = "ADDED_TO_LOG";
-            setTimeout(() => { btn.innerText = "ADD_TO_ORDER"; }, 1000);
         }
 
         function updateCartUI() {
-            const countEl = document.getElementById('cart-count');
-            if (countEl) countEl.innerText = cart.length;
-            const items = document.getElementById('cart-items');
-            if(!cart.length) {
-                items.innerHTML = '<div style="text-align:center;color:var(--ash);font-size:10px;margin-top:40px;">LOG_EMPTY</div>';
-                document.getElementById('cart-total-value').innerText = '0 KSh';
-                return;
-            }
+            document.getElementById('cart-count').innerText = cart.length;
+            const itemsContainer = document.getElementById('cart-items');
             let total = 0;
-            items.innerHTML = cart.map(item => {
+            itemsContainer.innerHTML = cart.map(item => {
                 total += item.price;
                 return `
                     <div class="cart-item">
                         <div class="cart-item-info">
                             <h4>${item.name}</h4>
-                            <p>${item.size} | ${item.price.toLocaleString()} KSh</p>
+                            <p style="font-size:9px; color:var(--ash)">SIZE: ${item.size} | ${item.price} KSh</p>
                         </div>
-                        <button onclick="removeFromCart(${item.id})" style="background:none;border:none;color:var(--accent-red);font-size:10px;cursor:pointer;">REMOVE</button>
+                        <button class="remove-btn" onclick="removeFromCart(${item.id})">REMOVE</button>
                     </div>`;
             }).join('');
             document.getElementById('cart-total-value').innerText = `${total.toLocaleString()} KSh`;
         }
 
-        function removeFromCart(id) { 
-            cart = cart.filter(i => i.id !== id); 
-            updateCartUI(); 
-        }
-
+        function removeFromCart(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
         function toggleCart() { cartDrawer.classList.toggle('open'); }
 
-        // Checkout Terminal
         function openTerminal() {
             if (!cart.length) return;
             terminalModal.style.display = 'flex';
             terminalInput.focus();
-            terminalStep = 0;
             terminalOutput.innerHTML = `<div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div><br><div>Type 'YES' to authenticate and transmit order log.</div>`;
+            document.getElementById('terminal-input-container').style.display = 'flex';
         }
 
         function processTerminalInput() {
             const val = terminalInput.value.trim().toUpperCase();
             terminalInput.value = '';
-            if (val === 'EXIT') { terminalModal.style.display = 'none'; return; }
-            if (val === '') return;
-            
-            const div = document.createElement('div');
-            div.innerText = `> ${val}`;
-            terminalOutput.appendChild(div);
-
-            if (terminalStep === 0 && val === 'YES') {
-                terminalStep = 1;
+            if (val === 'YES') {
                 finalizeCheckout();
-                const alertDiv = document.createElement('div');
-                alertDiv.style.border = '1px solid var(--accent-red)';
-                alertDiv.style.padding = '15px';
-                alertDiv.style.marginTop = '15px';
-                alertDiv.innerHTML = `
-                    <p style="color:var(--accent-red);margin-bottom:10px;">ACTION_REQUIRED</p>
-                    <p style="font-size:11px;margin-bottom:15px;">Order manifest copied. Paste it in Instagram DM.</p>
-                    <button class="terminal-btn" onclick="window.open('https://www.instagram.com/direct/t/${INSTA_USERNAME}', '_blank')">OPEN INSTAGRAM</button>
+                document.getElementById('terminal-input-container').style.display = 'none';
+                
+                terminalOutput.innerHTML += `
+                    <div style="color:var(--accent-green); margin-top:10px; font-weight:bold;">[SUCCESS] ORDER_MANIFEST_READY</div>
+                    <div style="font-size:10px; margin-top:15px; color: #fff; background: rgba(255,255,255,0.05); padding: 18px; border-left: 2px solid var(--accent-green); border-radius: 4px; line-height:1.6;">
+                        <b style="color: var(--accent-yellow); font-size:11px;">FINAL STEP: VERIFICATION</b> 
+                        <br><br>
+                        <span style="opacity:0.8;">A detailed order manifest has been copied to your clipboard. To complete:</span>
+                        <br><br>
+                        1. Press <b>CONFIRM</b> to open Instagram.
+                        <br>
+                        2. <b>PASTE</b> the manifest into the DM chat.
+                        <br>
+                        3. Send the message for structural confirmation.
+                        <br><br>
+                        <button class="terminal-btn" style="background:var(--paper); color:var(--obsidian);" onclick="confirmAndRedirect()">CONFIRM_AND_REDIRECT</button>
+                    </div>
                 `;
-                terminalOutput.appendChild(alertDiv);
-            } else {
-                const errDiv = document.createElement('div');
-                errDiv.innerText = `[ERROR] :: INVALID_COMMAND: ${val}`;
-                errDiv.style.color = 'var(--accent-red)';
-                terminalOutput.appendChild(errDiv);
             }
-            terminalOutput.scrollTop = terminalOutput.scrollHeight;
         }
 
+        function confirmAndRedirect() {
+            const instaDeepLink = `instagram://direct_thread?id=${INSTA_USER_ID}`;
+            const instaWebLink = `https://www.instagram.com/direct/t/${INSTA_USER_ID}`;
+            window.location.href = instaDeepLink;
+            setTimeout(() => { window.open(instaWebLink, '_blank'); }, 1500);
+        }
+
+        terminalExecute.addEventListener('click', processTerminalInput);
         terminalInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') processTerminalInput(); });
-        
-        // Execute button logic for mobile
-        terminalExecute.addEventListener('pointerdown', (e) => {
-            e.preventDefault();
-            processTerminalInput();
-        });
 
         function finalizeCheckout() {
-            const orderId = Math.floor(100000 + Math.random() * 899999);
-            const total = document.getElementById('cart-total-value').innerText;
-            let manifest = `--- KÖCE // ORDER_MANIFEST ---\nID: #KC-${orderId}\n\n`;
-            manifest += cart.map(i => ` [+] ${i.name} | SIZE: ${i.size} | ${i.price} KSh`).join('\n');
-            manifest += `\n\nTOTAL: ${total}\n----------------------------`;
+            const orderId = `KC-${Math.floor(1000 + Math.random() * 8999)}`;
+            const date = new Date().toLocaleDateString();
+            const time = new Date().toLocaleTimeString();
+            
+            let manifest = `KÖCE ORDER MANIFEST [${orderId}]\n`;
+            manifest += `DATE: ${date} | TIME: ${time}\n`;
+            manifest += `--------------------------------\n`;
+            
+            cart.forEach((i, idx) => {
+                manifest += `${idx + 1}. ITEM: ${i.name} | SIZE: ${i.size} | ${i.price} KSh\n`;
+            });
+            
+            manifest += `--------------------------------\n`;
+            manifest += `QUANTITY: ${cart.length} UNIT(S)\n`;
+            manifest += `TOTAL: ${document.getElementById('cart-total-value').innerText}\n`;
+            manifest += `--------------------------------\n`;
+            manifest += `AWAITING_RESPONCE...`;
             
             const dummy = document.createElement("textarea");
             document.body.appendChild(dummy);
@@ -667,16 +612,32 @@
             document.body.removeChild(dummy);
         }
 
-        // Scroll listener
-        document.querySelectorAll('.view').forEach(v => v.addEventListener('scroll', (e) => {
-            if(e.target.scrollTop > 50) body.classList.add('scrolled');
-            else body.classList.remove('scrolled');
-            e.target.querySelectorAll('.reveal').forEach(r => { 
-                if (r.getBoundingClientRect().top < window.innerHeight - 100) r.classList.add('active'); 
+        // Scroll Logic Engine
+        function checkReveals(view) {
+            view.querySelectorAll('.reveal').forEach(r => {
+                const rect = r.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    r.classList.add('active');
+                }
             });
-        }));
+        }
 
-        window.onload = isLocked;
+        document.querySelectorAll('.view').forEach(v => {
+            v.addEventListener('scroll', (e) => {
+                // Nav scrolling effect
+                if(e.target.scrollTop > 50) body.classList.add('scrolled');
+                else body.classList.remove('scrolled');
+
+                // Reveal trigger
+                checkReveals(e.target);
+            });
+        });
+
+        window.onload = () => {
+            // Initial check for current view
+            const activeView = document.querySelector('.view:not(.hidden)');
+            if(activeView) checkReveals(activeView);
+        };
     </script>
 </body>
 </html>
