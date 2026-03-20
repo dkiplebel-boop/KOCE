@@ -21,7 +21,7 @@
             --radius: 12px; 
             
             /* --- VAULT CONTROLS --- */
-            --vault-lock-display: flex; /* Toggle to 'none' to unlock shop */
+            --vault-lock-display: none; /* Toggle to 'none' to unlock shop */
             --vault-blur: 16px;      
             --vault-opacity: .1;   
             --static-opacity: .1;  
@@ -80,7 +80,6 @@
             cursor: pointer;
         }
 
-        /* Responsive UI Adjustments */
         @media (max-width: 600px) {
             .nav-logo, .cart-toggle { top: 30px; height: 32px; }
             .nav-logo { left: 25px; } 
@@ -88,7 +87,6 @@
             .nav-logo h2 { font-size: 11px; letter-spacing: 0.4em; }
         }
 
-        /* Scrolled State UI */
         .scrolled .nav-logo, .scrolled .cart-toggle { 
             top: 20px; 
             height: 36px;
@@ -215,13 +213,6 @@
         }
         .terminal-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 255, 102, 0.5); }
 
-        .terminal-alert {
-            background: rgba(255, 59, 59, 0.1); border: 1px solid var(--accent-red);
-            padding: 15px; margin: 10px 0; color: var(--paper); text-align: center;
-            border-radius: 4px; animation: pulse-border 1s infinite alternate;
-        }
-        @keyframes pulse-border { from { border-color: var(--accent-red); box-shadow: 0 0 5px var(--accent-red); } to { border-color: #fff; box-shadow: 0 0 15px var(--accent-red); } }
-
         /* -----------------------------------------------------------------------
         [STORE_GRID_ELEMENTS]
         -----------------------------------------------------------------------
@@ -251,8 +242,15 @@
         .product-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 20px; border-radius: var(--radius); display: flex; flex-direction: column; transition: border 0.3s ease; position: relative; }
         .product-img { width: 100%; aspect-ratio: 1; background: #121213; border-radius: 8px; margin-bottom: 20px; background-size: cover; background-position: center; position: relative; overflow: hidden; }
         
-        .img-blur-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); color: var(--paper); font-size: 9px; letter-spacing: 0.4em; font-weight: 700; text-transform: uppercase; z-index: 2; }
+        /* [COMING_SOON_LOGIC] */
+        .img-overlay { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); color: var(--paper); font-size: 10px; letter-spacing: 0.4em; font-weight: 900; z-index: 5; text-transform: uppercase; }
         
+        /* Apply this class to product-card to disable it */
+        .product-card.is-coming-soon .img-overlay { display: flex; }
+        .product-card.is-coming-soon .add-btn { background: rgba(255,255,255,0.05); color: #444; border-color: #333; cursor: not-allowed; pointer-events: none; }
+        .product-card.is-coming-soon .size-opt { opacity: 0.2; cursor: default; pointer-events: none; }
+        .product-card.is-coming-soon .pulse-icon { background: var(--ash); animation: none; }
+
         .product-info { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
         .product-info h3 { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
         
@@ -263,7 +261,6 @@
         
         .add-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--paper); color: var(--paper); font-size: 10px; letter-spacing: 0.2em; border-radius: 8px; cursor: pointer; margin-top: auto; transition: 0.3s; }
         .add-btn:hover { background: var(--paper); color: var(--obsidian); }
-        .add-btn:disabled { border-color: #333; color: #444; cursor: not-allowed; }
 
         .page-footer { padding: 60px 0 100px 0; text-align: center; opacity: 0.4; font-size: 10px; letter-spacing: 0.6em; color: var(--ash); text-transform: uppercase; }
 
@@ -273,11 +270,7 @@
 </head>
 <body>
 
-    <!-- 
-    -----------------------------------------------------------------------
-    [DOM_STRUCTURE]
-    -----------------------------------------------------------------------
-    -->
+    <!-- TRANSITION OVERLAY -->
     <div id="transition-overlay">
         <div class="coord-display">
             <div class="coord-line"><span>GATE_NODE</span><span class="val-green">ONLINE</span></div>
@@ -291,6 +284,7 @@
         </div>
     </div>
 
+    <!-- CART SYSTEM -->
     <div id="cart-drawer">
         <div class="cart-header">
             <h2>ORDER_STREAM</h2>
@@ -306,6 +300,7 @@
         </div>
     </div>
 
+    <!-- TERMINAL CHECKOUT -->
     <div id="terminal-modal">
         <div class="terminal-content">
             <div class="terminal-header">
@@ -342,7 +337,7 @@
             <div class="reveal">
                 <span class="section-label">01 // THE PHILOSOPHY</span>
                 <p class="philosophy-text">
-                    <b>KÖCE</b> (<b>ko-chey</b>) is the study of <b>essential form</b>. We believe that true elegance is found in the <b>absence of the unnecessary</b>. Our garments are designed to be a seamless extension of the self—simplifying the complex relationship between the body and its environment. It is the intersection of <b>logic and luxury</b>, where every silhouette is a <b>calculated response</b> to modern movement.
+                    <b>KÖCE</b> (<b>ko-chey</b>) is the study of <b>essential form</b>. We believe that true elegance is found in the <b>absence of the unnecessary</b> reduction of noise. Our garments are designed to be a seamless extension of the self—simplifying the complex relationship between the body and its environment. It is the intersection of <b>logic and luxury</b>, where every silhouette is a <b>calculated response</b> to modern movement.
                 </p>
             </div>
 
@@ -360,7 +355,7 @@
                 </p>
             </div>
         </section>
-        <footer class="page-footer">© 2026 DARREN KC // KE</footer>
+        <footer class="page-footer">© 2026 DARREN KC</footer>
     </div>
 
     <!-- STORE VIEW -->
@@ -372,95 +367,132 @@
                 <div class="coming-soon-badge">SEARCHING_SIGNAL // SOON...</div>
                 <h2 class="vault-title serif italic">EST_S26_W26</h2>
             </div>
+            
             <div id="shop-container" class="blur-target">
-                <div id="unlocked-spacer" style="height: 100px; display: none;"></div>
-                <div style="width: 90%; max-width: 1200px; margin: 0 auto 40px auto;">
+                <div style="width: 90%; max-width: 1200px; margin: 0 auto 40px auto; padding-top: 100px;">
                     <h2 style="font-size: 11px; letter-spacing: 0.8em; color: var(--ash); text-transform: uppercase;">01 // ARCHIVE_GRID</h2>
                 </div>
+                
                 <div class="store-grid">
-                    <!-- PRODUCT 1 -->
-                    <div class="product-card">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>AVAILABILITY: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1mfxpAh6DMSXEiWlrh8m5KQ5RGGVpum0t');"></div>
-                        <div class="product-info"><h3>B-01 TEE</h3><span>800 KSh</span></div>
+                    
+                    <!-- EDITABLE PRODUCT CARD 1 -->
+                    <!-- Remove 'is-coming-soon' to activate card -->
+                    <div class="product-card" data-price="700">
+                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
+                        <div class="product-img" style="background-image: 
+                            url('https://lh3.googleusercontent.com/u/0/d/1mfxpAh6DMSXEiWlrh8m5KQ5RGGVpum0t');">
+                            <div class="img-overlay">COMING_SOON</div>
+                        </div>
+                        <div class="product-info"><h3>B-01 TEE</h3><span>700 KSh</span></div>
                         <div class="size-picker">
+                            <div class="size-opt" onclick="selectSize(this)">S</div>
                             <div class="size-opt" onclick="selectSize(this)">M</div>
                             <div class="size-opt" onclick="selectSize(this)">L</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'B-01 TEE', 800)">ADD_TO_ORDER</button>
+                        <button class="add-btn" onclick="addToCart(this, 'B-01 TEE')">ADD_TO_ORDER</button>
                     </div>
-                    <!-- PRODUCT 2 -->
-                    <div class="product-card">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>AVAILABILITY: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/16ayCPTTsHTRrIt672FkLHyqyzGjOyzdL');"></div>
-                        <div class="product-info"><h3>W-01 TEE</h3><span>1,000 KSh</span></div>
+
+                   
+                    
+                    
+                    <!-- EDITABLE PRODUCT CARD 2 -->
+                    <div class="product-card" data-price="700">
+                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
+                        <div class="product-img" style="background-image: 
+                            url('https://lh3.googleusercontent.com/u/0/d/16ayCPTTsHTRrIt672FkLHyqyzGjOyzdL');">
+                            <div class="img-overlay">COMING_SOON</div>
+                        </div>
+                        <div class="product-info"><h3>W-01 TEE</h3><span>700 KSh</span></div>
                         <div class="size-picker">
+                            <div class="size-opt" onclick="selectSize(this)">S</div>
                             <div class="size-opt" onclick="selectSize(this)">M</div>
                             <div class="size-opt" onclick="selectSize(this)">L</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'W-01 TEE', 1000)">ADD_TO_ORDER</button>
+                        <button class="add-btn" onclick="addToCart(this, 'W-01 TEE')">ADD_TO_ORDER</button>
                     </div>
-                    <!-- PRODUCT 3 -->
-                    <div class="product-card">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>AVAILABILITY: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');"></div>
-                        <div class="product-info"><h3>B-02 COLLARED_TEE</h3><span>1,000 KSh</span></div>
+
+                    
+                    
+                    
+                    <!-- EDITABLE PRODUCT CARD 3 -->
+                     <div class="product-card" data-price="800">
+                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
+                        <div class="product-img" style="background-image: 
+                            url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');">
+                            <div class="img-overlay">COMING_SOON</div>
+                        </div>
+                        <div class="product-info"><h3>B-01_v2 TEE</h3><span>800 KSh</span></div>
                         <div class="size-picker">
+                            <div class="size-opt" onclick="selectSize(this)">S</div>
                             <div class="size-opt" onclick="selectSize(this)">M</div>
                             <div class="size-opt" onclick="selectSize(this)">L</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'B-02 COLLARED_TEE', 1000)">ADD_TO_ORDER</button>
+                        <button class="add-btn" onclick="addToCart(this, 'B-02 COLLARED_TEE')">ADD_TO_ORDER</button>
                     </div>
-                    <!-- PRODUCT 4 -->
-                    <div class="product-card">
-                        <div class="stock-pulse"><span class="pulse-icon"></span>AVAILABILITY: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');"></div>
-                        <div class="product-info"><h3>W-02 COLLARED_TEE</h3><span>1,000 KSh</span></div>
+
+                    
+                    
+                    
+                    <!-- COMING SOON EXAMPLE -->
+                    <!-- Add 'is-coming-soon' to disable this card -->
+                    <div class="product-card" data-price="800">
+                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
+                        <div class="product-img" style="background-image: 
+                            url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');">
+                            <div class="img-overlay">COMING_SOON</div>
+                        </div>
+                        <div class="product-info"><h3>W-01_v2 TEE</h3><span>800 KSh</span></div>
                         <div class="size-picker">
+                            <div class="size-opt" onclick="selectSize(this)">S</div>
                             <div class="size-opt" onclick="selectSize(this)">M</div>
                             <div class="size-opt" onclick="selectSize(this)">L</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'W-02 COLLARED_TEE', 1000)">ADD_TO_ORDER</button>
+                        <button class="add-btn" onclick="addToCart(this, 'W-02 COLLARED_TEE')">ADD_TO_ORDER</button>
                     </div>
-                    <!-- PRODUCT 5 (COMING SOON) -->
-                    <div class="product-card">
-                        <div class="stock-pulse"><span class="pulse-icon" style="background: var(--ash);"></span>AVAILABILITY: 0%</div>
-                        <div class="product-img" style="background-color: #121213;">
-                            <div class="img-blur-overlay">COMING_SOON</div>
+
+                       
+                
+                
+                <div class="product-card is-coming-soon" data-price="0">
+                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">91</span>%</div>
+                        <div class="product-img" style="background-image: 
+                            url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');">
+                            <div class="img-overlay">COMING_SOON</div>
                         </div>
-                        <div class="product-info"><h3>B-01_v2 TEE</h3><span>TBD</span></div>
+                        <div class="product-info"><h3>B-02 COLLARED</h3><span>TBD</span></div>
                         <div class="size-picker">
-                            <div class="size-opt" style="cursor: default; opacity: 0.3;">M</div>
-                            <div class="size-opt" style="cursor: default; opacity: 0.3;">L</div>
+                            <div class="size-opt" onclick="selectSize(this)">S</div>
+                            <div class="size-opt" onclick="selectSize(this)">M</div>
+                            <div class="size-opt" onclick="selectSize(this)">L</div>
                         </div>
-                        <button class="add-btn" disabled>AWAITING_STOCK</button>
+                        <button class="add-btn" onclick="addToCart(this, 'B-02 COLLARED')">LOCKED</button>
                     </div>
-                    <!-- PRODUCT 6 (COMING SOON) -->
-                    <div class="product-card">
-                        <div class="stock-pulse"><span class="pulse-icon" style="background: var(--ash);"></span>AVAILABILITY: 0%</div>
-                        <div class="product-img" style="background-color: #222;">
-                            <div class="img-blur-overlay">COMING_SOON</div>
+
+                    
+                
+                <div class="product-card is-coming-soon" data-price="0">
+                        <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: 0%</div>
+                        <div class="product-img" style="background-image: 
+                            url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');">
+                            <div class="img-overlay">COMING_SOON</div>
                         </div>
-                        <div class="product-info"><h3>W-01_v2 TEE</h3><span>TBD</span></div>
+                        <div class="product-info"><h3>W-02 COLLARED</h3><span>TBD</span></div>
                         <div class="size-picker">
-                            <div class="size-opt" style="cursor: default; opacity: 0.3;">M</div>
-                            <div class="size-opt" style="cursor: default; opacity: 0.3;">L</div>
+                            <div class="size-opt" onclick="selectSize(this)">S</div>
+                            <div class="size-opt" onclick="selectSize(this)">M</div>
+                            <div class="size-opt" onclick="selectSize(this)">L</div>
                         </div>
-                        <button class="add-btn" disabled>AWAITING_STOCK</button>
+                        <button class="add-btn" onclick="addToCart(this, 'W-02 COLLARED')">LOCKED</button>
                     </div>
+
                 </div>
-                <footer class="page-footer">ESTD 2026</footer>
+                <footer class="page-footer">ESTD 2026 // KE</footer>
             </div>
         </div>
     </div>
 
-    <!-- 
-    -----------------------------------------------------------------------
-    [CORE_LOGIC]
-    -----------------------------------------------------------------------
-    -->
     <script>
-        /* [CONSTANT_DECLARATIONS] */
+        // Core variables
         const overlay = document.getElementById('transition-overlay');
         const cartDrawer = document.getElementById('cart-drawer');
         const cartBtn = document.getElementById('cart-btn');
@@ -468,7 +500,6 @@
         const terminalOutput = document.getElementById('terminal-output');
         const terminalInput = document.getElementById('t-input');
         const terminalExecute = document.getElementById('terminal-execute');
-        const terminalInputContainer = document.getElementById('terminal-input-container');
         const body = document.body;
         
         let cart = []; 
@@ -476,59 +507,28 @@
         let terminalStep = 0;
         const INSTA_USERNAME = "18061521530438424/"; 
 
-        /**
-         * Checks if the site is in "Vault" mode.
-         * Applies 'none' to cart display if vault is locked.
-         */
+        // Check if vault is locked
         function isLocked() {
             const locked = getComputedStyle(document.documentElement).getPropertyValue('--vault-lock-display').trim() === 'flex';
-            const spacer = document.getElementById('unlocked-spacer');
-            const blurTarget = document.querySelector('.blur-target');
-            
-            // Apply logic to hide UI elements if locked
             if (cartBtn) cartBtn.style.display = locked ? 'none' : 'flex';
-            if (cartDrawer && locked) cartDrawer.classList.remove('open');
-            
-            if (blurTarget) blurTarget.style.pointerEvents = locked ? 'none' : 'auto';
-            if (spacer) spacer.style.display = locked ? 'none' : 'block';
-            
+            document.querySelector('.blur-target').style.pointerEvents = locked ? 'none' : 'auto';
             return locked;
         }
 
-        /**
-         * Shuffles coordinate data for transition overlay effect.
-         */
+        // Animated overlay logic
         function startCoordShuffle() {
             const coordValX = document.getElementById('coord-val-x');
             const coordValY = document.getElementById('coord-val-y');
-            const bufferVal = document.getElementById('buffer-val');
             const latencyVal = document.getElementById('latency-val');
             const diagMsg = document.getElementById('diag-msg');
             const progressBar = document.getElementById('load-progress');
-            
-            const messages = [
-                "ESTABLISHING_VPN", 
-                "PARSING_MANIFEST", 
-                "AUTH_KEY_VERIFIED", 
-                "STREAMING_ASSETS", 
-                "MAPPING_NODES", 
-                "CALIBRATING_OPTICS",
-                "SYNCING_STOCK_API",
-                "DECRYPTING_ORDER_LOGS"
-            ];
-            
+            const messages = ["ESTABLISHING_VPN", "PARSING_MANIFEST", "AUTH_KEY_VERIFIED", "STREAMING_ASSETS", "MAPPING_NODES", "CALIBRATING_OPTICS"];
             let progress = 0;
-            progressBar.style.width = '0%';
-
             if (shuffleInterval) clearInterval(shuffleInterval);
             shuffleInterval = setInterval(() => {
-                const x = (Math.random() * 2 - 1).toFixed(6); 
-                const y = (Math.random() * 180).toFixed(6);
-                if(coordValX) coordValX.innerText = (parseFloat(x) * 1.5).toFixed(6);
-                if(coordValY) coordValY.innerText = (parseFloat(y) * 1.2).toFixed(6);
-                if(bufferVal) bufferVal.innerText = `0X${Math.floor(Math.random()*0xFFFFFF).toString(16).toUpperCase().padStart(6, '0')}`;
-                if(latencyVal) latencyVal.innerText = `${(Math.random() * 15 + 2).toFixed(2)}ms`;
-                
+                if(coordValX) coordValX.innerText = (Math.random() * 2).toFixed(6);
+                if(coordValY) coordValY.innerText = (Math.random() * 100).toFixed(6);
+                if(latencyVal) latencyVal.innerText = `${(Math.random() * 15).toFixed(2)}ms`;
                 if(progress < 100) {
                     progress += 1.5;
                     progressBar.style.width = progress + '%';
@@ -537,23 +537,15 @@
             }, 45);
         }
 
-        /**
-         * Handles view switching with the complex transition engine.
-         */
+        // View switching
         function switchView(viewId) {
             startCoordShuffle();
             overlay.classList.add('active');
-            
             setTimeout(() => {
                 document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-                const targetView = document.getElementById(viewId + '-view');
-                targetView.classList.remove('hidden');
-                targetView.scrollTop = 0;
+                document.getElementById(viewId + '-view').classList.remove('hidden');
                 body.classList.remove('scrolled');
-                
-                // Re-check lock status on view switch
                 isLocked();
-                
                 setTimeout(() => {
                     overlay.style.clipPath = 'polygon(100% 0, 100% 0, 100% 0, 100% 0)';
                     setTimeout(() => {
@@ -565,31 +557,35 @@
             }, 950);
         }
 
+        // Size picking
         function selectSize(btn) {
-            if (isLocked() || btn.style.cursor === 'default') return; 
+            const card = btn.closest('.product-card');
+            if (card.classList.contains('is-coming-soon')) return;
             const picker = btn.parentElement;
             picker.classList.remove('error');
             picker.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
             btn.classList.add('active');
         }
 
-        function addToCart(btn, name, price) {
-            if (isLocked() || btn.disabled) return; 
+        // Cart logic
+        function addToCart(btn, name) {
             const card = btn.closest('.product-card');
+            if (card.classList.contains('is-coming-soon')) return;
+            
             const sizePicker = card.querySelector('.size-picker');
             const selectedSizeEl = sizePicker.querySelector('.size-opt.active');
+            const price = parseInt(card.getAttribute('data-price'));
             
             if (!selectedSizeEl) {
                 sizePicker.classList.add('error');
                 const originalText = btn.innerText;
                 btn.innerText = "SELECT_SIZE";
-                setTimeout(() => { btn.innerText = originalText; }, 2000);
+                setTimeout(() => { btn.innerText = originalText; }, 1500);
                 return;
             }
             
             cart.push({ id: Date.now(), name, price, size: selectedSizeEl.innerText });
             updateCartUI();
-            
             btn.innerText = "ADDED_TO_LOG";
             setTimeout(() => { btn.innerText = "ADD_TO_ORDER"; }, 1000);
         }
@@ -597,14 +593,12 @@
         function updateCartUI() {
             const countEl = document.getElementById('cart-count');
             if (countEl) countEl.innerText = cart.length;
-            
             const items = document.getElementById('cart-items');
             if(!cart.length) {
-                items.innerHTML = '<div style="text-align: center; color: var(--ash); font-size: 10px; margin-top: 40px;">LOG_EMPTY</div>';
+                items.innerHTML = '<div style="text-align:center;color:var(--ash);font-size:10px;margin-top:40px;">LOG_EMPTY</div>';
                 document.getElementById('cart-total-value').innerText = '0 KSh';
                 return;
             }
-            
             let total = 0;
             items.innerHTML = cart.map(item => {
                 total += item.price;
@@ -614,10 +608,9 @@
                             <h4>${item.name}</h4>
                             <p>${item.size} | ${item.price.toLocaleString()} KSh</p>
                         </div>
-                        <button onclick="removeFromCart(${item.id})" style="background:none; border:none; color:var(--accent-red); font-size:10px; cursor:pointer;">REMOVE_LOG</button>
+                        <button onclick="removeFromCart(${item.id})" style="background:none;border:none;color:var(--accent-red);font-size:10px;cursor:pointer;">REMOVE</button>
                     </div>`;
             }).join('');
-            
             document.getElementById('cart-total-value').innerText = `${total.toLocaleString()} KSh`;
         }
 
@@ -626,140 +619,68 @@
             updateCartUI(); 
         }
 
-        function toggleCart() { 
-            if (isLocked()) return; 
-            cartDrawer.classList.toggle('open'); 
-        }
+        function toggleCart() { cartDrawer.classList.toggle('open'); }
 
+        // Checkout Terminal
         function openTerminal() {
-            if (isLocked() || !cart.length) return;
+            if (!cart.length) return;
             terminalModal.style.display = 'flex';
-            terminalInputContainer.style.display = 'flex';
             terminalInput.focus();
             terminalStep = 0;
-            terminalOutput.innerHTML = `
-                <div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div>
-                <div>[NODE] :: KENYA // 0.2942 S</div>
-                <br>
-                <div>Type 'YES' to authenticate and transmit order log.</div>`;
+            terminalOutput.innerHTML = `<div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div><br><div>Type 'YES' to authenticate and transmit order log.</div>`;
         }
 
         function processTerminalInput() {
             const val = terminalInput.value.trim().toUpperCase();
             terminalInput.value = '';
+            if (val === 'EXIT') { terminalModal.style.display = 'none'; return; }
             
-            const logMsg = (msg, color = 'var(--accent-green)') => {
-                const div = document.createElement('div');
-                div.style.color = color;
-                div.style.marginBottom = '4px';
-                div.innerText = `> ${msg}`;
-                terminalOutput.appendChild(div);
-                terminalOutput.scrollTop = terminalOutput.scrollHeight;
-            };
+            const div = document.createElement('div');
+            div.innerText = `> ${val}`;
+            terminalOutput.appendChild(div);
 
-            if (val === 'EXIT' || val === 'CLOSE') { 
-                terminalModal.style.display = 'none'; 
-                return; 
-            }
-            
-            if (val) logMsg(val, 'var(--paper)');
-
-            if (terminalStep === 0) {
-                if (val === 'YES') {
-                    logMsg("AUTHENTICATING...");
-                    setTimeout(() => {
-                        logMsg("SUCCESS: USER_ARCHIVE_VERIFIED");
-                        logMsg("TRANSMITTING_ORDER_MANIFEST...");
-                        terminalStep = 1;
-                        
-                        finalizeCheckout();
-                        
-                        terminalInputContainer.style.display = 'none';
-                        const alertDiv = document.createElement('div');
-                        alertDiv.className = 'terminal-alert';
-                        alertDiv.innerHTML = `
-                            <div style="font-weight: 900; color: var(--accent-red); margin-bottom: 10px;">ACTION_REQUIRED</div>
-                            <div style="font-size: 11px; margin-bottom: 15px;">Order manifest copied to clipboard. Make sure you paste the manifet on KÖCE insta direct/messages.</div>
-                            <button class="terminal-btn" id="final-redirect-btn" style="width: 100%; padding: 12px; font-weight: 900;">GO TO INSTAGRAM</button>
-                        `;
-                        terminalOutput.appendChild(alertDiv);
-                        
-                        document.getElementById('final-redirect-btn').onclick = () => {
-                            window.open(`https://www.instagram.com/direct/t/${INSTA_USERNAME}`, '_blank');
-                            terminalModal.style.display = 'none';
-                            cart = []; 
-                            updateCartUI();
-                        };
-                    }, 1200);
-                } else if (val !== '') { 
-                    logMsg("ERROR: INVALID COMMAND", 'var(--accent-red)'); 
-                }
+            if (terminalStep === 0 && val === 'YES') {
+                terminalStep = 1;
+                finalizeCheckout();
+                const alertDiv = document.createElement('div');
+                alertDiv.style.border = '1px solid var(--accent-red)';
+                alertDiv.style.padding = '15px';
+                alertDiv.style.marginTop = '15px';
+                alertDiv.innerHTML = `
+                    <p style="color:var(--accent-red);margin-bottom:10px;">ACTION_REQUIRED</p>
+                    <p style="font-size:11px;margin-bottom:15px;">Order manifest copied. Paste it in Instagram DM.</p>
+                    <button class="terminal-btn" onclick="window.open('https://www.instagram.com/direct/t/${INSTA_USERNAME}', '_blank')">OPEN INSTAGRAM</button>
+                `;
+                terminalOutput.appendChild(alertDiv);
             }
         }
 
-        terminalInput.addEventListener('keydown', (e) => { 
-            if (e.key === 'Enter') processTerminalInput(); 
-        });
+        terminalInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') processTerminalInput(); });
         terminalExecute.onclick = processTerminalInput;
 
         function finalizeCheckout() {
-    // Generate Metadata
-    const orderId = Math.floor(100000 + Math.random() * 899999);
-    const timestamp = new Date().toLocaleString('en-GB', { timeZone: 'Africa/Nairobi' });
-    const total = document.getElementById('cart-total-value').innerText;
-    
-    // Build the Detailed Manifest
-    let manifest = `--- KÖCE // STRUCTURAL WEAR ---\n`;
-    manifest += `ORDER_NODE: ANONYMOUS\n`;
-    manifest += `TIMESTAMP: ${timestamp} EAT\n`;
-    manifest += `MANIFEST_ID: #KÖCE-${orderId}\n`;
-    manifest += `-------------------------------\n\n`;
-    manifest += `LOGGED_ITEMS:\n`;
-    
-    // Map items with detail
-    manifest += cart.map(i => ` ${i.name.padEnd(20)} | SIZE: ${i.size} | VAL: ${i.price} KSh`).join('\n');
-    
-    manifest += `\n\n-------------------------------\n`;
-    manifest += `TOTAL_COMMIT: ${total}\n`;
-    manifest += `STATUS: AWAITING_AUTHENTICATION\n`;
-    manifest += `-------------------------------`;
+            const orderId = Math.floor(100000 + Math.random() * 899999);
+            const total = document.getElementById('cart-total-value').innerText;
+            let manifest = `--- KÖCE // ORDER_MANIFEST ---\nID: #KC-${orderId}\n\n`;
+            manifest += cart.map(i => ` [+] ${i.name} | SIZE: ${i.size} | ${i.price} KSh`).join('\n');
+            manifest += `\n\nTOTAL: ${total}\n----------------------------`;
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = manifest; dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+        }
 
-    // Copy to Clipboard Logic
-    const dummy = document.createElement("textarea");
-    document.body.appendChild(dummy);
-    dummy.value = manifest; 
-    dummy.select();
-    try {
-        document.execCommand('copy');
-    } catch (err) {
-        console.error('Buffer copy failed', err);
-    }
-    document.body.removeChild(dummy);
-
-    return manifest;
-}
-
+        // Scroll listener
         document.querySelectorAll('.view').forEach(v => v.addEventListener('scroll', (e) => {
-            if(e.target.scrollTop > 50) {
-                body.classList.add('scrolled');
-            } else {
-                body.classList.remove('scrolled');
-            }
+            if(e.target.scrollTop > 50) body.classList.add('scrolled');
+            else body.classList.remove('scrolled');
             e.target.querySelectorAll('.reveal').forEach(r => { 
-                if (r.getBoundingClientRect().top < window.innerHeight - 100) {
-                    r.classList.add('active'); 
-                }
+                if (r.getBoundingClientRect().top < window.innerHeight - 100) r.classList.add('active'); 
             });
         }));
 
-        window.onload = () => { 
-            isLocked(); 
-            updateCartUI(); 
-            document.querySelectorAll('.stock-val').forEach(el => {
-                const val = Math.floor(Math.random() * 20) + 80 ;
-                el.innerText = val;
-            });
-        };
+        window.onload = isLocked;
     </script>
 </body>
 </html>
