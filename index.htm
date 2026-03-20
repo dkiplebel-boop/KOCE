@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KÖCE | Structural Wear</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;700;900&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,8 +23,8 @@
             /* --- VAULT CONTROLS --- */
             --vault-lock-display: none; /* Toggle to 'none' to unlock shop */
             --vault-blur: 0px;      
-            --vault-opacity: 01;   
-            --static-opacity: 01;  
+            --vault-opacity: 1;   
+            --static-opacity: 1;  
         }
 
         /* -----------------------------------------------------------------------
@@ -195,13 +195,19 @@
         .terminal-body { font-size: 12px; line-height: 1.6; color: var(--accent-green); height: 280px; overflow-y: auto; display: flex; flex-direction: column; }
         .t-input-line { display: flex; gap: 10px; margin-top: 10px; align-items: center; }
         .t-prompt { color: var(--accent-red); white-space: nowrap; }
-        #t-input { background: none; border: none; color: var(--paper); font-family: inherit; font-size: inherit; outline: none; flex-grow: 1; }
+        
+        /* 16px font size on #t-input prevents iOS auto-zoom on focus */
+        #t-input { 
+            background: none; border: none; color: var(--paper); 
+            font-family: inherit; font-size: 16px; 
+            outline: none; flex-grow: 1; width: 50px;
+        }
         
         .terminal-btn {
             background: var(--accent-green);
             color: #000;
             border: none;
-            padding: 4px 12px;
+            padding: 8px 16px;
             font-family: inherit;
             font-size: 10px;
             font-weight: 900;
@@ -210,8 +216,10 @@
             border-radius: 4px;
             transition: 0.2s;
             box-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+            flex-shrink: 0;
         }
         .terminal-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 255, 102, 0.5); }
+        .terminal-btn:active { transform: scale(0.95); }
 
         /* -----------------------------------------------------------------------
         [STORE_GRID_ELEMENTS]
@@ -245,7 +253,6 @@
         /* [COMING_SOON_LOGIC] */
         .img-overlay { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); color: var(--paper); font-size: 10px; letter-spacing: 0.4em; font-weight: 900; z-index: 5; text-transform: uppercase; }
         
-        /* Apply this class to product-card to disable it */
         .product-card.is-coming-soon .img-overlay { display: flex; }
         .product-card.is-coming-soon .add-btn { background: rgba(255,255,255,0.05); color: #444; border-color: #333; cursor: not-allowed; pointer-events: none; }
         .product-card.is-coming-soon .size-opt { opacity: 0.2; cursor: default; pointer-events: none; }
@@ -310,7 +317,7 @@
                 <span style="font-size: 9px; color: #555; margin-left: auto;">KÖCE_REMOTE_SHELL</span>
             </div>
             <div id="terminal-output" class="terminal-body">
-                <div>[SYSTEM] :: Initializing secure transaction protocol...</div>
+                <div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div>
                 <br>
                 <div>Type 'YES' to authenticate and transmit order log.</div>
             </div>
@@ -375,12 +382,9 @@
                 
                 <div class="store-grid">
                     
-                    <!-- EDITABLE PRODUCT CARD 1 -->
-                    <!-- Remove 'is-coming-soon' to activate card -->
                     <div class="product-card" data-price="700">
                         <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: 
-                            url('https://lh3.googleusercontent.com/u/0/d/1mfxpAh6DMSXEiWlrh8m5KQ5RGGVpum0t');">
+                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1mfxpAh6DMSXEiWlrh8m5KQ5RGGVpum0t');">
                             <div class="img-overlay">COMING_SOON</div>
                         </div>
                         <div class="product-info"><h3>B-01 TEE</h3><span>700 KSh</span></div>
@@ -392,14 +396,9 @@
                         <button class="add-btn" onclick="addToCart(this, 'B-01 TEE')">ADD_TO_ORDER</button>
                     </div>
 
-                   
-                    
-                    
-                    <!-- EDITABLE PRODUCT CARD 2 -->
                     <div class="product-card" data-price="700">
                         <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: 
-                            url('https://lh3.googleusercontent.com/u/0/d/16ayCPTTsHTRrIt672FkLHyqyzGjOyzdL');">
+                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/16ayCPTTsHTRrIt672FkLHyqyzGjOyzdL');">
                             <div class="img-overlay">COMING_SOON</div>
                         </div>
                         <div class="product-info"><h3>W-01 TEE</h3><span>700 KSh</span></div>
@@ -411,14 +410,9 @@
                         <button class="add-btn" onclick="addToCart(this, 'W-01 TEE')">ADD_TO_ORDER</button>
                     </div>
 
-                    
-                    
-                    
-                    <!-- EDITABLE PRODUCT CARD 3 -->
                      <div class="product-card" data-price="800">
                         <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: 
-                            url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');">
+                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');">
                             <div class="img-overlay">COMING_SOON</div>
                         </div>
                         <div class="product-info"><h3>B-01_v2 TEE</h3><span>800 KSh</span></div>
@@ -430,15 +424,9 @@
                         <button class="add-btn" onclick="addToCart(this, 'B-02 COLLARED_TEE')">ADD_TO_ORDER</button>
                     </div>
 
-                    
-                    
-                    
-                    <!-- COMING SOON EXAMPLE -->
-                    <!-- Add 'is-coming-soon' to disable this card -->
                     <div class="product-card" data-price="800">
                         <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">100</span>%</div>
-                        <div class="product-img" style="background-image: 
-                            url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');">
+                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');">
                             <div class="img-overlay">COMING_SOON</div>
                         </div>
                         <div class="product-info"><h3>W-01_v2 TEE</h3><span>800 KSh</span></div>
@@ -450,39 +438,32 @@
                         <button class="add-btn" onclick="addToCart(this, 'W-02 COLLARED_TEE')">ADD_TO_ORDER</button>
                     </div>
 
-                       
-                
-                
-                <div class="product-card is-coming-soon" data-price="0">
+                    <div class="product-card is-coming-soon" data-price="0">
                         <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: <span class="stock-val">91</span>%</div>
-                        <div class="product-img" style="background-image: 
-                            url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');">
+                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');">
                             <div class="img-overlay">COMING_SOON</div>
                         </div>
                         <div class="product-info"><h3>B-02 COLLARED</h3><span>TBD</span></div>
                         <div class="size-picker">
-                            <div class="size-opt" onclick="selectSize(this)">S</div>
-                            <div class="size-opt" onclick="selectSize(this)">M</div>
-                            <div class="size-opt" onclick="selectSize(this)">L</div>
+                            <div class="size-opt">S</div>
+                            <div class="size-opt">M</div>
+                            <div class="size-opt">L</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'B-02 COLLARED')">LOCKED</button>
+                        <button class="add-btn">LOCKED</button>
                     </div>
 
-                    
-                
-                <div class="product-card is-coming-soon" data-price="0">
+                    <div class="product-card is-coming-soon" data-price="0">
                         <div class="stock-pulse"><span class="pulse-icon"></span>STOCK_STATUS: 0%</div>
-                        <div class="product-img" style="background-image: 
-                            url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');">
+                        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');">
                             <div class="img-overlay">COMING_SOON</div>
                         </div>
                         <div class="product-info"><h3>W-02 COLLARED</h3><span>TBD</span></div>
                         <div class="size-picker">
-                            <div class="size-opt" onclick="selectSize(this)">S</div>
-                            <div class="size-opt" onclick="selectSize(this)">M</div>
-                            <div class="size-opt" onclick="selectSize(this)">L</div>
+                            <div class="size-opt">S</div>
+                            <div class="size-opt">M</div>
+                            <div class="size-opt">L</div>
                         </div>
-                        <button class="add-btn" onclick="addToCart(this, 'W-02 COLLARED')">LOCKED</button>
+                        <button class="add-btn">LOCKED</button>
                     </div>
 
                 </div>
@@ -511,7 +492,8 @@
         function isLocked() {
             const locked = getComputedStyle(document.documentElement).getPropertyValue('--vault-lock-display').trim() === 'flex';
             if (cartBtn) cartBtn.style.display = locked ? 'none' : 'flex';
-            document.querySelector('.blur-target').style.pointerEvents = locked ? 'none' : 'auto';
+            const blurContainer = document.querySelector('.blur-target');
+            if (blurContainer) blurContainer.style.pointerEvents = locked ? 'none' : 'auto';
             return locked;
         }
 
@@ -634,6 +616,7 @@
             const val = terminalInput.value.trim().toUpperCase();
             terminalInput.value = '';
             if (val === 'EXIT') { terminalModal.style.display = 'none'; return; }
+            if (val === '') return;
             
             const div = document.createElement('div');
             div.innerText = `> ${val}`;
@@ -652,11 +635,22 @@
                     <button class="terminal-btn" onclick="window.open('https://www.instagram.com/direct/t/${INSTA_USERNAME}', '_blank')">OPEN INSTAGRAM</button>
                 `;
                 terminalOutput.appendChild(alertDiv);
+            } else {
+                const errDiv = document.createElement('div');
+                errDiv.innerText = `[ERROR] :: INVALID_COMMAND: ${val}`;
+                errDiv.style.color = 'var(--accent-red)';
+                terminalOutput.appendChild(errDiv);
             }
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
         }
 
         terminalInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') processTerminalInput(); });
-        terminalExecute.onclick = processTerminalInput;
+        
+        // Execute button logic for mobile
+        terminalExecute.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            processTerminalInput();
+        });
 
         function finalizeCheckout() {
             const orderId = Math.floor(100000 + Math.random() * 899999);
@@ -664,9 +658,11 @@
             let manifest = `--- KÖCE // ORDER_MANIFEST ---\nID: #KC-${orderId}\n\n`;
             manifest += cart.map(i => ` [+] ${i.name} | SIZE: ${i.size} | ${i.price} KSh`).join('\n');
             manifest += `\n\nTOTAL: ${total}\n----------------------------`;
+            
             const dummy = document.createElement("textarea");
             document.body.appendChild(dummy);
-            dummy.value = manifest; dummy.select();
+            dummy.value = manifest; 
+            dummy.select();
             document.execCommand('copy');
             document.body.removeChild(dummy);
         }
