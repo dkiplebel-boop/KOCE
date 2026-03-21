@@ -24,7 +24,7 @@
             
             /* --- VAULT CONTROLS --- */
             --vault-lock-display: flex; /* Set to 'none' to unlock store and enable buttons/cart */
-            --vault-opacity: 0.1;   
+            --vault-opacity: .1;   
             --vault-blur: 17px; 
         }
 
@@ -343,6 +343,26 @@
 
         @media (max-width: 1000px) { .store-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 650px) { .store-grid { grid-template-columns: 1fr; } .product-img { max-height: 280px; } }
+
+     /* 1. COMPLETELY DISABLE INTERACTION WHEN LOCKED */
+body:has(#vault-lock[style*="display: flex"]) #store-view {
+    pointer-events: none !important; /* Disables all clicks, buttons, and hovers */
+    user-select: none !important;    /* Prevents text highlighting/copying */
+    -webkit-user-select: none;
+    cursor: not-allowed;
+}
+
+/* 2. RE-ENABLE INTERACTION FOR THE LOCK CONTENT ONLY */
+/* This allows the user to still click things INSIDE the lock message if needed */
+#vault-lock {
+    pointer-events: all !important;
+}
+
+/* 3. EXTRA PRECAUTION FOR BUTTONS */
+body:has(#vault-lock[style*="display: flex"]) .add-btn,
+body:has(#vault-lock[style*="display: flex"]) .size-opt {
+    tab-index: -1; /* Prevents keyboard navigating to buttons */
+}
     </style>
 </head>
 <body>
@@ -425,19 +445,19 @@
             <div class="reveal">
                 <span class="section-label">02 // THE ORIGIN</span>
                 <p class="philosophy-text">
-                    Born in the quiet of <b>Nakuru</b>, away from the reach of the masses. <b>KÖCE</b> was not built in a room; it was <b>engineered in a room</b>. We take the local soul of Kenyan craftsmanship and refine it through a lens of <b>universal simplicity</b>. Rooted in the Rift Valley, but built for the <b>global theater</b>.
+                    Born in the quiet of [<b>TBD</b>], away from the reach of the masses. <b>KÖCE</b> was not built in a room; it was <b>engineered in a room</b>. We take the local soul of Kenyan craftsmanship and refine it through a lens of <b>universal simplicity</b>. Rooted in the Rift Valley, but built for the <b>global theater</b>.
                 </p>
             </div>
 
             <div class="reveal">
                 <span class="section-label">03 // THE DESIGNER</span>
                 <p class="philosophy-text">
-                    A <b>singular vision</b> by <b>Darren KC</b>. One room. A <b>sketchbook</b>, a <b>laptop</b>, and a commitment to the <b>"how and why"</b> of construction. Every piece begins as a <b>hand-drawn line</b> on paper before being translated into a <b>digital blueprint</b>. <b>KÖCE</b> is the personal output of a designer who values the <b>architecture of clothing</b> over the passing trends of the season.
+                    A <b>singular vision</b> by [<b>TBD</b>]. One room. A <b>sketchbook</b>, a <b>laptop</b>, and a commitment to the <b>"how and why"</b> of construction. Every piece begins as a <b>hand-drawn line</b> on paper before being translated into a <b>digital blueprint</b>. <b>KÖCE</b> is the personal output of a designer who values the <b>architecture of clothing</b> over the passing trends of the season.
                 </p>
             </div>
         </section>
 
-        <footer class="page-footer">© 2026 DARREN KC // 0.2942° S, 36.0677° E</footer>
+        <footer class="page-footer">© 2026  // 0.2942° S, 36.0677° E</footer>
     </div>
 
     <!-- STORE VIEW -->
@@ -714,7 +734,7 @@
         terminalInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') processTerminalInput(); });
 
         function finalizeCheckout() {
-            const orderId = `KC-${Math.floor(1000 + Math.random() * 8999)}`;
+            const orderId = `KÖCE-${Math.floor(1000 + Math.random() * 8999)}`;
             const date = new Date().toLocaleDateString();
             const time = new Date().toLocaleTimeString();
             
