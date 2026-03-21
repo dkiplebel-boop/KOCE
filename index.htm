@@ -25,7 +25,7 @@
             /* --- VAULT CONTROLS --- */
             --vault-lock-display: flex; /* Set to 'none' to unlock store and enable buttons/cart */
             --vault-opacity: .1;   
-            --vault-blur: 19px; 
+            --vault-blur: 18px; 
         }
 
         /* -----------------------------------------------------------------------
@@ -326,10 +326,43 @@
         .product-info h3 { font-size: 12px; letter-spacing: 0.1em; font-weight: 400; }
         .product-info span { font-size: 12px; font-weight: 700; color: var(--ash); }
 
-        .size-picker { display: flex; gap: 8px; margin-bottom: 20px; }
-        .size-opt { width: 32px; height: 32px; border: 1px solid rgba(160, 160, 160, 0.2); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--ash); cursor: pointer; transition: 0.3s; }
-        .size-opt:hover { border-color: var(--paper); color: var(--paper); }
-        .size-opt.active { background: var(--paper); color: var(--obsidian); border-color: var(--paper); }
+        .size-picker {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.size-opt {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--ash);
+    cursor: pointer;
+    transition: all 0.3s var(--bezier);
+}
+
+.size-opt:hover {
+    border-color: var(--paper);
+    color: var(--paper);
+}
+
+.size-opt.active {
+    background: var(--paper);
+    color: var(--obsidian);
+    border-color: var(--paper);
+    font-weight: 900;
+}
+
+/* Coming soon interaction block */
+.is-coming-soon .size-opt {
+    cursor: default;
+    opacity: 0.3;
+}
         .size-picker.error { border: 1px solid var(--accent-red); padding: 5px; border-radius: 8px; background: rgba(255,0,0,0.05); }
 
         .add-btn { width: 100%; padding: 14px; background: none; border: 1px solid var(--paper); color: var(--paper); font-size: 10px; letter-spacing: 0.2em; border-radius: 8px; cursor: pointer; transition: 0.3s; }
@@ -759,7 +792,7 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         
         
         
-        <div class="store-grid" style="padding-top: 120px;">
+<div class="store-grid" style="padding-top: 120px;">
     <div class="product-card" id="card-v1">
         <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
         <div class="product-img" id="img-v1">
@@ -773,15 +806,15 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         </div>
         <div class="product-info"><h3 id="title-v1"></h3><span id="price-v1"></span></div>
         <div class="color-picker" id="picker-v1"></div>
+        <div class="size-picker" id="sizes-v1">
+            <div class="size-opt" onclick="selectSize(this, 'v1')">S</div>
+            <div class="size-opt" onclick="selectSize(this, 'v1')">M</div>
+            <div class="size-opt" onclick="selectSize(this, 'v1')">L</div>
+        </div>
         <button class="add-btn" onclick="addToCart(this, document.getElementById('title-v1').innerText)">ADD_TO_ORDER</button>
     </div>
 
-    
-            
-            
-            
-            
-            <div class="product-card" id="card-v2">
+    <div class="product-card" id="card-v2">
         <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
         <div class="product-img" id="img-v2">
             <div class="spec-sheet">
@@ -794,36 +827,66 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         </div>
         <div class="product-info"><h3 id="title-v2"></h3><span id="price-v2"></span></div>
         <div class="color-picker" id="picker-v2"></div>
+        <div class="size-picker" id="sizes-v2">
+            <div class="size-opt" onclick="selectSize(this, 'v2')">S</div>
+            <div class="size-opt" onclick="selectSize(this, 'v2')">M</div>
+            <div class="size-opt" onclick="selectSize(this, 'v2')">L</div>
+        </div>
         <button class="add-btn" onclick="addToCart(this, document.getElementById('title-v2').innerText)">ADD_TO_ORDER</button>
     </div>
 
-    
-            
-            
-            
-            <div class="product-card is-coming-soon" id="card-v3">
+    <div class="product-card is-coming-soon" id="card-v3">
         <div class="product-img" id="img-v3"><div class="img-overlay">COMING_SOON</div></div>
         <div class="product-info"><h3 id="title-v3"></h3><span>TBD</span></div>
         <div class="color-picker" id="picker-v3"></div>
+        <div class="size-picker">
+            <div class="size-opt">S</div>
+            <div class="size-opt">M</div>
+            <div class="size-opt">L</div>
+        </div>
     </div>
 
-    
-            
-            
-            <div class="product-card is-coming-soon" id="card-collared">
+    <div class="product-card is-coming-soon" id="card-h1">
+        <div class="product-img" id="img-h1"><div class="img-overlay">COMING_SOON</div></div>
+        <div class="product-info"><h3 id="title-h1"></h3><span>TBD</span></div>
+        <div class="color-picker" id="picker-h1"></div>
+        <div class="size-picker">
+            <div class="size-opt">M</div>
+            <div class="size-opt">L</div>
+        </div>
+    </div>
+
+    <div class="product-card is-coming-soon" id="card-h2">
+        <div class="product-img" id="img-h2"><div class="img-overlay">COMING_SOON</div></div>
+        <div class="product-info"><h3 id="title-h2"></h3><span>TBD</span></div>
+        <div class="color-picker" id="picker-h2"></div>
+        <div class="size-picker">
+            <div class="size-opt">M</div>
+            <div class="size-opt">L</div>
+        </div>
+    </div>
+
+    <div class="product-card is-coming-soon" id="card-collared">
         <div class="product-img" id="img-collared"><div class="img-overlay">COMING_SOON</div></div>
         <div class="product-info"><h3 id="title-collared"></h3><span>TBD</span></div>
         <div class="color-picker" id="picker-collared"></div>
+        <div class="size-picker">
+            <div class="size-opt">S</div>
+            <div class="size-opt">M</div>
+            <div class="size-opt">L</div>
+        </div>
     </div>
 
-    
-            
-            <div class="product-card is-coming-soon" id="card-lt" style="border: 1px solid var(--accent-yellow);">
+    <div class="product-card is-coming-soon" id="card-lt" style="border: 1px solid var(--accent-yellow);">
         <div class="product-img" id="img-lt"><div class="img-overlay" style="color:var(--accent-yellow)">LT_LIMITED</div></div>
         <div class="product-info"><h3 id="title-lt"></h3><span>TBD</span></div>
+        <div class="size-picker">
+            <div class="size-opt">S</div>
+            <div class="size-opt">M</div>
+            <div class="size-opt">L</div>
+        </div>
     </div>
-</div> 
-    
+</div>
     <script>
         
    const overlay = document.getElementById('transition-overlay');
@@ -1053,6 +1116,20 @@ const PRODUCTS_CONFIG = {
             white: { title: "W-03 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_", spec: "V3_PROTO_W" }
         }
     },
+
+    h1: {
+        variants: {
+            black: { title: "B-H1 HOODIE", img: "https://lh3.googleusercontent.com/u/0/d/1EZG_sOJW8WDIsrMENgdFKHeR4bNAaaJp", spec: "400GSM_STRUCTURAL_FLEECE" },
+            white: { title: "W-H1 HOODIE", img: "https://lh3.googleusercontent.com/u/0/d/14TfkJLzfKszs6-BGhDmI5n3qsMIdLWyT", spec: "400GSM_STRUCTURAL_FLEECE" }
+        }
+    },
+    h2: {
+        variants: {
+            black: { title: "B-H2 HOODIE", img: "https://lh3.googleusercontent.com/u/0/d/1uZ3hg7UNuPNIhKzI2BkvxfUY0gb0jDpe", spec: "OVERSIZED_HEAVY_KNIT" },
+            white: { title: "W-H2 HOODIE", img: "https://lh3.googleusercontent.com/u/0/d/1rF729qTwij8YifyBmVqiFNtemY3Zc3as", spec: "OVERSIZED_HEAVY_KNIT" }
+        }
+      },
+
     collared: {
         variants: {
             black: { title: "B-POLO", img: "https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E", spec: "POLO_01_B" },
