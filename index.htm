@@ -25,7 +25,7 @@
             /* --- VAULT CONTROLS --- */
             --vault-lock-display: flex; /* Set to 'none' to unlock store and enable buttons/cart */
             --vault-opacity: .1;   
-            --vault-blur: 17px; 
+            --vault-blur: 19px; 
         }
 
         /* -----------------------------------------------------------------------
@@ -319,7 +319,7 @@
             overflow: hidden; 
         }
 
-        .img-overlay { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); color: var(--paper); font-size: 10px; letter-spacing: 0.4em; font-weight: 900; z-index: 5; text-transform: uppercase; }
+        .img-overlay { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(19px); color: var(--paper); font-size: 10px; letter-spacing: 0.4em; font-weight: 900; z-index: 5; text-transform: uppercase; }
         .product-card.is-coming-soon .img-overlay { display: flex; }
 
         .product-info { display: flex; justify-content: space-between; margin-bottom: 20px; }
@@ -619,6 +619,33 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
 
 .spec-label { color: var(--accent-blue); opacity: 0.8; }
 .spec-value { color: #fff; font-weight: bold; }
+
+     /* --- COLOR SWATCH SYSTEM --- */
+.color-picker {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.color-opt {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: transform 0.3s var(--bezier);
+}
+
+.color-opt.active {
+    transform: scale(1.2);
+    border: 1.5px solid var(--paper);
+}
+
+.color-opt.black { background: #000; }
+.color-opt.white { background: #fff; border: 1px solid #444; }
+
+/* LT (Limited) Styling */
+.card-lt { border: 1px solid var(--accent-yellow) !important; }
     </style>
 </head>
 <body>
@@ -708,6 +735,9 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         <footer class="page-footer">© 2026  // 0.2942° S, 36.0677° E</footer>
     </div>
 
+    
+    
+    
     <div id="store-view" class="view hidden">
         <div id="vault-lock" style="display: var(--vault-lock-display);">
     <div class="static-noise"></div>
@@ -725,166 +755,75 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     </div>
 </div>
 
+   
+        
+        
+        
+        <div class="store-grid" style="padding-top: 120px;">
+    <div class="product-card" id="card-v1">
+        <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
+        <div class="product-img" id="img-v1">
+            <div class="spec-sheet">
+                <div>
+                    <div class="spec-header">// CORE_SPEC_V1.0</div>
+                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value" id="spec-v1"></span></div>
+                </div>
+                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button>
+            </div>
+        </div>
+        <div class="product-info"><h3 id="title-v1"></h3><span id="price-v1"></span></div>
+        <div class="color-picker" id="picker-v1"></div>
+        <button class="add-btn" onclick="addToCart(this, document.getElementById('title-v1').innerText)">ADD_TO_ORDER</button>
+    </div>
+
     
-    <div class="store-grid" style="padding-top: 120px;">
+            
+            
+            
+            
+            <div class="product-card" id="card-v2">
+        <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
+        <div class="product-img" id="img-v2">
+            <div class="spec-sheet">
+                <div>
+                    <div class="spec-header">// CORE_SPEC_V2.0</div>
+                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value" id="spec-v2"></span></div>
+                </div>
+                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button>
+            </div>
+        </div>
+        <div class="product-info"><h3 id="title-v2"></h3><span id="price-v2"></span></div>
+        <div class="color-picker" id="picker-v2"></div>
+        <button class="add-btn" onclick="addToCart(this, document.getElementById('title-v2').innerText)">ADD_TO_ORDER</button>
+    </div>
+
     
-    <div class="product-card" data-price="750">
-        <div class="spec-trigger-container">
-            <button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button>
-        </div>
-        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1wD9Wc516nh0NWiyztYHUW_7lbflZWCc6');">
-            <div class="spec-sheet">
-                <div>
-                    <div class="spec-header">// CORE_SPEC_SHEET_V1.0</div>
-                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value">STRUCTURAL_B_01</span></div>
-                    <div class="spec-line"><span class="spec-label">FABRIC</span><span class="spec-value">180GSM_PURE_COTTON</span></div>
-                    <div class="spec-line"><span class="spec-label">THREAD</span><span class="spec-value">100%_COTTON</span></div>
-                    <div class="spec-line"><span class="spec-label">ORIGIN</span><span class="spec-value">KE_PROTOTYPE</span></div>
-                </div>
-                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE_DECODE</button>
-            </div>
-        </div>
-        <div class="product-info"><h3>B-01 TEE</h3><span>750 KSh</span></div>
-        <div class="size-picker">
-            <div class="size-opt" onclick="selectSize(this)">S</div>
-            <div class="size-opt" onclick="selectSize(this)">M</div>
-            <div class="size-opt" onclick="selectSize(this)">L</div>
-        </div>
-        <button class="add-btn" onclick="addToCart(this, 'B-01 TEE')">ADD_TO_ORDER</button>
+            
+            
+            
+            <div class="product-card is-coming-soon" id="card-v3">
+        <div class="product-img" id="img-v3"><div class="img-overlay">COMING_SOON</div></div>
+        <div class="product-info"><h3 id="title-v3"></h3><span>TBD</span></div>
+        <div class="color-picker" id="picker-v3"></div>
     </div>
 
-    <div class="product-card" data-price="750">
-        <div class="spec-trigger-container">
-            <button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button>
-        </div>
-        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1fbmAg9UjyOcyTVGXasNSQsaQ42Q4oJc1');">
-            <div class="spec-sheet">
-                <div>
-                    <div class="spec-header">// CORE_SPEC_SHEET_V1.0</div>
-                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value">STRUCTURAL_W_01</span></div>
-                    <div class="spec-line"><span class="spec-label">FABRIC</span><span class="spec-value">180GSM_PURE_COTTON</span></div>
-                    <div class="spec-line"><span class="spec-label">THREAD</span><span class="spec-value">100%_COTTON</span></div>
-                    <div class="spec-line"><span class="spec-label">ORIGIN</span><span class="spec-value">KE_PROTOTYPE</span></div>
-                </div>
-                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE_DECODE</button>
-            </div>
-        </div>
-        <div class="product-info"><h3>W-01 TEE</h3><span>750 KSh</span></div>
-        <div class="size-picker">
-            <div class="size-opt" onclick="selectSize(this)">S</div>
-            <div class="size-opt" onclick="selectSize(this)">M</div>
-            <div class="size-opt" onclick="selectSize(this)">L</div>
-        </div>
-        <button class="add-btn" onclick="addToCart(this, 'W-01 TEE')">ADD_TO_ORDER</button>
+    
+            
+            
+            <div class="product-card is-coming-soon" id="card-collared">
+        <div class="product-img" id="img-collared"><div class="img-overlay">COMING_SOON</div></div>
+        <div class="product-info"><h3 id="title-collared"></h3><span>TBD</span></div>
+        <div class="color-picker" id="picker-collared"></div>
     </div>
 
-    <div class="product-card" data-price="750">
-        <div class="spec-trigger-container">
-            <button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button>
-        </div>
-        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/13dqlWO0dYEEDTw4ZAnaDs5LJogfs02as');">
-            <div class="spec-sheet">
-                <div>
-                    <div class="spec-header">// CORE_SPEC_SHEET_V2.0</div>
-                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value">STRUCTURAL_B_01</span></div>
-                    <div class="spec-line"><span class="spec-label">FABRIC</span><span class="spec-value">180GSM_PURE_COTTON</span></div>
-                    <div class="spec-line"><span class="spec-label">THREAD</span><span class="spec-value">100%_COTTON</span></div>
-                    <div class="spec-line"><span class="spec-label">ORIGIN</span><span class="spec-value">KE_PROTOTYPE</span></div>
-                </div>
-                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE_DECODE</button>
-            </div>
-        </div>
-        <div class="product-info"><h3>B-01_v2 TEE</h3><span>750 KSh</span></div>
-        <div class="size-picker">
-            <div class="size-opt" onclick="selectSize(this)">S</div>
-            <div class="size-opt" onclick="selectSize(this)">M</div>
-            <div class="size-opt" onclick="selectSize(this)">L</div>
-        </div>
-        <button class="add-btn" onclick="addToCart(this, 'B-01_v2 TEE')">ADD_TO_ORDER</button>
+    
+            
+            <div class="product-card is-coming-soon" id="card-lt" style="border: 1px solid var(--accent-yellow);">
+        <div class="product-img" id="img-lt"><div class="img-overlay" style="color:var(--accent-yellow)">LT_LIMITED</div></div>
+        <div class="product-info"><h3 id="title-lt"></h3><span>TBD</span></div>
     </div>
-
-    <div class="product-card" data-price="750">
-        <div class="spec-trigger-container">
-            <button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button>
-        </div>
-        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1scyEc8HKKFTD3vxJGW4o7dnD83fKLB7K');">
-            <div class="spec-sheet">
-                <div>
-                    <div class="spec-header">// CORE_SPEC_SHEET_V2.0</div>
-                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value">STRUCTURAL_W_01</span></div>
-                    <div class="spec-line"><span class="spec-label">FABRIC</span><span class="spec-value">180GSM_PURE_COTTON</span></div>
-                    <div class="spec-line"><span class="spec-label">THREAD</span><span class="spec-value">100%_COTTON</span></div>
-                    <div class="spec-line"><span class="spec-label">ORIGIN</span><span class="spec-value">KE_PROTOTYPE</span></div>
-                </div>
-                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE_DECODE</button>
-            </div>
-        </div>
-        <div class="product-info"><h3>W-01_v2 TEE</h3><span>750 KSh</span></div>
-        <div class="size-picker">
-            <div class="size-opt" onclick="selectSize(this)">S</div>
-            <div class="size-opt" onclick="selectSize(this)">M</div>
-            <div class="size-opt" onclick="selectSize(this)">L</div>
-        </div>
-        <button class="add-btn" onclick="addToCart(this, 'W-01_v2 TEE')">ADD_TO_ORDER</button>
-    </div>
-
-    <div class="product-card is-coming-soon">
-        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m');">
-            <div class="img-overlay">COMING_SOON</div>
-        </div>
-        <div class="product-info"><h3>B_01_v3E TEE</h3><span>TBD</span></div>
-        <div class="size-picker">
-            <div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div>
-        </div>
-        <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
-    </div>
-
-    <div class="product-card is-coming-soon">
-        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_');">
-            <div class="img-overlay">COMING_SOON</div>
-        </div>
-        <div class="product-info"><h3>W_01_v3E TEE</h3><span>TBD</span></div>
-        <div class="size-picker">
-            <div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div>
-        </div>
-        <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
-    </div>
-
-    <div class="product-card is-coming-soon">
-        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1uY92BUQHDjTtk0v_0vqPTqyN7OeHY_uk');">
-            <div class="img-overlay">COMING_SOON</div>
-        </div>
-        <div class="product-info"><h3>P_LT_v1 COLLARED</h3><span>TBD</span></div>
-        <div class="size-picker">
-            <div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div>
-        </div>
-        <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
-    </div>
-
-    <div class="product-card is-coming-soon">
-        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');">
-            <div class="img-overlay">COMING_SOON</div>
-        </div>
-        <div class="product-info"><h3>B-02 COLLARED</h3><span>TBD</span></div>
-        <div class="size-picker">
-            <div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div>
-        </div>
-        <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
-    </div>
-
-    <div class="product-card is-coming-soon">
-        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');">
-            <div class="img-overlay">COMING_SOON</div>
-        </div>
-        <div class="product-info"><h3>W-02 COLLARED</h3><span>TBD</span></div>
-        <div class="size-picker">
-            <div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div>
-        </div>
-        <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
-    </div>
-
-</div>
-
+</div> 
+    
     <script>
         
    const overlay = document.getElementById('transition-overlay');
@@ -1091,6 +1030,86 @@ const vaultCountdown = setInterval(() => {
         sheet.classList.toggle('is-active');
     }
 }
+
+      // --- PRODUCT DATABASE: EDIT EVERYTHING HERE ---
+const PRODUCTS_CONFIG = {
+    v1: {
+        price: "750 KSh",
+        variants: {
+            black: { title: "B-01 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1wD9Wc516nh0NWiyztYHUW_7lbflZWCc6", spec: "STRUCTURAL_B_01" },
+            white: { title: "W-01 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1fbmAg9UjyOcyTVGXasNSQsaQ42Q4oJc1", spec: "STRUCTURAL_W_01" }
+        }
+    },
+    v2: {
+        price: "750 KSh",
+        variants: {
+            black: { title: "B-02", img: "https://lh3.googleusercontent.com/u/0/d/13dqlWO0dYEEDTw4ZAnaDs5LJogfs02as", spec: "STRUCTURAL_B_02" },
+            white: { title: "W-02 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1scyEc8HKKFTD3vxJGW4o7dnD83fKLB7K", spec: "STRUCTURAL_W_02" }
+        }
+    },
+    v3: {
+        variants: {
+            black: { title: "B-03 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m", spec: "V3_PROTO_B" },
+            white: { title: "W-03 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_", spec: "V3_PROTO_W" }
+        }
+    },
+    collared: {
+        variants: {
+            black: { title: "B-POLO", img: "https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E", spec: "POLO_01_B" },
+            white: { title: "W-POLO", img: "https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax", spec: "POLO_01_W" }
+        }
+    },
+    
+    lt: {
+        single: { title: "LT-01 PRIVÉ", img: "https://lh3.googleusercontent.com/u/0/d/1uY92BUQHDjTtk0v_0vqPTqyN7OeHY_uk", spec: "LIMITED_LT_01" }
+    }
+};
+
+// --- LOGIC ENGINE (Don't change this part unless you want to change how it works) ---
+function initStore() {
+    for (const [id, data] of Object.entries(PRODUCTS_CONFIG)) {
+        const titleEl = document.getElementById(`title-${id}`);
+        const priceEl = document.getElementById(`price-${id}`);
+        const pickerEl = document.getElementById(`picker-${id}`);
+
+        if (priceEl) priceEl.innerText = data.price || "TBD";
+
+        if (data.variants) {
+            // Build the color buttons
+            Object.keys(data.variants).forEach((color, index) => {
+                const btn = document.createElement('div');
+                btn.className = `color-opt ${color} ${index === 0 ? 'active' : ''}`;
+                btn.onclick = () => updateCard(id, color);
+                pickerEl.appendChild(btn);
+            });
+            // Set initial state (default to black)
+            updateCard(id, 'black');
+        } else if (data.single) {
+            // Handle LT (Limited) which has no picker
+            document.getElementById(`img-${id}`).style.backgroundImage = `url('${data.single.img}')`;
+            titleEl.innerText = data.single.title;
+        }
+    }
+}
+
+function updateCard(id, color) {
+    const config = PRODUCTS_CONFIG[id].variants[color];
+    const card = document.getElementById(`card-${id}`);
+    
+    document.getElementById(`img-${id}`).style.backgroundImage = `url('${config.img}')`;
+    document.getElementById(`title-${id}`).innerText = config.title;
+    
+    const spec = document.getElementById(`spec-${id}`);
+    if (spec) spec.innerText = config.spec;
+
+    // Update active dot
+    const dots = document.querySelectorAll(`#picker-${id} .color-opt`);
+    dots.forEach(d => d.classList.toggle('active', d.classList.contains(color)));
+}
+
+// Start the store
+window.addEventListener('DOMContentLoaded', initStore);
+
 </script>
 </body>
 </html>
