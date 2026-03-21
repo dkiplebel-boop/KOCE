@@ -23,9 +23,9 @@
             --radius: 12px; 
             
             /* --- VAULT CONTROLS --- */
-            --vault-lock-display: none; /* Set to 'none' to unlock store and enable buttons/cart */
-            --vault-opacity: 1;   
-            --vault-blur: 0px; 
+            --vault-lock-display: flex; /* Set to 'none' to unlock store and enable buttons/cart */
+            --vault-opacity: .1;   
+            --vault-blur: 17px; 
         }
 
         /* -----------------------------------------------------------------------
@@ -145,39 +145,97 @@
         [TERMINAL_SYSTEM]
         -----------------------------------------------------------------------
         */
-        #terminal-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000;
-            display: none; justify-content: center; align-items: flex-start;
-            padding-top: 20px;
-            backdrop-filter: blur(12px);
-        }
-        .terminal-content {
-            background: #0d0d0d; border: 1px solid #333; width: 95%; max-width: 500px;
-            font-family: 'Courier New', Courier, monospace; padding: 15px; border-radius: 6px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            max-height: 90vh; display: flex; flex-direction: column;
-        }
-        .terminal-header { display: flex; gap: 6px; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; flex-shrink: 0; }
-        .t-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .terminal-body { font-size: 12px; line-height: 1.6; color: var(--accent-green); flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; min-height: 150px; }
-        
-        .t-input-wrapper { margin-top: 15px; border-top: 1px solid #222; padding-top: 15px; display: flex; flex-direction: column; gap: 15px; }
-        .t-input-line { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
-        .t-prompt { color: var(--accent-red); white-space: nowrap; font-size: 11px; }
-        
-        #t-input { 
-            background: #151515; border: 1px solid #333; color: var(--paper); 
-            font-family: inherit; font-size: 16px; 
-            outline: none; flex-grow: 1; padding: 10px; border-radius: 4px;
-        }
-        
+        /* --- UPDATED TERMINAL SYSTEM --- */
+#terminal-modal {
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.98); /* Slightly darker for focus */
+    z-index: 2000;
+    display: none; 
+    justify-content: center; 
+    align-items: center; /* Centered vertically */
+    padding: 20px;
+    backdrop-filter: blur(20px);
+}
+
+.terminal-content {
+    background: #0d0d0d; 
+    border: 1px solid #333; 
+    width: 95%; 
+    max-width: 800px; /* Increased from 500px */
+    height: 80vh;    /* Set a fixed height relative to viewport */
+    font-family: 'Courier New', Courier, monospace; 
+    padding: 25px; 
+    border-radius: 8px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    display: flex; 
+    flex-direction: column;
+}
+
+.terminal-header { 
+    display: flex; 
+    gap: 10px; 
+    margin-bottom: 20px; 
+    border-bottom: 1px solid #222; 
+    padding-bottom: 15px; 
+    flex-shrink: 0; 
+}
+
+.terminal-body { 
+    font-size: 14px; /* Increased from 12px */
+    line-height: 1.8; 
+    color: var(--accent-green); 
+    flex-grow: 1; 
+    overflow-y: auto; 
+    display: flex; 
+    flex-direction: column; 
+    padding-right: 10px; /* Space for scrollbar */
+}
+
+/* Custom Scrollbar for the Terminal */
+.terminal-body::-webkit-scrollbar { width: 4px; }
+.terminal-body::-webkit-scrollbar-track { background: transparent; }
+.terminal-body::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+
+.t-input-wrapper { 
+    margin-top: 20px; 
+    border-top: 1px solid #222; 
+    padding-top: 20px; 
+    flex-shrink: 0;
+}
+
         .terminal-btn {
-            background: var(--accent-green); color: #000; border: none;
-            padding: 14px 15px; font-family: inherit; font-size: 11px;
-            font-weight: 900; text-transform: uppercase; cursor: pointer;
-            border-radius: 4px; transition: 0.2s; width: 100%;
-        }
-        .terminal-btn:hover { background: #fff; }
+    background: var(--accent-green); 
+    color: #000; 
+    border: none;
+    /* Increased padding for a "bigger" feel */
+    padding: 20px 30px; 
+    font-family: inherit; 
+    /* Increased font size and weight */
+    font-size: 14px; 
+    font-weight: 900; 
+    text-transform: uppercase; 
+    letter-spacing: 0.3em;
+    cursor: pointer; 
+    border-radius: 4px; 
+    transition: all 0.3s var(--bezier); 
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0, 255, 102, 0.2);
+}
+
+.terminal-btn:hover { 
+    background: #fff; 
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.terminal-btn:disabled {
+    background: #222;
+    color: #444;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
 
         /* -----------------------------------------------------------------------
         [CART_DRAWER]
@@ -363,11 +421,208 @@ body:has(#vault-lock[style*="display: flex"]) .add-btn,
 body:has(#vault-lock[style*="display: flex"]) .size-opt {
     tab-index: -1; /* Prevents keyboard navigating to buttons */
 }
+
+        /* --- GLITCH ANIMATION ENGINE --- */
+@keyframes glitch-anim {
+    0% {
+        clip-path: inset(40% 0 61% 0);
+        transform: translate(-2px, 2px);
+    }
+    20% {
+        clip-path: inset(92% 0 1% 0);
+        transform: translate(1px, -3px);
+    }
+    40% {
+        clip-path: inset(43% 0 1% 0);
+        transform: translate(-10px, 10px);
+    }
+    60% {
+        clip-path: inset(25% 0 58% 0);
+        transform: translate(5px, 5px);
+    }
+    80% {
+        clip-path: inset(54% 0 7% 0);
+        transform: translate(-10px, -5px);
+    }
+    100% {
+        clip-path: inset(58% 0 43% 0);
+        transform: translate(2px, -2px);
+    }
+}
+
+        /* Apply to both standard and terminal buttons */
+.add-btn, .terminal-btn {
+    position: relative;
+    transition: all 0.2s var(--bezier);
+}
+
+.add-btn:hover, .terminal-btn:hover {
+    background: var(--paper);
+    color: var(--obsidian);
+    transform: scale(1.02);
+}
+
+/* The Glitch Layers */
+.add-btn:hover::before, .add-btn:hover::after,
+.terminal-btn:hover::before, .terminal-btn:after {
+    content: 'GLITCH_ACTIVE'; /* Or use attr(data-text) if you want it dynamic */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+}
+
+.add-btn:hover::before, .terminal-btn:hover::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--accent-red);
+    clip-path: inset(45% 0 44% 0);
+    animation: glitch-anim 0.2s infinite linear alternate-reverse;
+}
+
+.add-btn:hover::after, .terminal-btn:hover::after {
+    left: -2px;
+    text-shadow: -2px 0 var(--accent-blue);
+    clip-path: inset(50% 0 30% 0);
+    animation: glitch-anim 0.3s infinite linear alternate;
+}
+
+       /* --- EXTERNAL SPEC TRIGGER --- */
+.spec-trigger-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px; /* Space between button and image */
+    height: 20px;
+}
+
+.spec-trigger {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--ash);
+    font-size: 8px;
+    padding: 4px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    transition: all 0.3s var(--bezier);
+    text-transform: uppercase;
+}
+
+/* Hover effect: Turn Blue as requested */
+.spec-trigger:hover {
+    color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 10px rgba(0, 209, 255, 0.2);
+}
+
+/* --- BLUEPRINT MODE OVERLAY --- */
+.spec-sheet {
+    position: absolute;
+    inset: 0;
+    /* Blueprint Aesthetic: Deep Blue with Grid */
+    background-color: #001a33;
+    background-image: 
+        linear-gradient(rgba(0, 209, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 209, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    border: 2px solid var(--accent-blue);
+    padding: 25px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s var(--bezier);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Active Class for Blueprint Mode */
+.spec-sheet.is-active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Blueprint Content Styling */
+.spec-header {
+    color: var(--accent-blue);
+    font-weight: 900;
+    border-bottom: 1px solid var(--accent-blue);
+    margin-bottom: 20px;
+    font-size: 12px;
+}
+
+                        /* --- TEXT & LAYOUT REFINEMENT --- */
+.product-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 12px;
+}
+
+.product-info h3 {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.product-info span {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--ash);
+}
+
+/* --- STANDARDIZED BLUEPRINT SHEET --- */
+.spec-sheet {
+    position: absolute;
+    inset: 0;
+    background-color: #001a33;
+    background-image: 
+        linear-gradient(rgba(0, 209, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 209, 255, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    border: 1px solid var(--accent-blue);
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s var(--bezier);
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Standardizes content vs button */
+}
+
+.spec-header {
+    color: var(--accent-blue);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 209, 255, 0.3);
+    padding-bottom: 8px;
+    font-weight: 900;
+}
+
+.spec-line {
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.spec-label { color: var(--accent-blue); opacity: 0.8; }
+.spec-value { color: #fff; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <!-- TRANSITION OVERLAY -->
     <div id="transition-overlay">
         <div class="coord-display">
             <div class="diag-row"><span class="diag-label">GEO_LATITUDE</span><span id="coord-lat" class="diag-value" style="color:var(--paper)">0.2942° S</span></div>
@@ -382,7 +637,6 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         </div>
     </div>
 
-    <!-- CART SYSTEM -->
     <div id="cart-drawer">
         <div class="cart-header">
             <h2>ORDER_STREAM</h2>
@@ -398,8 +652,7 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         </div>
     </div>
 
-    <!-- TERMINAL CHECKOUT -->
-   <div id="terminal-modal">
+    <div id="terminal-modal">
     <div class="terminal-content">
         <div class="terminal-header">
             <div class="t-dot" style="background: #ff5f56;"></div>
@@ -411,14 +664,10 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         <div id="terminal-output" class="terminal-body">
             <div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div>
             <br>
-            <div id="terminal-step-msg">Please enter your EMAIL to begin authentication.</div>
+            <div id="terminal-step-msg">SYSTEM READY FOR MANIFEST GENERATION.</div>
         </div>
         <div class="t-input-wrapper" id="terminal-input-container">
-            <div class="t-input-line">
-                <span class="t-prompt" id="t-prompt-label">user@koce:~ $</span>
-                <input type="text" id="t-input" autocomplete="off" placeholder="address@domain.com">
-            </div>
-            <button class="terminal-btn" id="terminal-execute">Execute_Handshake</button>
+            <button class="terminal-btn" id="terminal-execute">GENERATE_ORDER_MANIFEST</button>
         </div>
     </div>
 </div>
@@ -426,7 +675,6 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     <header class="nav-logo" onclick="switchView('home')"><h2>KÖCE</h2></header>
     <button class="cart-toggle" id="cart-btn" onclick="toggleCart()">CART (<span id="cart-count">0</span>)</button>
     
-    <!-- HOME VIEW -->
     <div id="home-view" class="view">
         <section class="hero-section">
             <h1 class="main-title">KÖCE</h1>
@@ -460,9 +708,7 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         <footer class="page-footer">© 2026  // 0.2942° S, 36.0677° E</footer>
     </div>
 
-    <!-- STORE VIEW -->
     <div id="store-view" class="view hidden">
-        <!-- VAULT LOCK ELEMENT: Styles are applied here via the CSS variable -->
         <div id="vault-lock" style="display: var(--vault-lock-display);">
     <div class="static-noise"></div>
     <div class="scanline"></div>
@@ -479,128 +725,165 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     </div>
 </div>
 
-        <div class="store-grid" style="padding-top: 120px;">
-            <div class="product-card" data-price="750">
-                <div class="product-img" style="background-image: 
-                    url('https://lh3.googleusercontent.com/u/0/d/1wD9Wc516nh0NWiyztYHUW_7lbflZWCc6');"></div>
-                <div class="product-info"><h3>B-01 TEE</h3><span>750 KSh</span></div>
-                <div class="size-picker">
-                    <div class="size-opt" onclick="selectSize(this)">S</div>
-                    <div class="size-opt" onclick="selectSize(this)">M</div>
-                    <div class="size-opt" onclick="selectSize(this)">L</div>
+    
+    <div class="store-grid" style="padding-top: 120px;">
+    
+    <div class="product-card" data-price="750">
+        <div class="spec-trigger-container">
+            <button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button>
+        </div>
+        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1wD9Wc516nh0NWiyztYHUW_7lbflZWCc6');">
+            <div class="spec-sheet">
+                <div>
+                    <div class="spec-header">// CORE_SPEC_SHEET_V1.0</div>
+                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value">STRUCTURAL_B_01</span></div>
+                    <div class="spec-line"><span class="spec-label">FABRIC</span><span class="spec-value">180GSM_PURE_COTTON</span></div>
+                    <div class="spec-line"><span class="spec-label">THREAD</span><span class="spec-value">100%_COTTON</span></div>
+                    <div class="spec-line"><span class="spec-label">ORIGIN</span><span class="spec-value">KE_PROTOTYPE</span></div>
                 </div>
-                <button class="add-btn" onclick="addToCart(this, 'B-01 TEE')">ADD_TO_ORDER</button>
-            </div>
-
-            <div class="product-card" data-price="750">
-                <div class="product-img" style="background-image: 
-                    url('https://lh3.googleusercontent.com/u/0/d/1fbmAg9UjyOcyTVGXasNSQsaQ42Q4oJc1');"></div>
-                <div class="product-info"><h3>W-01 TEE</h3><span>750 KSh</span></div>
-                <div class="size-picker">
-                    <div class="size-opt" onclick="selectSize(this)">S</div>
-                    <div class="size-opt" onclick="selectSize(this)">M</div>
-                    <div class="size-opt" onclick="selectSize(this)">L</div>
-                </div>
-                <button class="add-btn" onclick="addToCart(this, 'W-01 TEE')">ADD_TO_ORDER</button>
-            </div>
-
-            <div class="product-card" data-price="750">
-                <div class="product-img" style="background-image: 
-                    url('https://lh3.googleusercontent.com/u/0/d/13dqlWO0dYEEDTw4ZAnaDs5LJogfs02as');"></div>
-                <div class="product-info"><h3>B-01_v2 TEE</h3><span>750 KSh</span></div>
-                <div class="size-picker">
-                    <div class="size-opt" onclick="selectSize(this)">S</div>
-                    <div class="size-opt" onclick="selectSize(this)">M</div>
-                    <div class="size-opt" onclick="selectSize(this)">L</div>
-                </div>
-                <button class="add-btn" onclick="addToCart(this, 'B-01_v2 TEE')">ADD_TO_ORDER</button>
-            </div>
-
-            <div class="product-card" data-price="750">
-                <div class="product-img" style="background-image: 
-                    url('https://lh3.googleusercontent.com/u/0/d/1scyEc8HKKFTD3vxJGW4o7dnD83fKLB7K');"></div>
-                <div class="product-info"><h3>W-01_v2 TEE</h3><span>750 KSh</span></div>
-                <div class="size-picker">
-                    <div class="size-opt" onclick="selectSize(this)">S</div>
-                    <div class="size-opt" onclick="selectSize(this)">M</div>
-                    <div class="size-opt" onclick="selectSize(this)">L</div>
-                </div>
-                <button class="add-btn" onclick="addToCart(this, 'W-01_v2 TEE')">ADD_TO_ORDER</button>
-            </div>
-
-            <div class="product-card is-coming-soon">
-                <div class="product-img" style="background-image: 
-                    url('https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m');">
-                    <div class="img-overlay">COMING_SOON</div>
-                </div>
-                <div class="product-info"><h3>B_01_v3E TEE</h3><span>TBD</span></div>
-                <div class="size-picker">
-                    <div class="size-opt">S</div>
-                    <div class="size-opt">M</div>
-                    <div class="size-opt">L</div>
-                </div>
-                <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
-            </div>
-
-             <div class="product-card is-coming-soon">
-                <div class="product-img" style="background-image: 
-                    url('https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_');">
-                    <div class="img-overlay">COMING_SOON</div>
-                </div>
-                <div class="product-info"><h3>W_01_v3E TEE</h3><span>TBD</span></div>
-                <div class="size-picker">
-                    <div class="size-opt">S</div>
-                    <div class="size-opt">M</div>
-                    <div class="size-opt">L</div>
-                </div>
-                <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
-            </div>
-
-            
-            <div class="product-card is-coming-soon">
-                <div class="product-img" style="background-image: 
-                    url('https://lh3.googleusercontent.com/u/0/d/1uY92BUQHDjTtk0v_0vqPTqyN7OeHY_uk');">
-                    <div class="img-overlay">COMING_SOON</div>
-                </div>
-                <div class="product-info"><h3>P_LT_v1 COLLARED</h3><span>TBD</span></div>
-                <div class="size-picker">
-                    <div class="size-opt">S</div>
-                    <div class="size-opt">M</div>
-                    <div class="size-opt">L</div>
-                </div>
-                <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
-            </div>
-
-            
-            
-            <div class="product-card is-coming-soon">
-                <div class="product-img" style="background-image: 
-                    url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');">
-                    <div class="img-overlay">COMING_SOON</div>
-                </div>
-                <div class="product-info"><h3>B-02 COLLARED</h3><span>TBD</span></div>
-                <div class="size-picker">
-                    <div class="size-opt">S</div>
-                    <div class="size-opt">M</div>
-                    <div class="size-opt">L</div>
-                </div>
-                <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
-            </div>
-            <div class="product-card is-coming-soon">
-                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');">
-                    <div class="img-overlay">COMING_SOON</div>
-                </div>
-                <div class="product-info"><h3>W-02 COLLARED</h3><span>TBD</span></div>
-                <div class="size-picker">
-                    <div class="size-opt">S</div>
-                    <div class="size-opt">M</div>
-                    <div class="size-opt">L</div>
-                </div>
-                <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE_DECODE</button>
             </div>
         </div>
-        <footer class="page-footer">ESTD 2026 // KE</footer>
+        <div class="product-info"><h3>B-01 TEE</h3><span>750 KSh</span></div>
+        <div class="size-picker">
+            <div class="size-opt" onclick="selectSize(this)">S</div>
+            <div class="size-opt" onclick="selectSize(this)">M</div>
+            <div class="size-opt" onclick="selectSize(this)">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'B-01 TEE')">ADD_TO_ORDER</button>
     </div>
+
+    <div class="product-card" data-price="750">
+        <div class="spec-trigger-container">
+            <button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button>
+        </div>
+        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1fbmAg9UjyOcyTVGXasNSQsaQ42Q4oJc1');">
+            <div class="spec-sheet">
+                <div>
+                    <div class="spec-header">// CORE_SPEC_SHEET_V1.0</div>
+                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value">STRUCTURAL_W_01</span></div>
+                    <div class="spec-line"><span class="spec-label">FABRIC</span><span class="spec-value">180GSM_PURE_COTTON</span></div>
+                    <div class="spec-line"><span class="spec-label">THREAD</span><span class="spec-value">100%_COTTON</span></div>
+                    <div class="spec-line"><span class="spec-label">ORIGIN</span><span class="spec-value">KE_PROTOTYPE</span></div>
+                </div>
+                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE_DECODE</button>
+            </div>
+        </div>
+        <div class="product-info"><h3>W-01 TEE</h3><span>750 KSh</span></div>
+        <div class="size-picker">
+            <div class="size-opt" onclick="selectSize(this)">S</div>
+            <div class="size-opt" onclick="selectSize(this)">M</div>
+            <div class="size-opt" onclick="selectSize(this)">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'W-01 TEE')">ADD_TO_ORDER</button>
+    </div>
+
+    <div class="product-card" data-price="750">
+        <div class="spec-trigger-container">
+            <button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button>
+        </div>
+        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/13dqlWO0dYEEDTw4ZAnaDs5LJogfs02as');">
+            <div class="spec-sheet">
+                <div>
+                    <div class="spec-header">// CORE_SPEC_SHEET_V2.0</div>
+                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value">STRUCTURAL_B_01</span></div>
+                    <div class="spec-line"><span class="spec-label">FABRIC</span><span class="spec-value">180GSM_PURE_COTTON</span></div>
+                    <div class="spec-line"><span class="spec-label">THREAD</span><span class="spec-value">100%_COTTON</span></div>
+                    <div class="spec-line"><span class="spec-label">ORIGIN</span><span class="spec-value">KE_PROTOTYPE</span></div>
+                </div>
+                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE_DECODE</button>
+            </div>
+        </div>
+        <div class="product-info"><h3>B-01_v2 TEE</h3><span>750 KSh</span></div>
+        <div class="size-picker">
+            <div class="size-opt" onclick="selectSize(this)">S</div>
+            <div class="size-opt" onclick="selectSize(this)">M</div>
+            <div class="size-opt" onclick="selectSize(this)">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'B-01_v2 TEE')">ADD_TO_ORDER</button>
+    </div>
+
+    <div class="product-card" data-price="750">
+        <div class="spec-trigger-container">
+            <button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button>
+        </div>
+        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1scyEc8HKKFTD3vxJGW4o7dnD83fKLB7K');">
+            <div class="spec-sheet">
+                <div>
+                    <div class="spec-header">// CORE_SPEC_SHEET_V2.0</div>
+                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value">STRUCTURAL_W_01</span></div>
+                    <div class="spec-line"><span class="spec-label">FABRIC</span><span class="spec-value">180GSM_PURE_COTTON</span></div>
+                    <div class="spec-line"><span class="spec-label">THREAD</span><span class="spec-value">100%_COTTON</span></div>
+                    <div class="spec-line"><span class="spec-label">ORIGIN</span><span class="spec-value">KE_PROTOTYPE</span></div>
+                </div>
+                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE_DECODE</button>
+            </div>
+        </div>
+        <div class="product-info"><h3>W-01_v2 TEE</h3><span>750 KSh</span></div>
+        <div class="size-picker">
+            <div class="size-opt" onclick="selectSize(this)">S</div>
+            <div class="size-opt" onclick="selectSize(this)">M</div>
+            <div class="size-opt" onclick="selectSize(this)">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'W-01_v2 TEE')">ADD_TO_ORDER</button>
+    </div>
+
+    <div class="product-card is-coming-soon">
+        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m');">
+            <div class="img-overlay">COMING_SOON</div>
+        </div>
+        <div class="product-info"><h3>B_01_v3E TEE</h3><span>TBD</span></div>
+        <div class="size-picker">
+            <div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div>
+        </div>
+        <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+    </div>
+
+    <div class="product-card is-coming-soon">
+        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_');">
+            <div class="img-overlay">COMING_SOON</div>
+        </div>
+        <div class="product-info"><h3>W_01_v3E TEE</h3><span>TBD</span></div>
+        <div class="size-picker">
+            <div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div>
+        </div>
+        <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+    </div>
+
+    <div class="product-card is-coming-soon">
+        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1uY92BUQHDjTtk0v_0vqPTqyN7OeHY_uk');">
+            <div class="img-overlay">COMING_SOON</div>
+        </div>
+        <div class="product-info"><h3>P_LT_v1 COLLARED</h3><span>TBD</span></div>
+        <div class="size-picker">
+            <div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div>
+        </div>
+        <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+    </div>
+
+    <div class="product-card is-coming-soon">
+        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');">
+            <div class="img-overlay">COMING_SOON</div>
+        </div>
+        <div class="product-info"><h3>B-02 COLLARED</h3><span>TBD</span></div>
+        <div class="size-picker">
+            <div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div>
+        </div>
+        <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+    </div>
+
+    <div class="product-card is-coming-soon">
+        <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax');">
+            <div class="img-overlay">COMING_SOON</div>
+        </div>
+        <div class="product-info"><h3>W-02 COLLARED</h3><span>TBD</span></div>
+        <div class="size-picker">
+            <div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div>
+        </div>
+        <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+    </div>
+
+</div>
 
     <script>
         
@@ -608,7 +891,6 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
 const cartDrawer = document.getElementById('cart-drawer');
 const terminalModal = document.getElementById('terminal-modal');
 const terminalOutput = document.getElementById('terminal-output');
-const terminalInput = document.getElementById('t-input');
 const terminalExecute = document.getElementById('terminal-execute');
 const body = document.body;
 
@@ -616,14 +898,8 @@ const body = document.body;
 const GATEWAY_URL = 'https://script.google.com/macros/s/AKfycby2tYe8WYosgPAdiWqUU5M2MlcpdLmboNROoQzBJyl5BtzaxLce6-dp6HgjGD8S9pMs/exec'; 
 
 let cart = []; 
-let currentStep = 'EMAIL';
-let customerEmail = '';
 
 // --- 2. UTILITIES ---
-function validateEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
 function updateCoordinates() {
     const lat = (0.2942 + (Math.random() * 0.0005 - 0.00025)).toFixed(6);
     const lng = (36.0677 + (Math.random() * 0.0005 - 0.00025)).toFixed(6);
@@ -726,36 +1002,10 @@ function toggleCart() { cartDrawer.classList.toggle('open'); }
 function openTerminal() {
     if (!cart.length) return;
     terminalModal.style.display = 'flex';
-    terminalInput.focus();
-    currentStep = 'EMAIL';
-    terminalOutput.innerHTML = `<div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div><br><div>Please enter your EMAIL to begin authentication.</div>`;
+    terminalOutput.innerHTML = `<div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div><br><div>SYSTEM READY FOR MANIFEST GENERATION.</div>`;
     document.getElementById('terminal-input-container').style.display = 'flex';
-    document.getElementById('t-prompt-label').innerText = "user@koce:~ $";
-    terminalInput.placeholder = "address@domain.com";
-    terminalInput.style.display = "block";
-    terminalInput.value = "";
-    terminalExecute.innerText = "Execute_Handshake";
-}
-
-function processTerminalInput() {
-    const val = terminalInput.value.trim();
-
-    if (currentStep === 'EMAIL') {
-        if (validateEmail(val)) {
-            customerEmail = val;
-            currentStep = 'CONFIRM';
-            terminalOutput.innerHTML += `<div style="color:var(--accent-blue)">[VALIDATED] :: ${customerEmail}</div>`;
-            terminalOutput.innerHTML += `<br><div>Transmission ready. Press 'CONTINUE' to synchronize.</div>`;
-            document.getElementById('t-prompt-label').innerText = "admin@koce:~ $";
-            terminalInput.style.display = "none";
-            terminalExecute.innerText = "CONTINUE_TRANSMISSION";
-        } else {
-            terminalOutput.innerHTML += `<div style="color:var(--accent-red)">[ERROR] :: INVALID_EMAIL_FORMAT</div>`;
-            terminalInput.value = "";
-        }
-    } else if (currentStep === 'CONFIRM') {
-        finalizeCheckout();
-    }
+    terminalExecute.innerText = "GENERATE_ORDER_MANIFEST";
+    terminalExecute.disabled = false;
 }
 
 async function finalizeCheckout() {
@@ -763,13 +1013,11 @@ async function finalizeCheckout() {
     terminalOutput.innerHTML += `<br><div style="color:var(--accent-yellow)">[CONNECTING] :: SYNCING_WITH_GATEWAY...</div>`;
     
     const orderId = `KÖCE-${Math.floor(1000 + Math.random() * 8999)}`;
-    let manifestText = `KÖCE ORDER MANIFEST\nID: ${orderId}\nEMAIL: ${customerEmail}\n\nITEMS:\n`;
-    let manifestHtml = ``;
+    let manifestText = `KÖCE ORDER MANIFEST\nID: ${orderId}\n\nITEMS:\n`;
     
     cart.forEach((i, idx) => {
         const line = `${idx + 1}. ${i.name} [${i.size}] - ${i.price} KSh\n`;
         manifestText += line;
-        manifestHtml += line.replace('\n', '<br>');
     });
     
     const total = document.getElementById('cart-total-value').innerText;
@@ -782,21 +1030,8 @@ async function finalizeCheckout() {
         console.error('Clipboard failed', err);
     }
 
-    // 2. Background Email Send
-    const payload = {
-        orderId: orderId,
-        customerEmail: customerEmail,
-        manifest: manifestText,
-        total: total
-    };
-
-    try {
-        await fetch(GATEWAY_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify(payload)
-        });
-
+    // 2. Mock Transmission Success
+    setTimeout(() => {
         document.getElementById('terminal-input-container').style.display = 'none';
         terminalOutput.innerHTML += `
             <div style="color:var(--accent-green); margin-top:10px; font-weight:bold;">[SUCCESS] TRANSMISSION_COMPLETE</div>
@@ -806,24 +1041,20 @@ async function finalizeCheckout() {
             </div>
             <br>
             <div style="font-size:10px; color: var(--ash); line-height:1.6;">
-                1. Navigate to our official messaging channel.<br>
-                2. Paste the manifest into the text field.<br>
-                3. Send to complete structural verification.
+                1. Navigate to our official messaging channel (Direct Message box).<br>
+                2. Paste the manifest into the message field.<br>
+                3. Send the message to complete structural verification.
             </div>
             <br>
             <button onclick="terminalModal.style.display='none'" class="terminal-btn" style="width:100%">CLOSE_TERMINAL</button>
         `;
         cart = []; 
         updateCartUI();
-    } catch (error) {
-        terminalOutput.innerHTML += `<div style="color:var(--accent-red)">[FATAL] :: UPLINK_FAILED.</div>`;
-        terminalExecute.disabled = false;
-    }
+    }, 1200);
 }
 
 // --- 6. LISTENERS ---
-terminalExecute.onclick = processTerminalInput;
-terminalInput.onkeydown = (e) => { if (e.key === 'Enter') processTerminalInput(); };
+terminalExecute.onclick = finalizeCheckout;
 
 document.querySelectorAll('.view').forEach(v => {
     v.addEventListener('scroll', (e) => {
@@ -852,7 +1083,14 @@ const vaultCountdown = setInterval(() => {
         timerDisplay.innerText = `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
     }
 }, 1000);
+
+        function toggleBlueprint(btn) {
+    const card = btn.closest('.product-card');
+    const sheet = card.querySelector('.spec-sheet');
+    if (sheet) {
+        sheet.classList.toggle('is-active');
+    }
+}
 </script>
 </body>
 </html>
-    
