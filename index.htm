@@ -464,15 +464,20 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     <div id="store-view" class="view hidden">
         <!-- VAULT LOCK ELEMENT: Styles are applied here via the CSS variable -->
         <div id="vault-lock" style="display: var(--vault-lock-display);">
-            <div class="static-noise"></div>
-            <div class="scanline"></div>
-            <div class="lock-content">
-                <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
-                <h2 style="font-size: 12px; letter-spacing: 0.5em; margin-bottom: 10px;">ARCHIVE_LOCKED</h2>
-                <p style="font-size: 10px; color: var(--ash); letter-spacing: 0.1em; line-height: 1.8;">The blueprint vault is currently undergoing structural maintenance.<br>Dropping <b>EST_S26_W26</b> </p>
-                <p style="font-size: 8px; color: var(--accent-red); margin-top: 20px; letter-spacing: 0.2em; opacity: 0.6;">FEED_ENCRYPTED // CHANNEL_01</p>
-            </div>
-        </div>
+    <div class="static-noise"></div>
+    <div class="scanline"></div>
+    <div class="lock-content">
+        <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+        <h2 id="lock-status" style="font-size: 12px; letter-spacing: 0.5em; margin-bottom: 10px;">ARCHIVE_LOCKED</h2>
+        
+        <div id="vault-timer" style="font-family: monospace; font-size: 28px; margin: 20px 0; color: var(--paper);">00d 00h 00m 00s</div>
+        
+        <p id="lock-msg" style="font-size: 10px; color: var(--ash); letter-spacing: 0.1em; line-height: 1.8;">
+            The blueprint vault is currently undergoing structural maintenance.<br>
+            DROPPING <b>JULY 26, 2026</b> 
+        </p>
+    </div>
+</div>
 
         <div class="store-grid" style="padding-top: 120px;">
             <div class="product-card" data-price="750">
@@ -781,6 +786,40 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
             const activeView = document.querySelector('.view:not(.hidden)');
             if(activeView) checkReveals(activeView);
         };
+
+        // --- VAULT COUNTDOWN TO JULY 26, 2026 ---
+const targetDate = new Date("July 26, 2026 00:00:00").getTime();
+const timerDisplay = document.getElementById('vault-timer');
+const lockStatus = document.getElementById('lock-status');
+const lockMsg = document.getElementById('lock-msg');
+
+const vaultCountdown = setInterval(() => {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    // Time calculations for days, hours, minutes and seconds
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    // Display the result
+    timerDisplay.innerText = `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+
+    // If the countdown is finished
+    if (distance < 0) {
+        clearInterval(vaultCountdown);
+        
+        // Trigger Malfunction State
+        lockStatus.innerText = "SYSTEM_MALFUNCTION";
+        lockStatus.style.color = "var(--accent-red)";
+        timerDisplay.innerText = "ERR_404_VAULT_VOID";
+        timerDisplay.style.color = "var(--accent-red)";
+        lockMsg.innerHTML = "CRITICAL FAILURE: THE ARCHIVE HAS BEEN PURGED.<br>MANUAL OVERRIDE REQUIRED TO RESTORE ACCESS.";
+        
+        document.getElementById('vault-lock').style.backdropFilter = "blur(40px)";
+    }
+}, 1000);
     </script>
 </body>
 </html>
