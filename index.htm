@@ -23,9 +23,9 @@
             --radius: 12px; 
             
             /* --- VAULT CONTROLS --- */
-            --vault-lock-display: flex; /* Set to 'none' to unlock store and enable buttons/cart */
-            --vault-opacity: .1;   
-            --vault-blur: 17px; 
+            --vault-lock-display: none; /* Set to 'none' to unlock store and enable buttons/cart */
+            --vault-opacity: 1;   
+            --vault-blur: 0px; 
         }
 
         /* -----------------------------------------------------------------------
@@ -455,9 +455,10 @@
         </div>
 
         <div class="store-grid" style="padding-top: 120px;">
-            <div class="product-card" data-price="700">
-                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1mfxpAh6DMSXEiWlrh8m5KQ5RGGVpum0t');"></div>
-                <div class="product-info"><h3>B-01 TEE</h3><span>700 KSh</span></div>
+            <div class="product-card" data-price="750">
+                <div class="product-img" style="background-image: 
+                    url('https://lh3.googleusercontent.com/u/0/d/1wD9Wc516nh0NWiyztYHUW_7lbflZWCc6');"></div>
+                <div class="product-info"><h3>B-01 TEE</h3><span>750 KSh</span></div>
                 <div class="size-picker">
                     <div class="size-opt" onclick="selectSize(this)">S</div>
                     <div class="size-opt" onclick="selectSize(this)">M</div>
@@ -466,9 +467,10 @@
                 <button class="add-btn" onclick="addToCart(this, 'B-01 TEE')">ADD_TO_ORDER</button>
             </div>
 
-            <div class="product-card" data-price="700">
-                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/16ayCPTTsHTRrIt672FkLHyqyzGjOyzdL');"></div>
-                <div class="product-info"><h3>W-01 TEE</h3><span>700 KSh</span></div>
+            <div class="product-card" data-price="750">
+                <div class="product-img" style="background-image: 
+                    url('https://lh3.googleusercontent.com/u/0/d/1fbmAg9UjyOcyTVGXasNSQsaQ42Q4oJc1');"></div>
+                <div class="product-info"><h3>W-01 TEE</h3><span>750 KSh</span></div>
                 <div class="size-picker">
                     <div class="size-opt" onclick="selectSize(this)">S</div>
                     <div class="size-opt" onclick="selectSize(this)">M</div>
@@ -477,9 +479,10 @@
                 <button class="add-btn" onclick="addToCart(this, 'W-01 TEE')">ADD_TO_ORDER</button>
             </div>
 
-            <div class="product-card" data-price="800">
-                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');"></div>
-                <div class="product-info"><h3>B-01_v2 TEE</h3><span>800 KSh</span></div>
+            <div class="product-card" data-price="750">
+                <div class="product-img" style="background-image: 
+                    url('https://lh3.googleusercontent.com/u/0/d/13dqlWO0dYEEDTw4ZAnaDs5LJogfs02as');"></div>
+                <div class="product-info"><h3>B-01_v2 TEE</h3><span>750 KSh</span></div>
                 <div class="size-picker">
                     <div class="size-opt" onclick="selectSize(this)">S</div>
                     <div class="size-opt" onclick="selectSize(this)">M</div>
@@ -488,9 +491,10 @@
                 <button class="add-btn" onclick="addToCart(this, 'B-01_v2 TEE')">ADD_TO_ORDER</button>
             </div>
 
-            <div class="product-card" data-price="800">
-                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4');"></div>
-                <div class="product-info"><h3>W-01_v2 TEE</h3><span>800 KSh</span></div>
+            <div class="product-card" data-price="750">
+                <div class="product-img" style="background-image: 
+                    url('https://lh3.googleusercontent.com/u/0/d/1scyEc8HKKFTD3vxJGW4o7dnD83fKLB7K');"></div>
+                <div class="product-info"><h3>W-01_v2 TEE</h3><span>750 KSh</span></div>
                 <div class="size-picker">
                     <div class="size-opt" onclick="selectSize(this)">S</div>
                     <div class="size-opt" onclick="selectSize(this)">M</div>
@@ -498,9 +502,55 @@
                 </div>
                 <button class="add-btn" onclick="addToCart(this, 'W-01_v2 TEE')">ADD_TO_ORDER</button>
             </div>
+
+            <div class="product-card is-coming-soon">
+                <div class="product-img" style="background-image: 
+                    url('https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m');">
+                    <div class="img-overlay">COMING_SOON</div>
+                </div>
+                <div class="product-info"><h3>B_01_v3E TEE</h3><span>TBD</span></div>
+                <div class="size-picker">
+                    <div class="size-opt">S</div>
+                    <div class="size-opt">M</div>
+                    <div class="size-opt">L</div>
+                </div>
+                <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+            </div>
+
+             <div class="product-card is-coming-soon">
+                <div class="product-img" style="background-image: 
+                    url('https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_');">
+                    <div class="img-overlay">COMING_SOON</div>
+                </div>
+                <div class="product-info"><h3>W_01_v3E TEE</h3><span>TBD</span></div>
+                <div class="size-picker">
+                    <div class="size-opt">S</div>
+                    <div class="size-opt">M</div>
+                    <div class="size-opt">L</div>
+                </div>
+                <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+            </div>
+
             
             <div class="product-card is-coming-soon">
-                <div class="product-img" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');">
+                <div class="product-img" style="background-image: 
+                    url('https://lh3.googleusercontent.com/u/0/d/1uY92BUQHDjTtk0v_0vqPTqyN7OeHY_uk');">
+                    <div class="img-overlay">COMING_SOON</div>
+                </div>
+                <div class="product-info"><h3>P_LT_v1 COLLARED</h3><span>TBD</span></div>
+                <div class="size-picker">
+                    <div class="size-opt">S</div>
+                    <div class="size-opt">M</div>
+                    <div class="size-opt">L</div>
+                </div>
+                <button class="add-btn" style="opacity: 0.3; pointer-events: none;">LOCKED</button>
+            </div>
+
+            
+            
+            <div class="product-card is-coming-soon">
+                <div class="product-img" style="background-image: 
+                    url('https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E');">
                     <div class="img-overlay">COMING_SOON</div>
                 </div>
                 <div class="product-info"><h3>B-02 COLLARED</h3><span>TBD</span></div>
