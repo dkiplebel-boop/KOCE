@@ -399,29 +399,29 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     </div>
 
     <!-- TERMINAL CHECKOUT -->
-    <div id="terminal-modal">
-        <div class="terminal-content">
-            <div class="terminal-header">
-                <div class="t-dot" style="background: #ff5f56;"></div>
-                <div class="t-dot" style="background: #ffbd2e;"></div>
-                <div class="t-dot" style="background: #27c93f;"></div>
-                <span style="font-size: 9px; color: #555; margin-left: auto;">KÖCE_REMOTE_SHELL</span>
-                <button onclick="document.getElementById('terminal-modal').style.display='none'" style="background:none; border:none; color:#555; margin-left:10px; cursor:pointer;">X</button>
+   <div id="terminal-modal">
+    <div class="terminal-content">
+        <div class="terminal-header">
+            <div class="t-dot" style="background: #ff5f56;"></div>
+            <div class="t-dot" style="background: #ffbd2e;"></div>
+            <div class="t-dot" style="background: #27c93f;"></div>
+            <span style="font-size: 9px; color: #555; margin-left: auto;">KÖCE_REMOTE_SHELL</span>
+            <button onclick="document.getElementById('terminal-modal').style.display='none'" style="background:none; border:none; color:#555; margin-left:10px; cursor:pointer;">X</button>
+        </div>
+        <div id="terminal-output" class="terminal-body">
+            <div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div>
+            <br>
+            <div id="terminal-step-msg">Please enter your EMAIL to begin authentication.</div>
+        </div>
+        <div class="t-input-wrapper" id="terminal-input-container">
+            <div class="t-input-line">
+                <span class="t-prompt" id="t-prompt-label">user@koce:~ $</span>
+                <input type="text" id="t-input" autocomplete="off" placeholder="address@domain.com">
             </div>
-            <div id="terminal-output" class="terminal-body">
-                <div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div>
-                <br>
-                <div>Type 'YES' to authenticate and transmit order log.</div>
-            </div>
-            <div class="t-input-wrapper" id="terminal-input-container">
-                <div class="t-input-line">
-                    <span class="t-prompt">admin@koce:~ $</span>
-                    <input type="text" id="t-input" autocomplete="off" placeholder="...">
-                </div>
-                <button class="terminal-btn" id="terminal-execute">Execute</button>
-            </div>
+            <button class="terminal-btn" id="terminal-execute">Execute_Handshake</button>
         </div>
     </div>
+</div>
 
     <header class="nav-logo" onclick="switchView('home')"><h2>KÖCE</h2></header>
     <button class="cart-toggle" id="cart-btn" onclick="toggleCart()">CART (<span id="cart-count">0</span>)</button>
@@ -472,7 +472,7 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         
         <div id="vault-timer" style="font-family: monospace; font-size: 28px; margin: 20px 0; color: var(--paper);">00d 00h 00m 00s</div>
         
-        <p id="lock-msg" style="font-size: 10px; color: var(--ash); letter-spacing: 0.1em; line-height: 1.8;">
+        <p id="lock-msg" style="font-size: 10px; color: #FFFFFF; letter-spacing: 0.1em; line-height: 1.8;">
             The blueprint vault is currently undergoing structural maintenance.<br>
             DROPPING <b>JULY 26, 2026</b> 
         </p>
@@ -603,223 +603,256 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     </div>
 
     <script>
-        const overlay = document.getElementById('transition-overlay');
-        const cartDrawer = document.getElementById('cart-drawer');
-        const terminalModal = document.getElementById('terminal-modal');
-        const terminalOutput = document.getElementById('terminal-output');
-        const terminalInput = document.getElementById('t-input');
-        const terminalExecute = document.getElementById('terminal-execute');
-        const body = document.body;
         
-        let cart = []; 
+   const overlay = document.getElementById('transition-overlay');
+const cartDrawer = document.getElementById('cart-drawer');
+const terminalModal = document.getElementById('terminal-modal');
+const terminalOutput = document.getElementById('terminal-output');
+const terminalInput = document.getElementById('t-input');
+const terminalExecute = document.getElementById('terminal-execute');
+const body = document.body;
 
-        function updateCoordinates() {
-            const lat = (0.2942 + (Math.random() * 0.0005 - 0.00025)).toFixed(6);
-            const lng = (36.0677 + (Math.random() * 0.0005 - 0.00025)).toFixed(6);
-            document.getElementById('coord-lat').innerText = `${lat}° S`;
-            document.getElementById('coord-lng').innerText = `${lng}° E`;
-            document.getElementById('diag-node').innerText = (Math.random() * 100).toFixed(4).padStart(7, '0');
-            document.getElementById('diag-plane').innerText = (Math.random() * 50).toFixed(4).padStart(7, '0');
-            const latVal = Math.floor(Math.random() * 80) + 12;
-            const latEl = document.getElementById('diag-latency');
-            latEl.innerText = `${latVal}ms`;
-            latEl.style.color = latVal > 60 ? 'var(--accent-red)' : (latVal > 40 ? 'var(--accent-yellow)' : 'var(--accent-green)');
-            document.getElementById('diag-buffer').innerText = `${Math.floor(Math.random() * 1024 + 128)}kb`;
-            const encryptVal = Math.min(100, Math.floor(Date.now() / 100) % 110);
-            const encEl = document.getElementById('diag-encryption');
-            encEl.innerText = `AES_RSA_${encryptVal}%`;
-            if (encryptVal > 90) encEl.style.color = 'var(--accent-green)';
-            else if (encryptVal > 50) encEl.style.color = 'var(--accent-yellow)';
-            else encEl.style.color = 'var(--accent-red)';
+// --- 1. CONFIGURATION ---
+const GATEWAY_URL = 'https://script.google.com/macros/s/AKfycby2tYe8WYosgPAdiWqUU5M2MlcpdLmboNROoQzBJyl5BtzaxLce6-dp6HgjGD8S9pMs/exec'; 
+
+let cart = []; 
+let currentStep = 'EMAIL';
+let customerEmail = '';
+
+// --- 2. UTILITIES ---
+function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function updateCoordinates() {
+    const lat = (0.2942 + (Math.random() * 0.0005 - 0.00025)).toFixed(6);
+    const lng = (36.0677 + (Math.random() * 0.0005 - 0.00025)).toFixed(6);
+    document.getElementById('coord-lat').innerText = `${lat}° S`;
+    document.getElementById('coord-lng').innerText = `${lng}° E`;
+    document.getElementById('diag-node').innerText = (Math.random() * 100).toFixed(4).padStart(7, '0');
+    document.getElementById('diag-plane').innerText = (Math.random() * 50).toFixed(4).padStart(7, '0');
+    const latVal = Math.floor(Math.random() * 80) + 12;
+    const latEl = document.getElementById('diag-latency');
+    latEl.innerText = `${latVal}ms`;
+    latEl.style.color = latVal > 60 ? 'var(--accent-red)' : (latVal > 40 ? 'var(--accent-yellow)' : 'var(--accent-green)');
+    document.getElementById('diag-buffer').innerText = `${Math.floor(Math.random() * 1024 + 128)}kb`;
+    const encryptVal = Math.min(100, Math.floor(Date.now() / 100) % 110);
+    const encEl = document.getElementById('diag-encryption');
+    encEl.innerText = `AES_RSA_${encryptVal}%`;
+    if (encryptVal > 90) encEl.style.color = 'var(--accent-green)';
+    else if (encryptVal > 50) encEl.style.color = 'var(--accent-yellow)';
+    else encEl.style.color = 'var(--accent-red)';
+}
+setInterval(updateCoordinates, 80); 
+
+// --- 3. NAVIGATION ---
+function switchView(viewId) {
+    overlay.classList.add('active');
+    updateCoordinates();
+    let progress = 0;
+    const bar = document.getElementById('load-progress');
+    const interval = setInterval(() => {
+        progress += (100 - progress) * 0.15;
+        if(progress > 99) progress = 100;
+        bar.style.width = progress + '%';
+        if(progress >= 100) clearInterval(interval);
+    }, 50);
+
+    setTimeout(() => {
+        document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+        const nextView = document.getElementById(viewId + '-view');
+        nextView.classList.remove('hidden');
+        nextView.scrollTop = 0;
+        body.classList.remove('scrolled');
+        
+        setTimeout(() => {
+            overlay.classList.remove('active');
+            bar.style.width = '0%';
+            checkReveals(nextView);
+        }, 800);
+    }, 1000);
+}
+
+function checkReveals(view) {
+    view.querySelectorAll('.reveal').forEach(r => {
+        const rect = r.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 100) {
+            r.classList.add('active');
         }
-        setInterval(updateCoordinates, 80); 
+    });
+}
 
-        function switchView(viewId) {
-            overlay.classList.add('active');
-            updateCoordinates();
-            let progress = 0;
-            const bar = document.getElementById('load-progress');
-            const interval = setInterval(() => {
-                progress += (100 - progress) * 0.15;
-                if(progress > 99) progress = 100;
-                bar.style.width = progress + '%';
-                if(progress >= 100) clearInterval(interval);
-            }, 50);
+// --- 4. CART ---
+function selectSize(btn) {
+    btn.parentElement.classList.remove('error');
+    btn.parentElement.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
+    btn.classList.add('active');
+}
 
-            setTimeout(() => {
-                document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-                const nextView = document.getElementById(viewId + '-view');
-                nextView.classList.remove('hidden');
-                
-                nextView.scrollTop = 0;
-                body.classList.remove('scrolled');
-                
-                setTimeout(() => {
-                    overlay.classList.remove('active');
-                    bar.style.width = '0%';
-                    checkReveals(nextView);
-                }, 800);
-            }, 1000);
+function addToCart(btn, name) {
+    const card = btn.closest('.product-card');
+    const selectedSizeEl = card.querySelector('.size-opt.active');
+    const price = parseInt(card.getAttribute('data-price'));
+    if (!selectedSizeEl) {
+        card.querySelector('.size-picker').classList.add('error');
+        return;
+    }
+    cart.push({ id: Date.now(), name, price, size: selectedSizeEl.innerText });
+    updateCartUI();
+}
+
+function updateCartUI() {
+    document.getElementById('cart-count').innerText = cart.length;
+    const itemsContainer = document.getElementById('cart-items');
+    let total = 0;
+    itemsContainer.innerHTML = cart.map(item => {
+        total += item.price;
+        return `
+            <div class="cart-item">
+                <div class="cart-item-info">
+                    <h4>${item.name}</h4>
+                    <p style="font-size:9px; color:var(--ash)">SIZE: ${item.size} | ${item.price} KSh</p>
+                </div>
+                <button class="remove-btn" onclick="removeFromCart(${item.id})">REMOVE</button>
+            </div>`;
+    }).join('');
+    document.getElementById('cart-total-value').innerText = `${total.toLocaleString()} KSh`;
+}
+
+function removeFromCart(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
+function toggleCart() { cartDrawer.classList.toggle('open'); }
+
+// --- 5. TERMINAL CHECKOUT ---
+function openTerminal() {
+    if (!cart.length) return;
+    terminalModal.style.display = 'flex';
+    terminalInput.focus();
+    currentStep = 'EMAIL';
+    terminalOutput.innerHTML = `<div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div><br><div>Please enter your EMAIL to begin authentication.</div>`;
+    document.getElementById('terminal-input-container').style.display = 'flex';
+    document.getElementById('t-prompt-label').innerText = "user@koce:~ $";
+    terminalInput.placeholder = "address@domain.com";
+    terminalInput.style.display = "block";
+    terminalInput.value = "";
+    terminalExecute.innerText = "Execute_Handshake";
+}
+
+function processTerminalInput() {
+    const val = terminalInput.value.trim();
+
+    if (currentStep === 'EMAIL') {
+        if (validateEmail(val)) {
+            customerEmail = val;
+            currentStep = 'CONFIRM';
+            terminalOutput.innerHTML += `<div style="color:var(--accent-blue)">[VALIDATED] :: ${customerEmail}</div>`;
+            terminalOutput.innerHTML += `<br><div>Transmission ready. Press 'CONTINUE' to synchronize.</div>`;
+            document.getElementById('t-prompt-label').innerText = "admin@koce:~ $";
+            terminalInput.style.display = "none";
+            terminalExecute.innerText = "CONTINUE_TRANSMISSION";
+        } else {
+            terminalOutput.innerHTML += `<div style="color:var(--accent-red)">[ERROR] :: INVALID_EMAIL_FORMAT</div>`;
+            terminalInput.value = "";
         }
+    } else if (currentStep === 'CONFIRM') {
+        finalizeCheckout();
+    }
+}
 
-        function selectSize(btn) {
-            btn.parentElement.classList.remove('error');
-            btn.parentElement.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
-            btn.classList.add('active');
-        }
+async function finalizeCheckout() {
+    terminalExecute.disabled = true;
+    terminalOutput.innerHTML += `<br><div style="color:var(--accent-yellow)">[CONNECTING] :: SYNCING_WITH_GATEWAY...</div>`;
+    
+    const orderId = `KÖCE-${Math.floor(1000 + Math.random() * 8999)}`;
+    let manifestText = `KÖCE ORDER MANIFEST\nID: ${orderId}\nEMAIL: ${customerEmail}\n\nITEMS:\n`;
+    let manifestHtml = ``;
+    
+    cart.forEach((i, idx) => {
+        const line = `${idx + 1}. ${i.name} [${i.size}] - ${i.price} KSh\n`;
+        manifestText += line;
+        manifestHtml += line.replace('\n', '<br>');
+    });
+    
+    const total = document.getElementById('cart-total-value').innerText;
+    manifestText += `\nTOTAL: ${total}`;
 
-        function addToCart(btn, name) {
-            const card = btn.closest('.product-card');
-            const selectedSizeEl = card.querySelector('.size-opt.active');
-            const price = parseInt(card.getAttribute('data-price'));
-            if (!selectedSizeEl) {
-                card.querySelector('.size-picker').classList.add('error');
-                return;
-            }
-            cart.push({ id: Date.now(), name, price, size: selectedSizeEl.innerText });
-            updateCartUI();
-        }
+    // 1. Copy to Clipboard
+    try {
+        await navigator.clipboard.writeText(manifestText);
+    } catch (err) {
+        console.error('Clipboard failed', err);
+    }
 
-        function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
-            const itemsContainer = document.getElementById('cart-items');
-            let total = 0;
-            itemsContainer.innerHTML = cart.map(item => {
-                total += item.price;
-                return `
-                    <div class="cart-item">
-                        <div class="cart-item-info">
-                            <h4>${item.name}</h4>
-                            <p style="font-size:9px; color:var(--ash)">SIZE: ${item.size} | ${item.price} KSh</p>
-                        </div>
-                        <button class="remove-btn" onclick="removeFromCart(${item.id})">REMOVE</button>
-                    </div>`;
-            }).join('');
-            document.getElementById('cart-total-value').innerText = `${total.toLocaleString()} KSh`;
-        }
+    // 2. Background Email Send
+    const payload = {
+        orderId: orderId,
+        customerEmail: customerEmail,
+        manifest: manifestText,
+        total: total
+    };
 
-        function removeFromCart(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
-        function toggleCart() { cartDrawer.classList.toggle('open'); }
-
-        function openTerminal() {
-            if (!cart.length) return;
-            terminalModal.style.display = 'flex';
-            terminalInput.focus();
-            terminalOutput.innerHTML = `<div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div><br><div>Type 'YES' to authenticate and transmit order log.</div>`;
-            document.getElementById('terminal-input-container').style.display = 'flex';
-        }
-
-        function processTerminalInput() {
-            const val = terminalInput.value.trim().toUpperCase();
-            terminalInput.value = '';
-            if (val === 'YES') {
-                finalizeCheckout();
-                document.getElementById('terminal-input-container').style.display = 'none';
-                
-                terminalOutput.innerHTML += `
-                    <div style="color:var(--accent-green); margin-top:10px; font-weight:bold;">[SUCCESS] ORDER_MANIFEST_COPIED</div>
-                    <div style="font-size:10px; margin-top:15px; color: #fff; background: rgba(255,255,255,0.05); padding: 18px; border-left: 2px solid var(--accent-green); border-radius: 4px; line-height:1.6;">
-                        <b style="color: var(--accent-yellow); font-size:11px;">INSTRUCTIONS:</b> 
-                        <br><br>
-                        1. Exit this browser and go to Instagram.
-                        <br>
-                        2. Search for <b>@koce_structural_wear</b> or open our direct messages.
-                        <br>
-                        3. <b>PASTE</b> the manifest (it is already on your clipboard).
-                        <br>
-                        4. Send the message to finalize your structural request.
-                        <br><br>
-                        <span style="opacity:0.5; font-style:italic;">Your request ID and specifications are included in the clipboard data.</span>
-                    </div>
-                `;
-            }
-        }
-
-        terminalExecute.addEventListener('click', processTerminalInput);
-        terminalInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') processTerminalInput(); });
-
-        function finalizeCheckout() {
-            const orderId = `KÖCE-${Math.floor(1000 + Math.random() * 8999)}`;
-            const date = new Date().toLocaleDateString();
-            const time = new Date().toLocaleTimeString();
-            
-            let manifest = `KÖCE ORDER MANIFEST [${orderId}]\n`;
-            manifest += `DATE: ${date} | TIME: ${time}\n`;
-            manifest += `--------------------------------\n`;
-            
-            cart.forEach((i, idx) => {
-                manifest += `${idx + 1}. ITEM: ${i.name} | SIZE: ${i.size} | ${i.price} KSh\n`;
-            });
-            
-            manifest += `--------------------------------\n`;
-            manifest += `QUANTITY: ${cart.length} UNIT(S)\n`;
-            manifest += `TOTAL: ${document.getElementById('cart-total-value').innerText}\n`;
-            manifest += `--------------------------------\n`;
-            manifest += `AWAITING_RESPONSE`;
-            
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = manifest; 
-            dummy.select();
-            document.execCommand('copy');
-            document.body.removeChild(dummy);
-        }
-
-        function checkReveals(view) {
-            view.querySelectorAll('.reveal').forEach(r => {
-                const rect = r.getBoundingClientRect();
-                if (rect.top < window.innerHeight - 100) {
-                    r.classList.add('active');
-                }
-            });
-        }
-
-        document.querySelectorAll('.view').forEach(v => {
-            v.addEventListener('scroll', (e) => {
-                if(e.target.scrollTop > 50) body.classList.add('scrolled');
-                else body.classList.remove('scrolled');
-                checkReveals(e.target);
-            });
+    try {
+        await fetch(GATEWAY_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify(payload)
         });
 
-        window.onload = () => {
-            const activeView = document.querySelector('.view:not(.hidden)');
-            if(activeView) checkReveals(activeView);
-        };
+        document.getElementById('terminal-input-container').style.display = 'none';
+        terminalOutput.innerHTML += `
+            <div style="color:var(--accent-green); margin-top:10px; font-weight:bold;">[SUCCESS] TRANSMISSION_COMPLETE</div>
+            <br>
+            <div style="background: rgba(0,255,102,0.1); padding: 10px; border: 1px solid var(--accent-green); font-size: 11px; color: var(--paper);">
+                ORDER_MANIFEST HAS BEEN COPIED TO YOUR CLIPBOARD.
+            </div>
+            <br>
+            <div style="font-size:10px; color: var(--ash); line-height:1.6;">
+                1. Navigate to our official messaging channel.<br>
+                2. Paste the manifest into the text field.<br>
+                3. Send to complete structural verification.
+            </div>
+            <br>
+            <button onclick="terminalModal.style.display='none'" class="terminal-btn" style="width:100%">CLOSE_TERMINAL</button>
+        `;
+        cart = []; 
+        updateCartUI();
+    } catch (error) {
+        terminalOutput.innerHTML += `<div style="color:var(--accent-red)">[FATAL] :: UPLINK_FAILED.</div>`;
+        terminalExecute.disabled = false;
+    }
+}
 
-        // --- VAULT COUNTDOWN TO JULY 26, 2026 ---
+// --- 6. LISTENERS ---
+terminalExecute.onclick = processTerminalInput;
+terminalInput.onkeydown = (e) => { if (e.key === 'Enter') processTerminalInput(); };
+
+document.querySelectorAll('.view').forEach(v => {
+    v.addEventListener('scroll', (e) => {
+        if(e.target.scrollTop > 50) body.classList.add('scrolled');
+        else body.classList.remove('scrolled');
+        checkReveals(e.target);
+    });
+});
+
+window.onload = () => {
+    const activeView = document.querySelector('.view:not(.hidden)');
+    if(activeView) checkReveals(activeView);
+};
+
+// --- 7. VAULT ---
 const targetDate = new Date("July 26, 2026 00:00:00").getTime();
-const timerDisplay = document.getElementById('vault-timer');
-const lockStatus = document.getElementById('lock-status');
-const lockMsg = document.getElementById('lock-msg');
-
 const vaultCountdown = setInterval(() => {
     const now = new Date().getTime();
     const distance = targetDate - now;
-
-    // Time calculations for days, hours, minutes and seconds
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    // Display the result
-    timerDisplay.innerText = `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
-
-    // If the countdown is finished
-    if (distance < 0) {
-        clearInterval(vaultCountdown);
-        
-        // Trigger Malfunction State
-        lockStatus.innerText = "SYSTEM_MALFUNCTION";
-        lockStatus.style.color = "var(--accent-red)";
-        timerDisplay.innerText = "ERR_404_VAULT_VOID";
-        timerDisplay.style.color = "var(--accent-red)";
-        lockMsg.innerHTML = "CRITICAL FAILURE: THE ARCHIVE HAS BEEN PURGED.<br>MANUAL OVERRIDE REQUIRED TO RESTORE ACCESS.";
-        
-        document.getElementById('vault-lock').style.backdropFilter = "blur(40px)";
+    const timerDisplay = document.getElementById('vault-timer');
+    if (timerDisplay) {
+        timerDisplay.innerText = `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
     }
 }, 1000);
-    </script>
+</script>
 </body>
 </html>
+    
