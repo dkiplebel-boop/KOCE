@@ -690,9 +690,14 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     border: 1.5px solid var(--paper);
 }
 
+/* Existing */
 .color-opt.black { background: #000; }
 .color-opt.white { background: #fff; border: 1px solid #444; }
 
+/* New Additions */
+.color-opt.maroon { background: #5C3A37; border: 1px solid #444; }
+.color-opt.purple { background: #3C2C37; border: 1px solid #444; }
+.color-opt.beige  { background: #CABCAA; border: 1px solid #444; }
 /* LT (Limited) Styling */
 .card-lt { border: 1px solid var(--accent-yellow) !important; }
 
@@ -1042,6 +1047,55 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     0% { transform: scale(1.5); opacity: 0.6; }
     100% { transform: scale(0); opacity: 0; }
 }
+
+        .status-dot-maroon {
+  height: 8px;
+  width: 8px;
+  background-color: #800000; /* Maroon */
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 5px #800000; /* Gives it a slight "active" glow */
+}
+
+.status-dot-purple {
+  height: 8px;
+  width: 8px;
+  background-color: #4B0082; /* Dark Purple */
+  border-radius: 50%;
+  display: inline-block;
+}
+        /* Update your CSS with the Beige Dot */
+.status-dot-beige {
+  height: 8px;
+  width: 8px;
+  background-color: #D2B48C; /* Tan/Beige */
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Adds a tiny bit of definition */
+}
+
+        /* Base style for any disabled option */
+.is-disabled-option {
+    background-color: #222 !important; /* Dark grey */
+    color: #444 !important;
+    border-color: #333 !important;
+    cursor: not-allowed !important;
+    opacity: 0.4;
+    position: relative;
+    pointer-events: none;
+}
+
+/* Red "X" line over out-of-stock colors/sizes */
+.is-disabled-option::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: #800000; /* Maroon to match your theme */
+    transform: rotate(-45deg);
+}
     </style>
 </head>
 <body>
@@ -1186,11 +1240,12 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     <div class="product-card" id="card-v1">
         <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">LOCKED</div></div>
         <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
-        <div class="product-img" id="img-v1"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V1</div><div class="spec-line"><span id="spec-v1"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
+        <div class="product-img" id="img-v1"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V1</div>
+            <div class="spec-line"><span id="spec-v1"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
         <div class="product-info"><h3 id="title-v1"></h3><span id="price-v1"></span></div>
         <div class="color-picker" id="picker-v1"></div>
         <div class="size-picker" id="sizes-v1">
-            <div class="size-opt" onclick="selectSize(this, 'v1')">S</div><div class="size-opt" onclick="selectSize(this, 'v1')">M</div><div class="size-opt" onclick="selectSize(this, 'v1')">L</div>
+            <div class="size-opt" data-size="S" onclick="selectSize(this, 'v1')">S</div><div class="size-opt" data-size="M" onclick="selectSize(this, 'v1')">M</div><div class="size-opt" data-size="L" onclick="selectSize(this, 'v1')">L</div>
         </div>
         <button class="add-btn" onclick="addToCart(this, 'v1')">ADD_TO_ORDER</button>
     </div>
@@ -1203,7 +1258,7 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         <div class="product-info"><h3 id="title-v2"></h3><span id="price-v2"></span></div>
         <div class="color-picker" id="picker-v2"></div>
         <div class="size-picker" id="sizes-v2">
-            <div class="size-opt" onclick="selectSize(this, 'v2')">S</div><div class="size-opt" onclick="selectSize(this, 'v2')">M</div><div class="size-opt" onclick="selectSize(this, 'v2')">L</div>
+            <div class="size-opt" data-size="S" onclick="selectSize(this, 'v2')">S</div><div class="size-opt" data-size="M" onclick="selectSize(this, 'v2')">M</div><div class="size-opt" data-size="L" onclick="selectSize(this, 'v2')">L</div>
         </div>
         <button class="add-btn" onclick="addToCart(this, 'v2')">ADD_TO_ORDER</button>
     </div>
@@ -1211,11 +1266,15 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     
     
     <div class="product-card is-coming-soon" id="card-v3">
-        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">v3E_SERIES_LOCKED</div></div>
-        <div class="product-img" id="img-v3"></div>
-        <div class="product-info"><h3 id="title-v3"></h3><span>TBD</span></div>
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">V3E_SERIES_LOCKED</div></div>
+        <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
+        <div class="product-img" id="img-v3"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V3</div><div class="spec-line"><span id="spec-v2"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
+        <div class="product-info"><h3 id="title-v3"></h3><span id="price-v3"></span></div>
         <div class="color-picker" id="picker-v3"></div>
-        <div class="size-picker"><div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div></div>
+        <div class="size-picker" id="sizes-v3">
+            <div class="size-opt" data-size="S" onclick="selectSize(this, 'v3')">S</div><div class="size-opt" data-size="M" onclick="selectSize(this, 'v3')">M</div><div class="size-opt" data-size="L" onclick="selectSize(this, 'v3')">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'v3')">ADD_TO_ORDER</button>
     </div>
 
     
@@ -1227,7 +1286,7 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         <div class="product-info"><h3 id="title-v4"></h3><span id="price-v4"></span></div>
         <div class="color-picker" id="picker-v4"></div>
         <div class="size-picker" id="sizes-v4">
-            <div class="size-opt" onclick="selectSize(this, 'v4')">S</div><div class="size-opt" onclick="selectSize(this, 'v4')">M</div><div class="size-opt" onclick="selectSize(this, 'v4')">L</div>
+            <div class="size-opt" data-size="S" onclick="selectSize(this, 'v4')">S</div><div class="size-opt" data-size="M" onclick="selectSize(this, 'v4')">M</div><div class="size-opt" data-size="L" onclick="selectSize(this, 'v4')">L</div>
         </div>
         <button class="add-btn" onclick="addToCart(this, 'v4')">ADD_TO_ORDER</button>
     </div>
@@ -1241,9 +1300,9 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         <div class="product-info"><h3 id="title-v5"></h3><span id="price-v5"></span></div>
         <div class="color-picker" id="picker-v5"></div>
         <div class="size-picker" id="sizes-v5">
-            <div class="size-opt" onclick="selectSize(this, 'v5')">S</div>
-            <div class="size-opt" onclick="selectSize(this, 'v5')">M</div>
-            <div class="size-opt" onclick="selectSize(this, 'v5')">L</div>
+            <div class="size-opt" data-size="S" onclick="selectSize(this, 'v5')">S</div>
+            <div class="size-opt" data-size="M" onclick="selectSize(this, 'v5')">M</div>
+            <div class="size-opt" data-size="L" onclick="selectSize(this, 'v5')">L</div>
         </div>
         <button class="add-btn" onclick="addToCart(this, 'v5')">ADD_TO_ORDER</button>
     </div>
@@ -1257,7 +1316,7 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         <div class="product-info"><h3 id="title-v6"></h3><span id="price-v6"></span></div>
         <div class="color-picker" id="picker-v6"></div>
         <div class="size-picker" id="sizes-v6">
-            <div class="size-opt" onclick="selectSize(this, 'v6')">S</div><div class="size-opt" onclick="selectSize(this, 'v6')">M</div><div class="size-opt" onclick="selectSize(this, 'v6')">L</div>
+            <div class="size-opt" data-size="S" onclick="selectSize(this, 'v6')">S</div><div class="size-opt" data-size="M" onclick="selectSize(this, 'v6')">M</div><div class="size-opt" data-size="L" onclick="selectSize(this, 'v6')">L</div>
         </div>
         <button class="add-btn" onclick="addToCart(this, 'v6')">ADD_TO_ORDER</button>
     </div>
@@ -1271,13 +1330,49 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         <div class="product-info"><h3 id="title-v7"></h3><span id="price-v7"></span></div>
         <div class="color-picker" id="picker-v7"></div>
         <div class="size-picker" id="sizes-v7">
-            <div class="size-opt" onclick="selectSize(this, 'v7')">S</div><div class="size-opt" onclick="selectSize(this, 'v7')">M</div><div class="size-opt" onclick="selectSize(this, 'v7')">L</div>
+            <div class="size-opt" data-size="S" onclick="selectSize(this, 'v7')">S</div><div class="size-opt" data-size="M" onclick="selectSize(this, 'v7')">M</div><div class="size-opt" data-size="L" onclick="selectSize(this, 'v7')">L</div>
         </div>
         <button class="add-btn" onclick="addToCart(this, 'v7')">ADD_TO_ORDER</button>
     </div>
 
+    <div class="product-card is-coming-soon" id="card-v8">
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">v8_SERIES_LOCKED</div></div>
+        <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
+        <div class="product-img" id="img-v8"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V8</div><div class="spec-line"><span id="spec-v8"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
+        <div class="product-info"><h3 id="title-v8"></h3><span id="price-v8"></span></div>
+        <div class="color-picker" id="picker-v8"></div>
+        <div class="size-picker" id="sizes-v8">
+            <div class="size-opt" data-size="S" onclick="selectSize(this, 'v8')">S</div><div class="size-opt" data-size="M" onclick="selectSize(this, 'v8')">M</div><div class="size-opt" data-size="L" onclick="selectSize(this, 'v8')">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'v8')">ADD_TO_ORDER</button>
+    </div>
+
+    <div class="product-card is-coming-soon" id="card-v9">
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">v9_SERIES_LOCKED</div></div>
+        <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
+        <div class="product-img" id="img-v9"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V9</div><div class="spec-line"><span id="spec-v9"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
+        <div class="product-info"><h3 id="title-v9"></h3><span id="price-v9"></span></div>
+        <div class="color-picker" id="picker-v9"></div>
+        <div class="size-picker" id="sizes-v9">
+            <div class="size-opt" data-size="S" onclick="selectSize(this, 'v9')">S</div><div class="size-opt" data-size="M" onclick="selectSize(this, 'v9')">M</div><div class="size-opt" data-size="L" onclick="selectSize(this, 'v8')">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'v9')">ADD_TO_ORDER</button>
+    </div>
+
+    <div class="product-card is-coming-soon" id="card-c1">
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">c1_SERIES_LOCKED</div></div>
+        <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
+        <div class="product-img" id="img-c1"><div class="spec-sheet"><div><div class="spec-header">// SPEC_C1</div><div class="spec-line"><span id="spec-c1"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
+        <div class="product-info"><h3 id="title-c1"></h3><span id="price-c1"></span></div>
+        <div class="color-picker" id="picker-c1"></div>
+        <div class="size-picker" id="sizes-c1">
+            <div class="size-opt" data-size="S" onclick="selectSize(this, 'c1')">S</div><div class="size-opt" data-size="M" onclick="selectSize(this, 'c1')">M</div><div class="size-opt" data-size="L" onclick="selectSize(this, 'c1')">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'c1')">ADD_TO_ORDER</button>
+    </div>
+
     
-    <div class="product-card glitch-active" id="card-lt">
+    <div class="product-card glitch-active is-coming-soon" id="card-lt">
     <div class="coming-soon-overlay">
         <i class="fa-solid fa-microchip" style="color: var(--accent-yellow); margin-bottom: 10px;"></i>
         <div class="lock-status">ERR_LT_ENCRYPTED</div>
@@ -1292,13 +1387,13 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
             <h3 id="title-lt" style="color: var(--accent-yellow);">LT_PROTOTYPE_01</h3>
             <span style="font-size: 0.7rem; color: var(--ash);">[LIMITED]</span>
         </div>
-        <p style="font-size: 0.6rem; color: var(--ash); margin-top: 5px;">MIND // LAPTOP // ROOM</p>
+        <p style="font-size: 0.6rem; color: var(--ash); margin-top: 5px;">1,150 KSh</p>
     </div>
 
     <div class="size-picker" id="sizes-lt">
-        <div class="size-opt" onclick="selectSize(this, 'lt')">S</div>
-        <div class="size-opt" onclick="selectSize(this, 'lt')">M</div>
-        <div class="size-opt" onclick="selectSize(this, 'lt')">L</div>
+        <div class="size-opt" data-size="S" onclick="selectSize(this, 'lt')">S</div>
+        <div class="size-opt" data-size="M" onclick="selectSize(this, 'lt')">M</div>
+        <div class="size-opt" data-size="L" onclick="selectSize(this, 'lt')">L</div>
     </div>
     <button class="add-btn" style="border-color: var(--accent-yellow); color: var(--accent-yellow);" onclick="addToCart(this, 'lt')">ADD_TO_ORDER</button>
 </div>
@@ -1310,9 +1405,9 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         <div class="product-img" id="img-h1"></div>
         <div class="product-info"><h3 id="title-h1"></h3><span>TBD</span></div>
         <div class="color-picker" id="picker-h1"></div>
-        <div class="size-picker"><div class="size-opt">M</div><div class="size-opt">L</div></div>
+        <div class="size-picker"><div class="size-opt" data-size="M">M</div><div class="size-opt" data-size="L">L</div></div>
     </div>
-        </div>
+</div>
 
     
     
@@ -1652,52 +1747,83 @@ const PRODUCTS_CONFIG = {
     v1: {
         price: "750 KSh",
         variants: {
-            black: { title: "Prototype", img: "https://lh3.googleusercontent.com/u/0/d/1wD9Wc516nh0NWiyztYHUW_7lbflZWCc6", spec: "STRUCTURAL_B_01" },
-            white: { title: "Prototype", img: "https://lh3.googleusercontent.com/u/0/d/1fbmAg9UjyOcyTVGXasNSQsaQ42Q4oJc1", spec: "STRUCTURAL_W_01" }
+            black: { title: "Prototype", img: "https://lh3.googleusercontent.com/u/0/d/1wD9Wc516nh0NWiyztYHUW_7lbflZWCc6", spec: "PROTOTYPE_B_v1" },
+            white: { title: "Prototype", img: "https://lh3.googleusercontent.com/u/0/d/1fbmAg9UjyOcyTVGXasNSQsaQ42Q4oJc1", spec: "PROTOTYPE_W_v1" }
         }
     },
     v2: {
-        price: "750 KSh",
+        price: "800 KSh",
         variants: {
-            black: { title: "Monolith", img: "https://lh3.googleusercontent.com/u/0/d/13dqlWO0dYEEDTw4ZAnaDs5LJogfs02as", spec: "STRUCTURAL_B_02" },
-            white: { title: "Monolith", img: "https://lh3.googleusercontent.com/u/0/d/1scyEc8HKKFTD3vxJGW4o7dnD83fKLB7K", spec: "STRUCTURAL_W_02" }
+            black: { title: "Monolith", img: "https://lh3.googleusercontent.com/u/0/d/13dqlWO0dYEEDTw4ZAnaDs5LJogfs02as", spec: "MONOLITH_B_v2" },
+            white: { title: "Monolith", img: "https://lh3.googleusercontent.com/u/0/d/1scyEc8HKKFTD3vxJGW4o7dnD83fKLB7K", spec: "MONOLITH_W_v2" }
         }
     },
     v3: {
         price: "600 KSh",
         variants: {
-            black: { title: "Manifest", img: "https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m", spec: "V3_PROTO_B" },
-            white: { title: "Manifest", img: "https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_", spec: "V3_PROTO_W" }
+            black: { title: "Manifest", img: "https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m", spec: "MANIFEST_W_v3" },
+            white: { title: "Manifest", img: "https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_", spec: "MANIFEST_W_v3" }
         }
     },
     v4: {
-        price: "850 KSh",
+        price: "900 KSh",
         variants: {
-            black: { title: "The_Feed", img: "https://lh3.googleusercontent.com/u/0/d/1T501amo4gK2GJDipB0jsuV0sP7rLs9jx", spec: "STRUCT_4_BLK" },
-            white: { title: "The_Feed", img: "https://lh3.googleusercontent.com/u/0/d/1PWd0zO-JQEBAtV71u4oZO6Uxe3k4lhjx", spec: "STRUCT_4_WHT" }
+            black: { title: "The_Feed", img: "https://lh3.googleusercontent.com/u/0/d/1T501amo4gK2GJDipB0jsuV0sP7rLs9jx", spec: "THE_FEED_B_v4" },
+            white: { title: "The_Feed", img: "https://lh3.googleusercontent.com/u/0/d/1PWd0zO-JQEBAtV71u4oZO6Uxe3k4lhjx", spec: "THE_FEED_W_v4" },
+            maroon: { title: "The_Feed", img: "https://lh3.googleusercontent.com/u/0/d/1maJUgICoURcvjtYGdQ6Ugwm53iD6zVzW", spec: "THE_FEED_MR_v4" }
         }
     },
     v5: {
-        price: "900 KSh",
+        price: "850 KSh",
         variants: {
-            black: { title: "Void", img: "https://lh3.googleusercontent.com/u/0/d/16qoq_fYmDuh19anI828mi-2tRQITZKh1", spec: "STRUCT_4_BLK" },
-            white: { title: "Void", img: "https://lh3.googleusercontent.com/u/0/d/10DrR-JUAOEKodyYrxwnoxNfUR7DVWzM8", spec: "STRUCT_4_WHT" }
+            black: { title: "Void", img: "https://lh3.googleusercontent.com/u/0/d/16qoq_fYmDuh19anI828mi-2tRQITZKh1", spec: "VOID_B_v5" },
+            white: { title: "Void", img: "https://lh3.googleusercontent.com/u/0/d/10DrR-JUAOEKodyYrxwnoxNfUR7DVWzM8", spec: "VOID_W_v5" }
         }
     },
     v6: {
-        price: "800 KSh",
+        price: "900 KSh",
         variants: {
-            black: { title: "Formarnt", img: "https://lh3.googleusercontent.com/u/0/d/1kAmaeBHTLi4wlxHM0A0Cpd0PkbwYmQ9T", spec: "STRUCT_4_BLK" },
-            white: { title: "Formarnt", img: "https://lh3.googleusercontent.com/u/0/d/1f506NG36u6BoBVClUuQH4DUo_5oUWCNY", spec: "STRUCT_4_WHT" }
+            black: { title: "Formarnt", img: "https://lh3.googleusercontent.com/u/0/d/1kAmaeBHTLi4wlxHM0A0Cpd0PkbwYmQ9T", spec: "FORMARNT_B_v6" },
+            white: { title: "Formarnt", img: "https://lh3.googleusercontent.com/u/0/d/1f506NG36u6BoBVClUuQH4DUo_5oUWCNY", spec: "FORMARNT_W_v6" },
+            purple: { title: "Formarnt", img: "https://lh3.googleusercontent.com/u/0/d/1RMzTlRzFpRC8IzNP2m-Fqj2osT5WhVAZ", spec: "FORMARNT_P_v6" }
         }
     },
     v7: {
         price: "900 KSh",
         variants: {
-            black: { title: "Shelter", img: "https://lh3.googleusercontent.com/u/0/d/1SOBSV6s98bUKHzBA59CuDZRi81VIJ7sD", spec: "STRUCT_4_BLK" },
-            white: { title: "Shelter", img: "https://lh3.googleusercontent.com/u/0/d/1kO3WDmafWb_Ylv9A08leuvop3HLLzD4x", spec: "STRUCT_4_WHT" }
+            black: { title: "Shelter", img: "https://lh3.googleusercontent.com/u/0/d/1SOBSV6s98bUKHzBA59CuDZRi81VIJ7sD", spec: "SHELTER_B_v7" },
+            white: { title: "Shelter", img: "https://lh3.googleusercontent.com/u/0/d/1kO3WDmafWb_Ylv9A08leuvop3HLLzD4x", spec: "SHELTER_W_v7" }
         }
     },
+
+    v8: {
+        price: "900 KSh",
+        variants: {
+            black: { title: "Us", img: "https://lh3.googleusercontent.com/u/0/d/1Xeai-OR1LvKddd2zcoVuC3Ee8UTRwIMj", spec: "US_B_v8" },
+            white: { title: "Us", img: "https://lh3.googleusercontent.com/u/0/d/1SPyAXtnSswGlTSk_sh3PKUiGu7Q0Q8V6", spec: "US_W_v8" },
+            beige: { title: "Us", img: "https://lh3.googleusercontent.com/u/0/d/1V6cs-_lOi5VV5tF1y1udiHiICZQ3VVkm", spec: "US_BE_v8" }
+        }
+    },
+
+    v9: {
+        price: "850 KSh",
+        variants: {
+            black: { title: "Capsule", img: "https://lh3.googleusercontent.com/u/0/d/1OIYTwTarvR0loLK115EZvG3bh87NFHOS", spec: "CAPSULE_B_v9" },
+            white: { title: "Capsule", img: "https://lh3.googleusercontent.com/u/0/d/1ZU-9Bs4ifgDCdbdgQKpirZyCnKvo6O3p", spec: "CAPSULE_W_v9" }
+        }
+    },
+
+        c1: {
+        price: "1000 KSh",
+        variants: {
+            black: { title: "Collared", img: "https://lh3.googleusercontent.com/u/0/d/1fLY8MmBiuaUaPaisaw5PqjCzKjCbthTz", spec: "COLLARED_B_c1" },
+            white: { title: "Collared", img: "https://lh3.googleusercontent.com/u/0/d/1MCTToq4LrfTTeHhWzgqVKaqkfoIEao2A", spec: "COLLARED_W_c1" }
+        }
+    },
+
+        
+
+    
     h1: {
         price: "1500 KSh",
         variants: {
@@ -1813,6 +1939,50 @@ function initLoadingScreen() {
 
 window.addEventListener('load', initLoadingScreen);
 
-</script>
-</body>
-</html>
+       /**
+ * [SYSTEM_LOG]: INVENTORY_PROTOCOL_ACTIVE
+ * This script scans for 'is-out-of-stock' class patterns 
+ * to automatically disable specific UI elements.
+ */
+function applyStockLogic() {
+    // Select all cards that have a class containing 'is-out-of-stock'
+    const products = document.querySelectorAll('[class*="is-out-of-stock"]');
+
+    products.forEach(card => {
+        const classList = Array.from(card.classList);
+        
+        classList.forEach(className => {
+            if (className.startsWith('is-out-of-stock')) {
+                
+                // 1. FULL LOCKDOWN: If class is exactly 'is-out-of-stock', kill everything
+                if (className === 'is-out-of-stock') {
+                    card.querySelectorAll('.color-opt, .size-opt').forEach(el => {
+                        el.classList.add('is-disabled-option');
+                    });
+                }
+                
+                // 2. COLOR SUPPRESSION LOGIC
+                // B = Black, W = White, M = Maroon, P = Purple, BE = Beige
+                if (className.includes('-B'))  card.querySelector('.color-opt.black')?.classList.add('is-disabled-option');
+                if (className.includes('-W'))  card.querySelector('.color-opt.white')?.classList.add('is-disabled-option');
+                if (className.includes('-m'))  card.querySelector('.color-opt.maroon')?.classList.add('is-disabled-option');
+                if (className.includes('-P'))  card.querySelector('.color-opt.purple')?.classList.add('is-disabled-option');
+                if (className.includes('-BE')) card.querySelector('.color-opt.beige')?.classList.add('is-disabled-option');
+                
+                // 3. SIZE SUPPRESSION LOGIC (Using the data-size attributes you just added)
+                // S = Small, M = Medium, L = Large
+                if (className.includes('-S')) card.querySelector('.size-opt[data-size="S"]')?.classList.add('is-disabled-option');
+                if (className.includes('-M')) card.querySelector('.size-opt[data-size="M"]')?.classList.add('is-disabled-option');
+                if (className.includes('-L')) card.querySelector('.size-opt[data-size="L"]')?.classList.add('is-disabled-option');
+            }
+        });
+    });
+}
+
+// Initialize the suppression system on load
+window.addEventListener('DOMContentLoaded', applyStockLogic);
+
+                </script>
+            </body>
+        </html>
+    
