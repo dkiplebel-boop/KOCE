@@ -25,7 +25,7 @@
             /* --- VAULT CONTROLS --- */
             --vault-lock-display: flex; /* Set to 'none' to unlock store and enable buttons/cart */
             --vault-opacity: .1;   
-            --vault-blur: 18px; 
+            --vault-blur: 19px; 
         }
 
         /* -----------------------------------------------------------------------
@@ -134,8 +134,8 @@
         }
         #transition-overlay.active .coord-display { opacity: 0.9; transform: translateY(0); }
         
-        .diag-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); padding: 2px 0; }
-        .diag-label { color: var(--ash); }
+        .diag-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); padding: 4px 0; }
+        .diag-label { color: var(--ash); font-size: 9px; }
         .diag-value { font-weight: 700; transition: color 0.1s; }
         
         .loading-bar { width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0; position: relative; overflow: hidden; }
@@ -146,97 +146,113 @@
         -----------------------------------------------------------------------
         */
         /* --- UPDATED TERMINAL SYSTEM --- */
+/* --- OVERPOWERED TERMINAL SYSTEM --- */
+/* --- KÖCE_REMOTE_SHELL_V2 --- */
 #terminal-modal {
-    position: fixed; 
-    inset: 0; 
-    background: rgba(0,0,0,0.98); /* Slightly darker for focus */
-    z-index: 2000;
-    display: none; 
-    justify-content: center; 
-    align-items: center; /* Centered vertically */
-    padding: 20px;
-    backdrop-filter: blur(20px);
-}
-
-.terminal-content {
-    background: #0d0d0d; 
-    border: 1px solid #333; 
-    width: 95%; 
-    max-width: 800px; /* Increased from 500px */
-    height: 80vh;    /* Set a fixed height relative to viewport */
-    font-family: 'Courier New', Courier, monospace; 
-    padding: 25px; 
-    border-radius: 8px;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-    display: flex; 
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 480px;
+    background: #0a0a0b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 10000; /* Stays above the shop grid */
+    display: none; /* Controlled by script */
     flex-direction: column;
+    box-shadow: 0 0 80px rgba(0,0,0,1), 0 0 20px rgba(0, 255, 102, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    isolation: isolate;
 }
 
-.terminal-header { 
-    display: flex; 
-    gap: 10px; 
-    margin-bottom: 20px; 
-    border-bottom: 1px solid #222; 
-    padding-bottom: 15px; 
-    flex-shrink: 0; 
+/* CRT Scanline Effect */
+#terminal-modal::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 5;
 }
 
-.terminal-body { 
-    font-size: 14px; /* Increased from 12px */
-    line-height: 1.8; 
-    color: var(--accent-green); 
-    flex-grow: 1; 
-    overflow-y: auto; 
-    display: flex; 
-    flex-direction: column; 
-    padding-right: 10px; /* Space for scrollbar */
+.terminal-header {
+    background: #151516;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #222;
 }
 
-/* Custom Scrollbar for the Terminal */
-.terminal-body::-webkit-scrollbar { width: 4px; }
-.terminal-body::-webkit-scrollbar-track { background: transparent; }
-.terminal-body::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+.t-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
 
-.t-input-wrapper { 
-    margin-top: 20px; 
-    border-top: 1px solid #222; 
-    padding-top: 20px; 
-    flex-shrink: 0;
+.terminal-body {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    height: 320px;
+    padding: 20px;
+    color: var(--accent-green);
+    overflow-y: auto;
+    background: radial-gradient(circle at center, #121213 0%, #0a0a0b 100%);
+    line-height: 1.6;
 }
 
-        .terminal-btn {
-    background: var(--accent-green); 
-    color: #000; 
+/* BIG COPY UI */
+.copy-banner {
+    background: var(--accent-green);
+    color: black;
+    font-weight: 900;
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.t-input-wrapper {
+    display: flex;
+    border-top: 1px solid #222;
+    background: #0a0a0b;
+}
+
+/* --- TERMINAL PRIMARY ACTION BUTTON --- */
+.terminal-btn, #terminal-execute {
+    flex: 1;
+    padding: 18px;
+    background: var(--accent-green) !important; /* Solid Green */
     border: none;
-    /* Increased padding for a "bigger" feel */
-    padding: 20px 30px; 
-    font-family: inherit; 
-    /* Increased font size and weight */
-    font-size: 14px; 
-    font-weight: 900; 
-    text-transform: uppercase; 
-    letter-spacing: 0.3em;
-    cursor: pointer; 
-    border-radius: 4px; 
-    transition: all 0.3s var(--bezier); 
-    width: 100%;
-    box-shadow: 0 0 20px rgba(0, 255, 102, 0.2);
+    color: #000 !important; /* Black text for high contrast */
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 900;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.2s ease;
+    position: relative;
+    z-index: 10;
 }
 
-.terminal-btn:hover { 
-    background: #fff; 
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
-    transform: translateY(-2px);
+.terminal-btn:hover, #terminal-execute:hover {
+    background: #fff !important; /* Turns white on hover */
+    box-shadow: 0 0 20px var(--accent-green);
+    transform: translateY(-1px);
 }
 
-.terminal-btn:disabled {
-    background: #222;
-    color: #444;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
+.terminal-btn:active {
+    transform: translateY(1px);
 }
 
+.done-btn {
+    border-left: 1px solid #222;
+    color: var(--paper);
+}
+
+.terminal-btn:hover, .done-btn:hover {
+    background: rgba(255,255,255,0.05);
+}
         /* -----------------------------------------------------------------------
         [CART_DRAWER]
         -----------------------------------------------------------------------
@@ -679,20 +695,388 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
 
 /* LT (Limited) Styling */
 .card-lt { border: 1px solid var(--accent-yellow) !important; }
+
+        /* --- OVERPOWERED COMING SOON SYSTEM --- */
+.product-card {
+    position: relative;
+    overflow: hidden;
+}
+
+/* The Lock Overlay */
+.coming-soon-overlay {
+    display: none; 
+    position: absolute;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(14px) grayscale(1);
+    -webkit-backdrop-filter: blur(14px) grayscale(1);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --- REINFORCED REDACTION SYSTEM --- */
+.product-card {
+    position: relative;
+    /* Ensure no child elements can break out of the card boundaries */
+    overflow: hidden; 
+    isolation: isolate;
+}
+
+.coming-soon-overlay {
+    display: none; 
+    position: absolute;
+    /* Inset 0 ensures it covers every pixel from edge to edge */
+    inset: 0; 
+    /* 9999 ensures it sits ABOVE the blue spec-sheet (which is usually z-index 10-100) */
+    z-index: 9999; 
+    background: rgba(10, 10, 11, 0.85); /* Darker base to hide the blue */
+    backdrop-filter: blur(16px) saturate(0); /* High blur + No color */
+    -webkit-backdrop-filter: blur(16px) saturate(0);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    pointer-events: all; /* Blocks clicks from reaching the 'Archive' buttons underneath */
+}
+
+/* This stops the "glitch" where children are still visible */
+.product-card.is-coming-soon * {
+    opacity: 1 !important; /* Makes everything underneath almost invisible */
+    filter: blur(1px);
+}
+
+/* Except the overlay itself, which must stay sharp */
+.product-card.is-coming-soon .coming-soon-overlay {
+    display: flex;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+        /* --- STRUCTURAL LOADING CURTAIN --- */
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 20000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.8s var(--bezier);
+}
+
+/* The Glitch Animation for Entrance/Exit */
+.glitch-out {
+    animation: glitch-exit 0.5s forwards;
+}
+
+@keyframes glitch-exit {
+    0% { transform: scaleY(1); filter: brightness(1) contrast(1); }
+    20% { transform: scaleY(1.02) skewX(5deg); filter: hue-rotate(90deg); }
+    40% { transform: scaleY(0.8) skewX(-10deg); opacity: 0.8; }
+    100% { transform: scaleY(0); filter: brightness(0); opacity: 0; }
+}
+
+.coord-display {
+    font-family: monospace;
+    color: var(--accent-green);
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-shadow: 0 0 5px var(--accent-green);
+    margin-bottom: 20px;
+}
+
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Background Grid */
+.loading-grid {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(0, 255, 102, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 255, 102, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: -1;
+}
+
+.loading-content { width: 300px; text-align: center; }
+
+.coord-display {
+    font-family: 'Courier New', monospace;
+    color: var(--accent-green);
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    min-height: 45px;
+}
+
+.loading-bar-wrapper {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.loading-bar-progress {
+    position: absolute;
+    height: 100%;
+    width: 0%;
+    background: var(--accent-green);
+    box-shadow: 0 0 20px var(--accent-green);
+    transition: width 0.1s linear;
+}
+
+#status-log {
+    font-family: monospace;
+    font-size: 8px;
+    color: var(--ash);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* THE EXIT GLITCH */
+.glitch-exit {
+    animation: koce-shutter 0.7s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+}
+
+@keyframes koce-shutter {
+    0% { clip-path: inset(0 0 0 0); filter: brightness(1); }
+    30% { clip-path: inset(40% 0 40% 0); filter: hue-rotate(90deg); }
+    60% { clip-path: inset(49% 0 49% 0); transform: scaleX(1.5); }
+    100% { clip-path: inset(50% 0 50% 0); transform: scaleX(3); opacity: 0; }
+}
+
+/* Glitch Overlay for the Curtain */
+.curtain-noise {
+    position: absolute;
+    inset: 0;
+    background: url('https://raw.githubusercontent.com/KoceWear/assets/main/noise.png'); /* Or a simple grain filter */
+    opacity: 0.05;
+    pointer-events: none;
+}
+        /* --- COORDINATE TEXT STYLING --- */
+.coord-display {
+    font-family: 'Courier New', monospace;
+    color: var(--accent-green);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px rgba(0, 255, 102, 0.5);
+    text-align: center;
+    line-height: 1.8;
+    min-height: 40px;
+}
+
+#coord-text span {
+    display: block;
+    animation: text-flicker 0.05s infinite;
+}
+
+@keyframes text-flicker {
+    0% { opacity: 1; transform: translateX(0); }
+    25% { opacity: 0.8; transform: translateX(1px); }
+    50% { opacity: 1; transform: translateX(-1px); }
+    100% { opacity: 0.9; }
+}
+
+        /* --- OUT OF STOCK SYSTEM --- */
+.product-card.is-out-of-stock {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Overlay for Out of Stock - No Blur */
+.out-of-stock-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 9998; /* Just below coming-soon */
+    background: rgba(10, 10, 11, 0.4); /* Light tint to show text */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    pointer-events: all; /* Blocks clicks to elements behind it */
+}
+
+.product-card.is-out-of-stock .out-of-stock-overlay {
+    display: flex;
+}
+
+.stock-status {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    font-weight: 900;
+    color: var(--accent-red);
+    text-transform: uppercase;
+}
+
+/* Disable buttons and pickers when out of stock */
+.is-out-of-stock .add-btn,
+.is-out-of-stock .size-opt,
+.is-out-of-stock .spec-trigger {
+    opacity: 0.2;
+    pointer-events: none !important;
+    cursor: not-allowed;
+}
+
+        /* --- OUT OF STOCK BUTTON STATES --- */
+.is-out-of-stock .add-btn {
+    background: transparent !important;
+    border: 1px solid var(--accent-red) !important;
+    color: var(--accent-red) !important;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+/* Optional: Slight dimming of the card to show it's unavailable */
+.product-card.is-out-of-stock {
+    filter: grayscale(0.5);
+    border-color: rgba(255, 60, 60, 0.2) !important;
+}
+
+/* Ensure the overlay doesn't hide the button so the user can see the status */
+.is-out-of-stock .out-of-stock-overlay {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    height: 70%; /* Only covers the image/info area, leaving button visible */
+    background: rgba(10, 10, 11, 0.2);
+    z-index: 5;
+    pointer-events: all;
+    align-items: center;
+    justify-content: center;
+}
+
+    /* --- LT SERIES UNIQUE GLITCH --- */
+#card-lt {
+    position: relative;
+    border: 1px solid var(--accent-yellow) !important;
+    overflow: hidden;
+}
+
+/* The Glitch Animation */
+@keyframes glitch-skew {
+    0% { transform: skew(0deg); }
+    20% { transform: skew(-1deg); }
+    24% { transform: skew(1deg); }
+    28% { transform: skew(0deg); }
+    70% { transform: skew(0.5deg); }
+    80% { transform: skew(-0.5deg); }
+    100% { transform: skew(0deg); }
+}
+
+#card-lt.glitch-active {
+    animation: glitch-skew 3s infinite linear alternate-reverse;
+}
+
+/* Glitchy "Ghost" Border */
+#card-lt::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border: 1px solid var(--accent-blue);
+    opacity: 0;
+    z-index: -1;
+}
+
+#card-lt:hover::before {
+    opacity: 0.5;
+    animation: glitch-skew 0.2s infinite;
+}
+
+/* Redefining the locked state for LT */
+#card-lt .lock-status {
+    font-family: monospace;
+    text-shadow: 1px 0 var(--accent-red), -2px 0 var(--accent-blue);
+    letter-spacing: 5px;
+}
+
+/* High Speed Coord Flux */
+.coord-glitch-text {
+    font-variant-numeric: tabular-nums;
+    font-weight: 900;
+}
+
+/* --- ADD TO CART GHOST EFFECT --- */
+.cart-ghost {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    background: var(--accent-green);
+    pointer-events: none;
+    z-index: 999999;
+    border-radius: 4px;
+    filter: blur(4px);
+    box-shadow: 0 0 20px var(--accent-green), 0 0 40px rgba(0, 255, 102, 0.3);
+    transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+    opacity: 0.9;
+}
+
+.cart-ghost-trail {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: var(--accent-green);
+    pointer-events: none;
+    z-index: 999998;
+    opacity: 0.6;
+    border-radius: 2px;
+    filter: blur(2px);
+    animation: trail-fade 0.5s forwards linear;
+}
+
+@keyframes trail-fade {
+    0% { transform: scale(1.5); opacity: 0.6; }
+    100% { transform: scale(0); opacity: 0; }
+}
     </style>
 </head>
 <body>
 
+<div id="loading-screen">
+    <div class="curtain-noise"></div>
+    <div class="loading-grid"></div>
+    
+    <div class="loading-content">
+        <div class="coord-display">
+            <div id="coord-main" class="coord-glitch-text" style="color: var(--accent-green); font-size: 14px; letter-spacing: 1px;">0.000000° S / 0.000000° E</div>
+            <div id="coord-sub" style="font-size: 8px; opacity: 0.6; margin-top: 5px;">SAT_UPLINK: ACTIVE_LINK_TBD</div>
+        </div>
+
+        <div class="loading-bar-wrapper">
+            <div class="loading-bar-progress" id="load-progress"></div>
+            <div class="bar-glitch"></div>
+        </div>
+
+        <div id="status-log">INITIALIZING_SYSTEM_V.07...</div>
+    </div>
+</div>
+
+    
     <div id="transition-overlay">
         <div class="coord-display">
-            <div class="diag-row"><span class="diag-label">GEO_LATITUDE</span><span id="coord-lat" class="diag-value" style="color:var(--paper)">0.2942° S</span></div>
+            <div class="diag-row" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;"><span class="diag-label">GEO_LATITUDE</span><span id="coord-lat" class="diag-value" style="color:var(--paper)">0.2942° S</span></div>
             <div class="diag-row"><span class="diag-label">GEO_LONGITUDE</span><span id="coord-lng" class="diag-value" style="color:var(--paper)">36.0677° E</span></div>
-            <div class="diag-row"><span class="diag-label">GATENODE_X</span><span id="diag-node" class="diag-value" style="color:var(--accent-blue)">0.0000</span></div>
-            <div class="diag-row"><span class="diag-label">Y_PLANE_TRANS</span><span id="diag-plane" class="diag-value" style="color:var(--accent-blue)">0.0000</span></div>
-            <div class="diag-row"><span class="diag-label">SYS_LATENCY</span><span id="diag-latency" class="diag-value">0ms</span></div>
-            <div class="diag-row"><span class="diag-label">BUFFER_ALLOC</span><span id="diag-buffer" class="diag-value" style="color:var(--accent-yellow)">0kb</span></div>
+            <div style="height: 10px;"></div>
+            <div class="diag-row"><span class="diag-label">NODE_INDEX</span><span id="diag-node" class="diag-value" style="color:var(--accent-blue)">0.0000</span></div>
+            <div class="diag-row"><span class="diag-label">PLANE_X_TRANS</span><span id="diag-plane" class="diag-value" style="color:var(--accent-blue)">0.0000</span></div>
+            <div class="diag-row"><span class="diag-label">PKT_LATENCY</span><span id="diag-latency" class="diag-value">0ms</span></div>
+            <div class="diag-row"><span class="diag-label">RAM_BUFFER</span><span id="diag-buffer" class="diag-value" style="color:var(--accent-yellow)">0kb</span></div>
             <div class="diag-row"><span class="diag-label">ENCRYPTION</span><span id="diag-encryption" class="diag-value" style="color:var(--accent-red)">SECURE_0%</span></div>
-            <div class="loading-bar"><div id="load-progress" class="loading-bar-fill"></div></div>
+            <div class="loading-bar"><div id="load-progress-transition" class="loading-bar-fill"></div></div>
             <div id="diag-msg" style="font-size: 8px; text-transform: uppercase; opacity: 0.5; letter-spacing: 0.2em;">PROTOCOL_HANDSHAKE_ACTIVE</div>
         </div>
     </div>
@@ -712,23 +1096,21 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         </div>
     </div>
 
-    <div id="terminal-modal">
-    <div class="terminal-content">
-        <div class="terminal-header">
-            <div class="t-dot" style="background: #ff5f56;"></div>
-            <div class="t-dot" style="background: #ffbd2e;"></div>
-            <div class="t-dot" style="background: #27c93f;"></div>
-            <span style="font-size: 9px; color: #555; margin-left: auto;">KÖCE_REMOTE_SHELL</span>
-            <button onclick="document.getElementById('terminal-modal').style.display='none'" style="background:none; border:none; color:#555; margin-left:10px; cursor:pointer;">X</button>
-        </div>
-        <div id="terminal-output" class="terminal-body">
-            <div>[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div>
-            <br>
-            <div id="terminal-step-msg">SYSTEM READY FOR MANIFEST GENERATION.</div>
-        </div>
-        <div class="t-input-wrapper" id="terminal-input-container">
-            <button class="terminal-btn" id="terminal-execute">GENERATE_ORDER_MANIFEST</button>
-        </div>
+   <div id="terminal-modal">
+    <div class="terminal-header">
+        <div class="t-dot" style="background: #ff5f56;"></div>
+        <div class="t-dot" style="background: #ffbd2e;"></div>
+        <div class="t-dot" style="background: #27c93f;"></div>
+        <span style="font-size: 9px; color: #555; margin-left: auto; letter-spacing: 1px;">KÖCE_REMOTE_SHELL_V2</span>
+    </div>
+    
+    <div id="terminal-output" class="terminal-body">
+        <div style="opacity: 0.5;">[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div>
+        <div id="terminal-step-msg">> SYSTEM READY FOR MANIFEST GENERATION.</div>
+    </div>
+
+    <div class="t-input-wrapper" id="terminal-input-container">
+        <button class="terminal-btn" id="terminal-execute" onclick="finalizeCheckout()">GENERATE_ORDER_MANIFEST</button>
     </div>
 </div>
 
@@ -746,7 +1128,7 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
             <div class="reveal">
                 <span class="section-label">01 // THE PHILOSOPHY</span>
                 <p class="philosophy-text">
-                    <b>KÖCE</b> (<b>ko-chey</b>) is the study of <b>essential form</b>. We believe that true elegance is found in the <b>absence of the unnecessary</b> reduction of noise. Our garments are designed to be a seamless extension of the self—simplifying the complex relationship between the body and its environment. It is the intersection of <b>logic and luxury</b>, where every silhouette is a <b>calculated response</b> to modern movement.
+                    <b>KÖCE</b> (<b>ko-chey</b>) is the study of <b>essential form</b>. We believe that true elegance is found in the <b>absence of the unnecessary</b> reduction of noise. Our garments are designed to be a seamless extension of the self—simplifying the complex relationship between the body and its environment. It is the intersection of <b>logic and luxury</b>, where every silhouette is a <b>calculated response</b> to emotion.
                 </p>
             </div>
 
@@ -758,13 +1140,13 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
             </div>
 
             <div class="reveal">
-                <span class="section-label">03 // THE DESIGNER</span>
-                <p class="philosophy-text">
-                    A <b>singular vision</b> by [<b>TBD</b>]. One room. A <b>sketchbook</b>, a <b>laptop</b>, and a commitment to the <b>"how and why"</b> of construction. Every piece begins as a <b>hand-drawn line</b> on paper before being translated into a <b>digital blueprint</b>. <b>KÖCE</b> is the personal output of a designer who values the <b>architecture of clothing</b> over the passing trends of the season.
-                </p>
-            </div>
+    <span class="section-label">03 // THE DESIGNER</span>
+    <p class="philosophy-text">
+        A <b>singular vision</b> by [<b>TBD</b>]. One room, a <b>mind</b>, a <b>laptop</b>, and a commitment to the <b>"how and why"</b> of construction. Every piece begins as a <b>digital blueprint</b>. <b>KÖCE</b> is the personal output of a designer who values the <b>architecture of clothing</b> over the passing trends of the season.
+    </p>
+</div>
                     <div class="reveal">
-    <span class="section-label">03 // THE ASSEMBLY</span>
+    <span class="section-label">04 // THE ASSEMBLY</span>
     <p class="philosophy-text">
         Our process is a <b>geographic circuit</b>. We source <b>high-density pure cotton</b> from the industrial hubs of [<b>TBD</b>], selecting only the textiles that meet our structural requirements. The raw forms are then transported to our [<b>TBD</b>] for technical modification. This is where the <b>blueprint meets the fabric</b>—using precision printing and architectural design to transform a standard top into a <b>KÖCE artifact</b>. It is a fusion of capital-city resources and TBD craftsmanship.
     </p>
@@ -802,99 +1184,139 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         
 <div class="store-grid" style="padding-top: 120px;">
     <div class="product-card" id="card-v1">
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">LOCKED</div></div>
         <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
-        <div class="product-img" id="img-v1">
-            <div class="spec-sheet">
-                <div>
-                    <div class="spec-header">// CORE_SPEC_V1.0</div>
-                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value" id="spec-v1"></span></div>
-                </div>
-                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button>
-            </div>
-        </div>
+        <div class="product-img" id="img-v1"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V1</div><div class="spec-line"><span id="spec-v1"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
         <div class="product-info"><h3 id="title-v1"></h3><span id="price-v1"></span></div>
         <div class="color-picker" id="picker-v1"></div>
         <div class="size-picker" id="sizes-v1">
-            <div class="size-opt" onclick="selectSize(this, 'v1')">S</div>
-            <div class="size-opt" onclick="selectSize(this, 'v1')">M</div>
-            <div class="size-opt" onclick="selectSize(this, 'v1')">L</div>
+            <div class="size-opt" onclick="selectSize(this, 'v1')">S</div><div class="size-opt" onclick="selectSize(this, 'v1')">M</div><div class="size-opt" onclick="selectSize(this, 'v1')">L</div>
         </div>
-        <button class="add-btn" onclick="addToCart(this, document.getElementById('title-v1').innerText)">ADD_TO_ORDER</button>
+        <button class="add-btn" onclick="addToCart(this, 'v1')">ADD_TO_ORDER</button>
     </div>
 
+   
     <div class="product-card" id="card-v2">
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">LOCKED</div></div>
         <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
-        <div class="product-img" id="img-v2">
-            <div class="spec-sheet">
-                <div>
-                    <div class="spec-header">// CORE_SPEC_V2.0</div>
-                    <div class="spec-line"><span class="spec-label">SERIES</span><span class="spec-value" id="spec-v2"></span></div>
-                </div>
-                <button class="terminal-btn" style="font-size:8px; padding:10px;" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button>
-            </div>
-        </div>
+        <div class="product-img" id="img-v2"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V2</div><div class="spec-line"><span id="spec-v2"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
         <div class="product-info"><h3 id="title-v2"></h3><span id="price-v2"></span></div>
         <div class="color-picker" id="picker-v2"></div>
         <div class="size-picker" id="sizes-v2">
-            <div class="size-opt" onclick="selectSize(this, 'v2')">S</div>
-            <div class="size-opt" onclick="selectSize(this, 'v2')">M</div>
-            <div class="size-opt" onclick="selectSize(this, 'v2')">L</div>
+            <div class="size-opt" onclick="selectSize(this, 'v2')">S</div><div class="size-opt" onclick="selectSize(this, 'v2')">M</div><div class="size-opt" onclick="selectSize(this, 'v2')">L</div>
         </div>
-        <button class="add-btn" onclick="addToCart(this, document.getElementById('title-v2').innerText)">ADD_TO_ORDER</button>
+        <button class="add-btn" onclick="addToCart(this, 'v2')">ADD_TO_ORDER</button>
     </div>
 
+    
+    
     <div class="product-card is-coming-soon" id="card-v3">
-        <div class="product-img" id="img-v3"><div class="img-overlay">COMING_SOON</div></div>
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">v3E_SERIES_LOCKED</div></div>
+        <div class="product-img" id="img-v3"></div>
         <div class="product-info"><h3 id="title-v3"></h3><span>TBD</span></div>
         <div class="color-picker" id="picker-v3"></div>
-        <div class="size-picker">
-            <div class="size-opt">S</div>
-            <div class="size-opt">M</div>
-            <div class="size-opt">L</div>
-        </div>
+        <div class="size-picker"><div class="size-opt">S</div><div class="size-opt">M</div><div class="size-opt">L</div></div>
     </div>
 
+    
+    
+    <div class="product-card is-coming-soon" id="card-v4">
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">v4_SERIES_LOCKED</div></div>
+        <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
+        <div class="product-img" id="img-v4"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V4</div><div class="spec-line"><span id="spec-v4"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
+        <div class="product-info"><h3 id="title-v4"></h3><span id="price-v4"></span></div>
+        <div class="color-picker" id="picker-v4"></div>
+        <div class="size-picker" id="sizes-v4">
+            <div class="size-opt" onclick="selectSize(this, 'v4')">S</div><div class="size-opt" onclick="selectSize(this, 'v4')">M</div><div class="size-opt" onclick="selectSize(this, 'v4')">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'v4')">ADD_TO_ORDER</button>
+    </div>
+
+   
+    
+    <div class="product-card is-coming-soon" id="card-v5">
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">v5_SERIES_LOCKED</div></div>
+        <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
+        <div class="product-img" id="img-v5"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V5</div><div class="spec-line"><span id="spec-v5"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
+        <div class="product-info"><h3 id="title-v5"></h3><span id="price-v5"></span></div>
+        <div class="color-picker" id="picker-v5"></div>
+        <div class="size-picker" id="sizes-v5">
+            <div class="size-opt" onclick="selectSize(this, 'v5')">S</div>
+            <div class="size-opt" onclick="selectSize(this, 'v5')">M</div>
+            <div class="size-opt" onclick="selectSize(this, 'v5')">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'v5')">ADD_TO_ORDER</button>
+    </div>
+
+    
+    
+    <div class="product-card is-coming-soon" id="card-v6">
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">v6_SERIES_LOCKED</div></div>
+        <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
+        <div class="product-img" id="img-v6"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V6</div><div class="spec-line"><span id="spec-v6"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
+        <div class="product-info"><h3 id="title-v6"></h3><span id="price-v6"></span></div>
+        <div class="color-picker" id="picker-v6"></div>
+        <div class="size-picker" id="sizes-v6">
+            <div class="size-opt" onclick="selectSize(this, 'v6')">S</div><div class="size-opt" onclick="selectSize(this, 'v6')">M</div><div class="size-opt" onclick="selectSize(this, 'v6')">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'v6')">ADD_TO_ORDER</button>
+    </div>
+
+    
+    
+    <div class="product-card is-coming-soon" id="card-v7">
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">v7_SERIES_LOCKED</div></div>
+        <div class="spec-trigger-container"><button class="spec-trigger" onclick="toggleBlueprint(this)">SRC_DECODE</button></div>
+        <div class="product-img" id="img-v7"><div class="spec-sheet"><div><div class="spec-header">// SPEC_V7</div><div class="spec-line"><span id="spec-v7"></span></div></div><button class="terminal-btn" onclick="this.parentElement.classList.remove('is-active')">CLOSE</button></div></div>
+        <div class="product-info"><h3 id="title-v7"></h3><span id="price-v7"></span></div>
+        <div class="color-picker" id="picker-v7"></div>
+        <div class="size-picker" id="sizes-v7">
+            <div class="size-opt" onclick="selectSize(this, 'v7')">S</div><div class="size-opt" onclick="selectSize(this, 'v7')">M</div><div class="size-opt" onclick="selectSize(this, 'v7')">L</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(this, 'v7')">ADD_TO_ORDER</button>
+    </div>
+
+    
+    <div class="product-card glitch-active" id="card-lt">
+    <div class="coming-soon-overlay">
+        <i class="fa-solid fa-microchip" style="color: var(--accent-yellow); margin-bottom: 10px;"></i>
+        <div class="lock-status">ERR_LT_ENCRYPTED</div>
+    </div>
+
+    <div class="product-img" id="img-lt" style="background-image: url('https://lh3.googleusercontent.com/u/0/d/1uY92BUQHDjTtk0v_0vqPTqyN7OeHY_uk');">
+        <div class="img-overlay">COMING_SOON</div>
+    </div>
+
+    <div class="product-info">
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+            <h3 id="title-lt" style="color: var(--accent-yellow);">LT_PROTOTYPE_01</h3>
+            <span style="font-size: 0.7rem; color: var(--ash);">[LIMITED]</span>
+        </div>
+        <p style="font-size: 0.6rem; color: var(--ash); margin-top: 5px;">MIND // LAPTOP // ROOM</p>
+    </div>
+
+    <div class="size-picker" id="sizes-lt">
+        <div class="size-opt" onclick="selectSize(this, 'lt')">S</div>
+        <div class="size-opt" onclick="selectSize(this, 'lt')">M</div>
+        <div class="size-opt" onclick="selectSize(this, 'lt')">L</div>
+    </div>
+    <button class="add-btn" style="border-color: var(--accent-yellow); color: var(--accent-yellow);" onclick="addToCart(this, 'lt')">ADD_TO_ORDER</button>
+</div>
+
+   
+    
     <div class="product-card is-coming-soon" id="card-h1">
-        <div class="product-img" id="img-h1"><div class="img-overlay">COMING_SOON</div></div>
+        <div class="coming-soon-overlay"><i class="fa-solid fa-lock"></i><div class="lock-status">H_SERIES_LOCKED</div></div>
+        <div class="product-img" id="img-h1"></div>
         <div class="product-info"><h3 id="title-h1"></h3><span>TBD</span></div>
         <div class="color-picker" id="picker-h1"></div>
-        <div class="size-picker">
-            <div class="size-opt">M</div>
-            <div class="size-opt">L</div>
-        </div>
+        <div class="size-picker"><div class="size-opt">M</div><div class="size-opt">L</div></div>
     </div>
+        </div>
 
-    <div class="product-card is-coming-soon" id="card-h2">
-        <div class="product-img" id="img-h2"><div class="img-overlay">COMING_SOON</div></div>
-        <div class="product-info"><h3 id="title-h2"></h3><span>TBD</span></div>
-        <div class="color-picker" id="picker-h2"></div>
-        <div class="size-picker">
-            <div class="size-opt">M</div>
-            <div class="size-opt">L</div>
-        </div>
-    </div>
-
-    <div class="product-card is-coming-soon" id="card-collared">
-        <div class="product-img" id="img-collared"><div class="img-overlay">COMING_SOON</div></div>
-        <div class="product-info"><h3 id="title-collared"></h3><span>TBD</span></div>
-        <div class="color-picker" id="picker-collared"></div>
-        <div class="size-picker">
-            <div class="size-opt">S</div>
-            <div class="size-opt">M</div>
-            <div class="size-opt">L</div>
-        </div>
-    </div>
-
-    <div class="product-card is-coming-soon" id="card-lt" style="border: 1px solid var(--accent-yellow);">
-        <div class="product-img" id="img-lt"><div class="img-overlay" style="color:var(--accent-yellow)">LT_LIMITED</div></div>
-        <div class="product-info"><h3 id="title-lt"></h3><span>TBD</span></div>
-        <div class="size-picker">
-            <div class="size-opt">S</div>
-            <div class="size-opt">M</div>
-            <div class="size-opt">L</div>
-        </div>
-    </div>
-</div>
+    
+    
+    
     <script>
         
    const overlay = document.getElementById('transition-overlay');
@@ -936,7 +1358,7 @@ function switchView(viewId) {
     overlay.classList.add('active');
     updateCoordinates();
     let progress = 0;
-    const bar = document.getElementById('load-progress');
+    const bar = document.getElementById('load-progress-transition');
     const interval = setInterval(() => {
         progress += (100 - progress) * 0.15;
         if(progress > 99) progress = 100;
@@ -975,29 +1397,111 @@ function selectSize(btn) {
     btn.classList.add('active');
 }
 
-function addToCart(btn, name) {
+function addToCart(btn, vCode) {
     const card = btn.closest('.product-card');
     const selectedSizeEl = card.querySelector('.size-opt.active');
-    const price = parseInt(card.getAttribute('data-price'));
+    
+    // Detect which color is currently active
+    const activeColorBtn = card.querySelector('.color-opt.active');
+    const color = activeColorBtn ? 
+        Array.from(activeColorBtn.classList).find(c => c !== 'color-opt' && c !== 'active') : 'black';
+
+    const config = PRODUCTS_CONFIG[vCode];
+    const priceStr = config.price || "0";
+    const price = parseInt(priceStr.replace(/[^0-9]/g, ''));
+
     if (!selectedSizeEl) {
         card.querySelector('.size-picker').classList.add('error');
         return;
     }
-    cart.push({ id: Date.now(), name, price, size: selectedSizeEl.innerText });
+
+    // High Quality Cinematic Ghost Effect
+    triggerGhostEffect(btn);
+
+    cart.push({ 
+        id: Date.now(), 
+        vCode: vCode, 
+        color: color,
+        price: price, 
+        size: selectedSizeEl.innerText 
+    });
     updateCartUI();
+}
+
+/**
+ * CINEMATIC GHOST EFFECT
+ * Creates a floating digital artifact that leaves a decaying trail.
+ */
+function triggerGhostEffect(button) {
+    const startRect = button.getBoundingClientRect();
+    const cartBtn = document.getElementById('cart-btn');
+    const endRect = cartBtn.getBoundingClientRect();
+
+    // Create main ghost particle
+    const ghost = document.createElement('div');
+    ghost.className = 'cart-ghost';
+    ghost.style.left = (startRect.left + startRect.width / 2 - 15) + 'px';
+    ghost.style.top = (startRect.top - 15) + 'px';
+    document.body.appendChild(ghost);
+
+    // Track the trail creation interval
+    let trailInterval;
+    
+    // Start tracking the ghost position for trail generation
+    const spawnTrail = () => {
+        const rect = ghost.getBoundingClientRect();
+        const trail = document.createElement('div');
+        trail.className = 'cart-ghost-trail';
+        trail.style.left = (rect.left + rect.width / 2 - 4) + 'px';
+        trail.style.top = (rect.top + rect.height / 2 - 4) + 'px';
+        document.body.appendChild(trail);
+        setTimeout(() => trail.remove(), 500);
+    };
+
+    // Run trail spawner while ghost is moving
+    trailInterval = setInterval(spawnTrail, 25);
+
+    // Forces a reflow to start transition
+    ghost.offsetWidth;
+
+    // Movement: Slow, floaty cubic-bezier
+    ghost.style.left = (endRect.left + endRect.width / 2 - 15) + 'px';
+    ghost.style.top = (endRect.top + endRect.height / 2 - 15) + 'px';
+    ghost.style.transform = 'scale(0.05) rotate(360deg)';
+    ghost.style.opacity = '0';
+
+    setTimeout(() => {
+        clearInterval(trailInterval);
+        ghost.remove();
+        // Feedback on cart button
+        cartBtn.style.transform = 'scale(1.2) rotate(3deg)';
+        setTimeout(() => cartBtn.style.transform = 'scale(1) rotate(0deg)', 200);
+    }, 1200); // Matched to transition duration
 }
 
 function updateCartUI() {
     document.getElementById('cart-count').innerText = cart.length;
     const itemsContainer = document.getElementById('cart-items');
     let total = 0;
+    
     itemsContainer.innerHTML = cart.map(item => {
         total += item.price;
+        const config = PRODUCTS_CONFIG[item.vCode];
+        
+        let designName = "ARCHIVE_PIECE";
+        if (config.single) {
+            designName = config.single.title;
+        } else if (config.variants && config.variants[item.color]) {
+            designName = config.variants[item.color].title;
+        }
+        
         return `
             <div class="cart-item">
                 <div class="cart-item-info">
-                    <h4>${item.name}</h4>
-                    <p style="font-size:9px; color:var(--ash)">SIZE: ${item.size} | ${item.price} KSh</p>
+                    <h4 style="text-transform: uppercase;">${item.vCode} | ${designName}</h4>
+                    <p style="font-size:9px; color:var(--ash)">
+                        VARIANT: ${item.color.toUpperCase()} | SIZE: ${item.size} | ${item.price.toLocaleString()} KSh
+                    </p>
                 </div>
                 <button class="remove-btn" onclick="removeFromCart(${item.id})">REMOVE</button>
             </div>`;
@@ -1019,48 +1523,89 @@ function openTerminal() {
 }
 
 async function finalizeCheckout() {
-    terminalExecute.disabled = true;
-    terminalOutput.innerHTML += `<br><div style="color:var(--accent-yellow)">[CONNECTING] :: SYNCING_WITH_GATEWAY...</div>`;
+    const output = document.getElementById('terminal-output');
+    const executeBtn = document.getElementById('terminal-execute');
+    const inputContainer = document.getElementById('terminal-input-container');
     
-    const orderId = `KÖCE-${Math.floor(1000 + Math.random() * 8999)}`;
-    let manifestText = `KÖCE ORDER MANIFEST\nID: ${orderId}\n\nITEMS:\n`;
-    
-    cart.forEach((i, idx) => {
-        const line = `${idx + 1}. ${i.name} [${i.size}] - ${i.price} KSh\n`;
-        manifestText += line;
-    });
-    
-    const total = document.getElementById('cart-total-value').innerText;
-    manifestText += `\nTOTAL: ${total}`;
-
-    // 1. Copy to Clipboard
-    try {
-        await navigator.clipboard.writeText(manifestText);
-    } catch (err) {
-        console.error('Clipboard failed', err);
+    if (cart.length === 0) {
+        output.innerHTML = `<span style="color:var(--accent-red)">[!] ERROR: DATA_SET_NULL. ADD ITEMS TO CART.</span>`;
+        return;
     }
 
-    // 2. Mock Transmission Success
-    setTimeout(() => {
-        document.getElementById('terminal-input-container').style.display = 'none';
-        terminalOutput.innerHTML += `
-            <div style="color:var(--accent-green); margin-top:10px; font-weight:bold;">[SUCCESS] TRANSMISSION_COMPLETE</div>
-            <br>
-            <div style="background: rgba(0,255,102,0.1); padding: 10px; border: 1px solid var(--accent-green); font-size: 11px; color: var(--paper);">
-                ORDER_MANIFEST HAS BEEN COPIED TO YOUR CLIPBOARD.
+    // Processing animation
+    output.innerHTML = `> INITIALIZING SECURE_LINK...<br>> ENCRYPTING_DATA_STREAM...`;
+    
+    const orderId = `KÖCE-tx${Math.floor(1000 + Math.random() * 8999)}`;
+    let clipText = `--- KÖCE ORDER MANIFEST ---\nORDER_ID: ${orderId}\n\n`;
+    let screenHTML = `<div style="color:var(--paper); margin-bottom:15px; font-weight:bold;">REF_ID: ${orderId}</div>`;
+
+    cart.forEach((item, index) => {
+        const config = PRODUCTS_CONFIG[item.vCode];
+        const name = config.single ? config.single.title : (config.variants ? config.variants[item.color].title : "ITEM");
+        
+        clipText += `${index + 1}. [${item.vCode.toUpperCase()}] ${name}\n   VAR: ${item.color.toUpperCase()} | SIZE: ${item.size} | PRICE: ${item.price} KSh\n\n`;
+        
+        screenHTML += `
+            <div style="border-left: 2px solid var(--accent-green); padding-left: 12px; margin-bottom: 12px;">
+                <span style="color:white; font-weight:bold;">${item.vCode.toUpperCase()} | ${name}</span><br>
+                <span style="font-size:10px; opacity:0.7;">${item.color.toUpperCase()} / SIZE: ${item.size} / ${item.price} KSh</span>
+            </div>`;
+    });
+
+    const totalValue = document.getElementById('cart-total-value').innerText;
+    clipText += `TOTAL AMOUNT: ${totalValue}\n`;
+
+    try {
+        await navigator.clipboard.writeText(clipText);
+        
+        // Final Output UI
+        output.innerHTML = `
+            <div class="copy-banner">AUTO-COPIED TO CLIPBOARD</div>
+            ${screenHTML}
+            <div style="margin-top:15px; color:var(--accent-yellow); font-size:10px;">
+                >> ENCRYPTION_SUCCESS: MANIFEST_READY_FOR_DM
             </div>
-            <br>
-            <div style="font-size:10px; color: var(--ash); line-height:1.6;">
-                1. Navigate to our official messaging channel (Direct Message box).<br>
-                2. Paste the manifest into the message field.<br>
-                3. Send the message to complete structural verification.
-            </div>
-            <br>
-            <button onclick="terminalModal.style.display='none'" class="terminal-btn" style="width:100%">CLOSE_TERMINAL</button>
         `;
-        cart = []; 
-        updateCartUI();
-    }, 1200);
+
+        // Hide the Generate button
+        executeBtn.style.display = 'none';
+
+        // Create the Green Done Button
+        if (!document.querySelector('.done-btn')) {
+            const doneBtn = document.createElement('button');
+            doneBtn.className = 'done-btn terminal-btn'; 
+            
+            doneBtn.style.background = "var(--accent-green)";
+            doneBtn.style.color = "#000";
+            doneBtn.style.width = "100%";
+            doneBtn.style.fontWeight = "900";
+            doneBtn.style.border = "none";
+            doneBtn.style.padding = "18px";
+            doneBtn.style.cursor = "pointer";
+            
+            doneBtn.innerText = 'DONE / CLOSE SHELL';
+            doneBtn.onclick = closeTerminal; 
+            
+            inputContainer.appendChild(doneBtn);
+        }
+    } catch (err) {
+        output.innerHTML = `<span style="color:var(--accent-red)">[!] ERROR: CLIPBOARD_WRITE_FAILED.</span>`;
+        executeBtn.style.display = 'block';
+    }
+}
+
+function closeTerminal() {
+    const modal = document.getElementById('terminal-modal');
+    const executeBtn = document.getElementById('terminal-execute');
+    const output = document.getElementById('terminal-output');
+    const doneBtn = document.querySelector('.done-btn');
+
+    modal.style.display = 'none';
+    output.innerHTML = `<div style="opacity: 0.5;">[SYSTEM] :: SECURE PROTOCOL INITIALIZED.</div><div id="terminal-step-msg">> SYSTEM READY.</div>`;
+    executeBtn.style.display = 'block';
+    if (doneBtn) doneBtn.remove();
+    cart = [];
+    updateCartUI();
 }
 
 // --- 6. LISTENERS ---
@@ -1094,7 +1639,7 @@ const vaultCountdown = setInterval(() => {
     }
 }, 1000);
 
-        function toggleBlueprint(btn) {
+function toggleBlueprint(btn) {
     const card = btn.closest('.product-card');
     const sheet = card.querySelector('.spec-sheet');
     if (sheet) {
@@ -1102,77 +1647,108 @@ const vaultCountdown = setInterval(() => {
     }
 }
 
-      // --- PRODUCT DATABASE: EDIT EVERYTHING HERE ---
+      // --- PRODUCT DATABASE ---
 const PRODUCTS_CONFIG = {
     v1: {
         price: "750 KSh",
         variants: {
-            black: { title: "B-01 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1wD9Wc516nh0NWiyztYHUW_7lbflZWCc6", spec: "STRUCTURAL_B_01" },
-            white: { title: "W-01 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1fbmAg9UjyOcyTVGXasNSQsaQ42Q4oJc1", spec: "STRUCTURAL_W_01" }
+            black: { title: "Prototype", img: "https://lh3.googleusercontent.com/u/0/d/1wD9Wc516nh0NWiyztYHUW_7lbflZWCc6", spec: "STRUCTURAL_B_01" },
+            white: { title: "Prototype", img: "https://lh3.googleusercontent.com/u/0/d/1fbmAg9UjyOcyTVGXasNSQsaQ42Q4oJc1", spec: "STRUCTURAL_W_01" }
         }
     },
     v2: {
         price: "750 KSh",
         variants: {
-            black: { title: "B-02", img: "https://lh3.googleusercontent.com/u/0/d/13dqlWO0dYEEDTw4ZAnaDs5LJogfs02as", spec: "STRUCTURAL_B_02" },
-            white: { title: "W-02 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1scyEc8HKKFTD3vxJGW4o7dnD83fKLB7K", spec: "STRUCTURAL_W_02" }
+            black: { title: "Monolith", img: "https://lh3.googleusercontent.com/u/0/d/13dqlWO0dYEEDTw4ZAnaDs5LJogfs02as", spec: "STRUCTURAL_B_02" },
+            white: { title: "Monolith", img: "https://lh3.googleusercontent.com/u/0/d/1scyEc8HKKFTD3vxJGW4o7dnD83fKLB7K", spec: "STRUCTURAL_W_02" }
         }
     },
     v3: {
+        price: "600 KSh",
         variants: {
-            black: { title: "B-03 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m", spec: "V3_PROTO_B" },
-            white: { title: "W-03 TEE", img: "https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_", spec: "V3_PROTO_W" }
+            black: { title: "Manifest", img: "https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m", spec: "V3_PROTO_B" },
+            white: { title: "Manifest", img: "https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_", spec: "V3_PROTO_W" }
         }
     },
-
+    v4: {
+        price: "850 KSh",
+        variants: {
+            black: { title: "The_Feed", img: "https://lh3.googleusercontent.com/u/0/d/1T501amo4gK2GJDipB0jsuV0sP7rLs9jx", spec: "STRUCT_4_BLK" },
+            white: { title: "The_Feed", img: "https://lh3.googleusercontent.com/u/0/d/1PWd0zO-JQEBAtV71u4oZO6Uxe3k4lhjx", spec: "STRUCT_4_WHT" }
+        }
+    },
+    v5: {
+        price: "900 KSh",
+        variants: {
+            black: { title: "Void", img: "https://lh3.googleusercontent.com/u/0/d/16qoq_fYmDuh19anI828mi-2tRQITZKh1", spec: "STRUCT_4_BLK" },
+            white: { title: "Void", img: "https://lh3.googleusercontent.com/u/0/d/10DrR-JUAOEKodyYrxwnoxNfUR7DVWzM8", spec: "STRUCT_4_WHT" }
+        }
+    },
+    v6: {
+        price: "800 KSh",
+        variants: {
+            black: { title: "Formarnt", img: "https://lh3.googleusercontent.com/u/0/d/1kAmaeBHTLi4wlxHM0A0Cpd0PkbwYmQ9T", spec: "STRUCT_4_BLK" },
+            white: { title: "Formarnt", img: "https://lh3.googleusercontent.com/u/0/d/1f506NG36u6BoBVClUuQH4DUo_5oUWCNY", spec: "STRUCT_4_WHT" }
+        }
+    },
+    v7: {
+        price: "900 KSh",
+        variants: {
+            black: { title: "Shelter", img: "https://lh3.googleusercontent.com/u/0/d/1SOBSV6s98bUKHzBA59CuDZRi81VIJ7sD", spec: "STRUCT_4_BLK" },
+            white: { title: "Shelter", img: "https://lh3.googleusercontent.com/u/0/d/1kO3WDmafWb_Ylv9A08leuvop3HLLzD4x", spec: "STRUCT_4_WHT" }
+        }
+    },
     h1: {
+        price: "1500 KSh",
         variants: {
             black: { title: "B-H1 HOODIE", img: "https://lh3.googleusercontent.com/u/0/d/1EZG_sOJW8WDIsrMENgdFKHeR4bNAaaJp", spec: "400GSM_STRUCTURAL_FLEECE" },
             white: { title: "W-H1 HOODIE", img: "https://lh3.googleusercontent.com/u/0/d/14TfkJLzfKszs6-BGhDmI5n3qsMIdLWyT", spec: "400GSM_STRUCTURAL_FLEECE" }
         }
     },
-    h2: {
-        variants: {
-            black: { title: "B-H2 HOODIE", img: "https://lh3.googleusercontent.com/u/0/d/1uZ3hg7UNuPNIhKzI2BkvxfUY0gb0jDpe", spec: "OVERSIZED_HEAVY_KNIT" },
-            white: { title: "W-H2 HOODIE", img: "https://lh3.googleusercontent.com/u/0/d/1rF729qTwij8YifyBmVqiFNtemY3Zc3as", spec: "OVERSIZED_HEAVY_KNIT" }
-        }
-      },
-
-    collared: {
-        variants: {
-            black: { title: "B-POLO", img: "https://lh3.googleusercontent.com/u/0/d/1W1lmGo7lihExyGQJYf6V2PSm1-Jyy-4E", spec: "POLO_01_B" },
-            white: { title: "W-POLO", img: "https://lh3.googleusercontent.com/u/0/d/1zcV3cWriZXEUli0nFd-eFwzZ3WwZlbax", spec: "POLO_01_W" }
-        }
-    },
-    
     lt: {
-        single: { title: "LT-01 PRIVÉ", img: "https://lh3.googleusercontent.com/u/0/d/1uY92BUQHDjTtk0v_0vqPTqyN7OeHY_uk", spec: "LIMITED_LT_01" }
+        price: "1100 KSh",
+        stock: 10, 
+        isPrototype: true,
+        single: { 
+            title: "LT-01 PRIVÉ", 
+            img: "https://lh3.googleusercontent.com/u/0/d/1uY92BUQHDjTtk0v_0vqPTqyN7OeHY_uk", 
+            spec: "LIMITED_LT_01" 
+        }
     }
 };
-
-// --- LOGIC ENGINE (Don't change this part unless you want to change how it works) ---
+    
 function initStore() {
     for (const [id, data] of Object.entries(PRODUCTS_CONFIG)) {
+        const cardEl = document.getElementById(`card-${id}`);
         const titleEl = document.getElementById(`title-${id}`);
         const priceEl = document.getElementById(`price-${id}`);
         const pickerEl = document.getElementById(`picker-${id}`);
+        const imgEl = document.getElementById(`img-${id}`);
 
         if (priceEl) priceEl.innerText = data.price || "TBD";
 
-        if (data.variants) {
-            // Build the color buttons
-            Object.keys(data.variants).forEach((color, index) => {
-                const btn = document.createElement('div');
-                btn.className = `color-opt ${color} ${index === 0 ? 'active' : ''}`;
-                btn.onclick = () => updateCard(id, color);
-                pickerEl.appendChild(btn);
-            });
-            // Set initial state (default to black)
+        if (data.single) {
+            if (imgEl) imgEl.style.backgroundImage = `url('${data.single.img}')`;
+            if (titleEl) titleEl.innerText = data.single.title;
+            if (data.isPrototype && cardEl) cardEl.classList.add('glitch-active');
+        } 
+        else if (data.variants) {
+            if (pickerEl) {
+                pickerEl.innerHTML = '';
+                Object.keys(data.variants).forEach((color, index) => {
+                    const btn = document.createElement('div');
+                    btn.className = `color-opt ${color} ${index === 0 ? 'active' : ''}`;
+                    btn.onclick = () => updateCard(id, color);
+                    pickerEl.appendChild(btn);
+                });
+            }
             updateCard(id, 'black');
-        } else if (data.single) {
-            // Handle LT (Limited) which has no picker
-            document.getElementById(`img-${id}`).style.backgroundImage = `url('${data.single.img}')`;
-            titleEl.innerText = data.single.title;
+        }
+
+        if (data.stock === 0 && cardEl) {
+            cardEl.classList.add('is-out-of-stock');
+            const btn = cardEl.querySelector('.add-btn');
+            if (btn) btn.innerText = "OUT_OF_STOCK";
         }
     }
 }
@@ -1187,13 +1763,55 @@ function updateCard(id, color) {
     const spec = document.getElementById(`spec-${id}`);
     if (spec) spec.innerText = config.spec;
 
-    // Update active dot
     const dots = document.querySelectorAll(`#picker-${id} .color-opt`);
     dots.forEach(d => d.classList.toggle('active', d.classList.contains(color)));
 }
 
-// Start the store
 window.addEventListener('DOMContentLoaded', initStore);
+
+function initLoadingScreen() {
+    const mainText = document.getElementById('coord-main');
+    const subText = document.getElementById('coord-sub');
+    const logText = document.getElementById('status-log');
+    const progress = document.getElementById('load-progress');
+    const screen = document.getElementById('loading-screen');
+
+    const logs = [
+        "ESTABLISHING_ENCRYPTED_LINK...",
+        "FETCHING_STRUCTURAL_ASSETS...",
+        "CALIBRATING_BLUEPRINTS...",
+        "AUTHORIZING_VAULT_ACCESS...",
+        "SYSTEM_READY."
+    ];
+
+    let percent = 0;
+    
+    const interval = setInterval(() => {
+        percent += Math.random() * 5;
+        if (percent > 100) percent = 100;
+        
+        progress.style.width = percent + '%';
+        const logIndex = Math.floor((percent / 100) * (logs.length - 1));
+        logText.innerText = logs[logIndex];
+
+        // HIGH SPEED COORDINATE FLUX
+        const lat = (0.2942 + (Math.random() * 0.005 - 0.0025)).toFixed(6);
+        const lon = (36.0677 + (Math.random() * 0.005 - 0.0025)).toFixed(6);
+        mainText.innerHTML = `${lat}° S / ${lon}° E`;
+
+        if (percent === 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                screen.classList.add('glitch-exit');
+                setTimeout(() => {
+                    screen.style.display = 'none';
+                }, 700);
+            }, 1000);
+        }
+    }, 60);
+}
+
+window.addEventListener('load', initLoadingScreen);
 
 </script>
 </body>
