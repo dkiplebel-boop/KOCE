@@ -1096,6 +1096,55 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
     background: #800000; /* Maroon to match your theme */
     transform: rotate(-45deg);
 }
+
+    /* --- MANIFESTO STYLING --- */
+.manifesto-container {
+    max-width: 800px;
+    margin-bottom: 80px;
+}
+
+.manifesto-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--accent-green);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    font-weight: 900;
+    border-left: 2px solid var(--accent-green);
+    padding-left: 15px;
+}
+
+.philosophy-text b {
+    color: var(--paper);
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255,255,255,0.1);
+}
+
+/* Glitch Effect for "Visual Noise" */
+.glitch-text {
+    position: relative;
+    display: inline-block;
+}
+
+.glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px;
+    text-shadow: -1px 0 var(--accent-red);
+    top: 0;
+    color: var(--paper);
+    background: var(--obsidian);
+    overflow: hidden;
+    clip: rect(0, 900px, 0, 0);
+    animation: noise-glitch 3s infinite linear alternate-reverse;
+}
+
+@keyframes noise-glitch {
+    0% { clip: rect(10px, 9999px, 20px, 0); }
+    20% { clip: rect(30px, 9999px, 40px, 0); }
+    100% { clip: rect(10px, 9999px, 50px, 0); }
+}
     </style>
 </head>
 <body>
@@ -1178,13 +1227,25 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
             <button class="enter-btn" onclick="switchView('store')">BROWSE_ARCHIVE →</button>
         </section>
 
-                <section class="content-section">
-            <div class="reveal">
-                <span class="section-label">01 // THE PHILOSOPHY</span>
-                <p class="philosophy-text">
-                    <b>KÖCE</b> (<b>ko-chey</b>) is the study of <b>essential form</b>. We believe that true elegance is found in the <b>absence of the unnecessary</b> reduction of noise. Our garments are designed to be a seamless extension of the self—simplifying the complex relationship between the body and its environment. It is the intersection of <b>logic and luxury</b>, where every silhouette is a <b>calculated response</b> to emotion.
-                </p>
-            </div>
+                <section class="content-section reveal">
+    <span class="section-label">01 // PHILOSOPHY</span>
+    <div class="manifesto-container">
+        <h2 class="manifesto-title">I. THE PROBLEM: <span class="glitch-text" data-text="VISUAL NOISE">VISUAL NOISE</span></h2>
+        <p class="philosophy-text">
+            Modern fashion is currently in a state of chaos. We call this <b>"Visual Noise."</b> It is the constant bombardment of loud, meaningless graphics and "hype" that expires within weeks. 
+            This noise creates a cycle of <b>Fast-Fashion Fatigue</b>, where clothes aren’t designed to last—physically or aesthetically. 
+            Most apparel loses its silhouette after a few washes and its relevance before the season is even over.
+        </p>
+        
+        <h2 class="manifesto-title">II. THE SOLUTION: NOISE SUPPRESSION & UNIVERSAL DESIGN</h2>
+        <p class="philosophy-text">
+            <b>KÖCE</b> functions as a <b>Noise Suppression System</b>. We strip away the unnecessary until only the <b>"Signal"</b> remains. 
+            Our pieces solve the issue of garment longevity through <b>Structural Engineering</b>.
+        </p>
+    </div>
+
+
+
 
             <div class="reveal">
                 <span class="section-label">02 // THE ORIGIN</span>
@@ -1209,7 +1270,7 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
                     
         </section>
 
-        <footer class="page-footer">© 2026  // 0.2942° S, 36.0677° E</footer>
+        <footer class="page-footer">© 2026  // 0.2942° S, 36.0677° E, KE</footer>
     </div>
 
     
