@@ -25,7 +25,7 @@
             /* --- VAULT CONTROLS --- */
             --vault-lock-display: flex; /* Set to 'none' to unlock store and enable buttons/cart */
             --vault-opacity: .1;   
-            --vault-blur: 19px; 
+            --vault-blur: 21px; 
         }
 
         /* -----------------------------------------------------------------------
@@ -1227,7 +1227,7 @@ body:has(#vault-lock[style*="display: flex"]) .size-opt {
         
         <p id="lock-msg" style="font-size: 10px; color: #FFFFFF; letter-spacing: 0.1em; line-height: 1.8;">
             The blueprint vault is currently undergoing structural maintenance.<br>
-            Pre-order <b>JULY 1, 2026</b>. OFFICIAL DROP <b>JULY 26,2026</b>
+            Pre-order <b>JULY 16, 2026</b>. OFFICIAL DROP <b>JULY 26,2026</b>
         </p>
     </div>
 </div>
@@ -1720,7 +1720,7 @@ window.onload = () => {
 };
 
 // --- 7. VAULT ---
-const targetDate = new Date("July 1, 2026 00:00:00").getTime();
+const targetDate = new Date("July 16, 2026 00:00:00").getTime();
 const vaultCountdown = setInterval(() => {
     const now = new Date().getTime();
     const distance = targetDate - now;
