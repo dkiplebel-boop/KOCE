@@ -485,7 +485,7 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
     
     <div class="flex flex-col gap-3">
         <button id="final-copy-btn" onclick="copyAndFinalize()" class="w-full py-5 bg-black text-white rounded-xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-zinc-800 transition-all">
-            Copy & Open Instagram
+            Copy 
         </button>
 
         <div class="py-4 px-2">
@@ -922,46 +922,87 @@ function backToShipping() {
  * 5. COPY, REDIRECT, AND CLEAR CART
  */
 async function copyAndFinalize() {
-    const orderText = document.getElementById('order-hash-container').innerText;
     const btn = document.getElementById('final-copy-btn');
+    const orderText = document.getElementById('order-hash-container').innerText;
     
-    const username = "kocestructuralwear";
-    const appLink = `instagram://user?username=${username}`;
-    const webLink = `https://www.instagram.com/${username}/`;
+    // 1. Extract ONLY the code (KOCE-XXXXXX)
+    const orderIDMatch = orderText.match(/KOCE-[A-Z0-9]+/);
+    const orderID = orderIDMatch ? orderIDMatch : "KOCE-UNKNOWN";
+
+    const region = document.getElementById('cust-region').value;
+    const city = region === 'OUTSIDE_NAIROBI' 
+        ? document.getElementById('cust-city-select').value 
+        : 'NAIROBI';
+
+    const orderData = {
+        orderID: orderID,
+        name: document.getElementById('cust-name').value,
+        phone: document.getElementById('cust-phone').value,
+        location: city,
+        total: cart.reduce((a, b) => a + b.price, 0),
+        items: cart.map(it => ({
+            name: it.name,
+            size: it.selectedSize,
+            color: it.selectedColor
+        }))
+    };
+
+    btn.innerText = "SAVING ORDER...";
+    btn.disabled = true;
 
     try {
-        // 1. Copy to clipboard
+        // Upload to your Google Sheet
+        await fetch('https://script.google.com/macros/s/AKfycbzAOJRa36ccq4Jvx6U8YgdG5WUQVhdT-KouhIdd0SyeMn15UXvjGgmuSkZwhZYW3Uwwzw/exec', {
+            method: 'POST',
+            mode: 'no-cors', 
+            body: JSON.stringify(orderData)
+        });
+
+        // Copy the summary to clipboard
         await navigator.clipboard.writeText(orderText);
         
-        // 2. Feedback and Cart Clearing
-        btn.innerText = "COPIED! OPENING APP...";
-        btn.style.backgroundColor = "#000"; 
-        
-        // CLEAR THE CART HERE
+        // --- NEW SUCCESS UI ---
+        const summaryPhase = document.getElementById('phase-summary');
+        summaryPhase.innerHTML = `
+            <div class="py-10 animate-fade-in">
+                <div class="mb-6 flex justify-center">
+                    <div class="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center font-black">✓</div>
+                </div>
+                <h3 class="font-heading font-black text-3xl uppercase mb-4">Order Logged</h3>
+                <p class="text-[10px] text-black/60 tracking-[0.2em] uppercase leading-loose mb-8">
+                    Your details are copied to your clipboard.<br>
+                    Follow these steps to finish:
+                </p>
+                
+                <div class="text-left space-y-6 mb-10 border-t border-black/5 pt-8">
+                    <div class="flex gap-4">
+                        <span class="font-black opacity-20 text-xs">01</span>
+                        <p class="text-[10px] font-bold uppercase tracking-widest">Leave the site and open Instagram</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <span class="font-black opacity-20 text-xs">02</span>
+                        <p class="text-[10px] font-bold uppercase tracking-widest">Search for <span class="underline">@kocestructuralwear</span></p>
+                    </div>
+                    <div class="flex gap-4">
+                        <span class="font-black opacity-20 text-xs">03</span>
+                        <p class="text-[10px] font-bold uppercase tracking-widest">Paste your message in our DMs</p>
+                    </div>
+                </div>
+
+                <button onclick="closeModal();" class="w-full py-5 border border-black text-black rounded-xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-black hover:text-white transition-all">
+                    Dismiss
+                </button>
+            </div>
+        `;
+
+        // Clear the cart
         cart = []; 
-        updateCartUI(); // Updates the bag count and list on your main site
+        updateCartUI();
 
-        // 3. Launch Instagram App
-        setTimeout(() => {
-            window.location.href = appLink;
-
-            // Fallback for Desktop
-            setTimeout(() => {
-                if (!document.hidden) {
-                    window.open(webLink, '_blank');
-                }
-            }, 500);
-
-            // Close modal and reset button after delay
-            setTimeout(() => {
-                closeModal();
-                btn.innerText = "Copy & Open Instagram";
-            }, 1000);
-        }, 800);
-        
     } catch (err) {
-        console.error('Clipboard failed', err);
-        alert("Clipboard access denied. Please copy the text manually.");
+        console.error('System Error:', err);
+        btn.innerText = "RETRY";
+        btn.disabled = false;
     }
 }
 
