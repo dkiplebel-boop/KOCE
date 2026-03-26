@@ -49,10 +49,14 @@
     position: fixed; 
     inset: 0; 
     z-index: 1500;
-    pointer-events: none; /* Allows clicking "KÖCE" through the blur */
+    pointer-events: none; /* Allows clicking the Nav/Home button through the overlay */
     align-items: center; 
     justify-content: center; 
     flex-direction: column;
+}
+
+#vault-countdown {
+    pointer-events: auto; /* The text itself can still be interacted with if needed */
 }
 
         body {
@@ -285,7 +289,7 @@
     <div id="transition-grid"></div>
 
     <div id="gateway">
-        <button class="enter-trigger text-white uppercase font-black tracking-[1em] text-[10px]" onclick="enterSite()">Initialize System</button>
+        <button class="enter-trigger text-white uppercase font-black tracking-[1em] text-[10px]" onclick="enterSite()">Enter</button>
     </div>
 
     <div id="vault-overlay">
@@ -601,39 +605,47 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
         }
 
         function navigate(pageId) {
-            grid.classList.add('active');
-            const blocks = Array.from(document.querySelectorAll('.pixel-block'));
-            blocks.forEach((b, i) => {
-                const x = i % 10; const y = Math.floor(i / 10);
-                b.style.transitionDelay = `${(x + y) * 20}ms`;
-            });
-            setTimeout(() => {
-                document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-                const targetPage = document.getElementById(pageId);
-                targetPage.style.display = pageId === 'shop' ? 'block' : 'flex';
-                if(pageId === 'shop') renderShop();
-                if(pageId === 'home') triggerHomeAnims();
-                window.scrollTo(0, 0);
-                grid.classList.remove('active');
-                initObserver();
-            }, 600);
+    grid.classList.add('active');
+    const blocks = Array.from(document.querySelectorAll('.pixel-block'));
+    
+    blocks.forEach((b, i) => {
+        const x = i % 10; const y = Math.floor(i / 10);
+        b.style.transitionDelay = `${(x + y) * 20}ms`;
+    });
 
-            const isLocked = getComputedStyle(document.documentElement).getPropertyValue('--vault-lock-display').trim() === 'flex';
-            const shopEl = document.getElementById('shop');
-            const vaultOverlay = document.getElementById('vault-overlay');
-            const cartBtn = document.getElementById('cart-btn-trigger');
+    setTimeout(() => {
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+        const targetPage = document.getElementById(pageId);
+        targetPage.style.display = pageId === 'shop' ? 'block' : 'flex';
+        
+        if(pageId === 'shop') renderShop();
+        if(pageId === 'home') triggerHomeAnims();
+        
+        window.scrollTo(0, 0);
+        grid.classList.remove('active');
+        initObserver();
 
-            if (pageId === 'shop' && isLocked) {
-                shopEl.classList.add('vault-active');
-                vaultOverlay.style.display = 'flex';
-                cartBtn.classList.add('cart-locked'); 
-                startVaultTimer();
-            } else {
-                shopEl.classList.remove('vault-active');
-                vaultOverlay.style.display = 'none';
-                cartBtn.classList.remove('cart-locked');
-            }
+        // --- VAULT SCROLL LOCK ---
+        const isLocked = getComputedStyle(document.documentElement).getPropertyValue('--vault-lock-display').trim() === 'flex';
+        const shopEl = document.getElementById('shop');
+        const vaultOverlay = document.getElementById('vault-overlay');
+        const cartBtn = document.getElementById('cart-btn-trigger');
+
+        if (pageId === 'shop' && isLocked) {
+            shopEl.classList.add('vault-active');
+            vaultOverlay.style.display = 'flex';
+            cartBtn.classList.add('cart-locked'); 
+            document.body.classList.add('no-scroll'); // Locks background scroll
+            startVaultTimer();
+        } else {
+            shopEl.classList.remove('vault-active');
+            vaultOverlay.style.display = 'none';
+            cartBtn.classList.remove('cart-locked');
+            document.body.classList.remove('no-scroll'); // Unlocks for Home
         }
+    }, 600);
+}
+
 
         function startVaultTimer() {
             const target = new Date("July 16, 2026 00:00:00").getTime();
