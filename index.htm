@@ -18,15 +18,18 @@
     
     <style>
         :root {
-            --bg: #f5f5f5;
-            --text: #1A1A1B;
+            --bg: #fffff5;
+            --text: #000000;
+             
             --ease-heavy: cubic-bezier(0.9, 0, 0.1, 1);
             --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
             --ios-blur: blur(20px);
             
+   
+            
         --vault-lock-display: flex; /* Set to 'none' to unlock */
-    --vault-blur: 17px;
-    --vault-opacity: .1;
+    --vault-blur: 30px;
+    --vault-opacity: 0.2;
 }
 
 /* Blurs the entire shop page content */
@@ -506,10 +509,7 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
 
         <div class="py-4 px-2">
             <p class="text-[9px] text-black/40 uppercase tracking-[0.2em] leading-loose">
-                1. Click the button above<br>
-                2. Instagram will open automatically<br>
-                3. <span class="text-black font-bold underline">Paste</span> the message in our DMs to confirm
-            </p>
+                1. Click the button above to copy message<br>
         </div>
         
         <button onclick="backToShipping()" class="w-full py-4 text-[10px] font-black uppercase tracking-[0.4em] text-black/30 hover:text-black transition-colors">Edit Details</button>
@@ -533,48 +533,48 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
             
 
             
-            { id: 'V3', name: 'Manifest', price: 600, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m', white: 'https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_' }, colors: ['black', 'white'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
+            { id: 'V3', name: 'Manifest', price: 0, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1bszXefx_eHCLLjnvZyF_DVYUFSLZAP9m', white: 'https://lh3.googleusercontent.com/u/0/d/1QTdQbqCF-bhyf-CvuuL5vtoOmb5Tfz4_' }, colors: ['black', 'white'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
 
             
            
-            { id: 'V4', name: 'The Feed', price: 900, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1T501amo4gK2GJDipB0jsuV0sP7rLs9jx', white: 'https://lh3.googleusercontent.com/u/0/d/1PWd0zO-JQEBAtV71u4oZO6Uxe3k4lhjx', marron: 'https://lh3.googleusercontent.com/u/0/d/1maJUgICoURcvjtYGdQ6Ugwm53iD6zVzW' }, colors: ['black', 'white', 'marron'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
+            { id: 'V4', name: 'The Feed', price: 0, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1T501amo4gK2GJDipB0jsuV0sP7rLs9jx', white: 'https://lh3.googleusercontent.com/u/0/d/1PWd0zO-JQEBAtV71u4oZO6Uxe3k4lhjx', marron: 'https://lh3.googleusercontent.com/u/0/d/1maJUgICoURcvjtYGdQ6Ugwm53iD6zVzW' }, colors: ['black', 'white', 'marron'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
 
 
 
-            { id: 'V5', name: 'Void', price: 850, img: { black: 'https://lh3.googleusercontent.com/u/0/d/16qoq_fYmDuh19anI828mi-2tRQITZKh1', white: 'https://lh3.googleusercontent.com/u/0/d/10DrR-JUAOEKodyYrxwnoxNfUR7DVWzM8' }, colors: ['black', 'white'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
-
-            
-            
-            { id: 'V6', name: 'Formarnt', price: 900, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1kAmaeBHTLi4wlxHM0A0Cpd0PkbwYmQ9T', white: 'https://lh3.googleusercontent.com/u/0/d/1f506NG36u6BoBVClUuQH4DUo_5oUWCNY', purple: 'https://lh3.googleusercontent.com/u/0/d/1RMzTlRzFpRC8IzNP2m-Fqj2osT5WhVAZ' }, colors: ['black', 'white', 'purple'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
-
-
-            
-            { id: 'V7', name: 'Shelter', price: 850, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1SOBSV6s98bUKHzBA59CuDZRi81VIJ7sD', white: 'https://lh3.googleusercontent.com/u/0/d/1kO3WDmafWb_Ylv9A08leuvop3HLLzD4x' }, colors: ['black', 'white'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
+            { id: 'V5', name: 'Void', price: 0, img: { black: 'https://lh3.googleusercontent.com/u/0/d/16qoq_fYmDuh19anI828mi-2tRQITZKh1', white: 'https://lh3.googleusercontent.com/u/0/d/10DrR-JUAOEKodyYrxwnoxNfUR7DVWzM8' }, colors: ['black', 'white'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
 
             
             
-            { id: 'V8', name: 'Us', price: 900, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1Xeai-OR1LvKddd2zcoVuC3Ee8UTRwIMj', white: 'https://lh3.googleusercontent.com/u/0/d/1SPyAXtnSswGlTSk_sh3PKUiGu7Q0Q8V6', beige: 'https://lh3.googleusercontent.com/u/0/d/1V6cs-_lOi5VV5tF1y1udiHiICZQ3VVkm' }, colors: ['black', 'white', 'beige'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
-
-            
-            { id: 'V9', name: 'Capsule', price: 850, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1OIYTwTarvR0loLK115EZvG3bh87NFHOS', white: 'https://lh3.googleusercontent.com/u/0/d/1ZU-9Bs4ifgDCdbdgQKpirZyCnKvo6O3p' }, colors: ['black', 'white'], sizes: ['M', 'L'], status: 'coming soon' },
-            
-
-            
-            { id: 'V10', name: 'Ascensation', price: 800, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1Ah3ziLjiHTibMI8S3L3KUZR9qQghHHPd', white: 'https://lh3.googleusercontent.com/u/0/d/18TvJ8s5IlMAPNQ3SZ-cBiRMRZ2zQFINe', darkgreen: 'https://lh3.googleusercontent.com/u/0/d/14E88kAZig_kfYMkOLSPXXmdX3NTlIjdP' }, colors: ['black', 'white', 'darkgreen'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
+            { id: 'V6', name: 'Formarnt', price: 0, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1kAmaeBHTLi4wlxHM0A0Cpd0PkbwYmQ9T', white: 'https://lh3.googleusercontent.com/u/0/d/1f506NG36u6BoBVClUuQH4DUo_5oUWCNY', purple: 'https://lh3.googleusercontent.com/u/0/d/1RMzTlRzFpRC8IzNP2m-Fqj2osT5WhVAZ' }, colors: ['black', 'white', 'purple'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
 
 
             
-            { id: 'H1', name: 'Prototype', price: 1500, img: { black: 'https://images.unsplash.com/photo-1534215754734-18e55d13e346', white: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b' }, colors: ['black', 'white'], sizes: ['M', 'L'], status: 'coming soon' },
+            { id: 'V7', name: 'Shelter', price: 0, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1SOBSV6s98bUKHzBA59CuDZRi81VIJ7sD', white: 'https://lh3.googleusercontent.com/u/0/d/1kO3WDmafWb_Ylv9A08leuvop3HLLzD4x' }, colors: ['black', 'white'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
+
+            
+            
+            { id: 'V8', name: 'Us', price: 0, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1Xeai-OR1LvKddd2zcoVuC3Ee8UTRwIMj', white: 'https://lh3.googleusercontent.com/u/0/d/1SPyAXtnSswGlTSk_sh3PKUiGu7Q0Q8V6', beige: 'https://lh3.googleusercontent.com/u/0/d/1V6cs-_lOi5VV5tF1y1udiHiICZQ3VVkm' }, colors: ['black', 'white', 'beige'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
+
+            
+            { id: 'V9', name: 'Capsule', price: 0, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1OIYTwTarvR0loLK115EZvG3bh87NFHOS', white: 'https://lh3.googleusercontent.com/u/0/d/1ZU-9Bs4ifgDCdbdgQKpirZyCnKvo6O3p' }, colors: ['black', 'white'], sizes: ['M', 'L'], status: 'coming soon' },
+            
+
+            
+            { id: 'V10', name: 'Ascensation', price: 0, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1Ah3ziLjiHTibMI8S3L3KUZR9qQghHHPd', white: 'https://lh3.googleusercontent.com/u/0/d/18TvJ8s5IlMAPNQ3SZ-cBiRMRZ2zQFINe', darkgreen: 'https://lh3.googleusercontent.com/u/0/d/14E88kAZig_kfYMkOLSPXXmdX3NTlIjdP' }, colors: ['black', 'white', 'darkgreen'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
+
+
+            
+            { id: 'H1', name: 'Prototype', price: 0, img: { black: 'https://images.unsplash.com/photo-1534215754734-18e55d13e346', white: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b' }, colors: ['black', 'white'], sizes: ['M', 'L'], status: 'coming soon' },
 
         
-            { id: 'C1', name: 'Collared', price: 1000, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1fLY8MmBiuaUaPaisaw5PqjCzKjCbthTz', white: 'https://lh3.googleusercontent.com/u/0/d/1MCTToq4LrfTTeHhWzgqVKaqkfoIEao2A', navyblue: 'https://lh3.googleusercontent.com/u/0/d/1ZN_ICADYkhTumxVNyxvQRjefy0WdvxXG' }, colors: ['black', 'white', 'navyblue'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
+            { id: 'C1', name: 'Collared', price: 0, img: { black: 'https://lh3.googleusercontent.com/u/0/d/1fLY8MmBiuaUaPaisaw5PqjCzKjCbthTz', white: 'https://lh3.googleusercontent.com/u/0/d/1MCTToq4LrfTTeHhWzgqVKaqkfoIEao2A', navyblue: 'https://lh3.googleusercontent.com/u/0/d/1ZN_ICADYkhTumxVNyxvQRjefy0WdvxXG' }, colors: ['black', 'white', 'navyblue'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
 
             
-            { id: 'LT1', name: 'Prive', price: 1100, img: { pink: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a' }, colors: ['pink'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
+            { id: 'LT1', name: 'Prive', price: 0, img: { pink: 'https://lh3.googleusercontent.com/u/0/d/1uY92BUQHDjTtk0v_0vqPTqyN7OeHY_uk' }, colors: ['pink'], sizes: ['S', 'M', 'L'], status: 'coming soon' },
 
 
             
-            { id: 'LT2', name: 'Atelier', price: 1100, img: { lightblue: ' https://lh3.googleusercontent.com/u/0/d/1X6h6bpHV0U-mP6n6KUMGUttYYVTZ4A_D' }, colors: ['lightblue'], sizes: ['S', 'M', 'L'], status: 'coming soon' }
+            { id: 'LT2', name: 'Atelier', price: 0, img: { lightblue: ' https://lh3.googleusercontent.com/u/0/d/1X6h6bpHV0U-mP6n6KUMGUttYYVTZ4A_D' }, colors: ['lightblue'], sizes: ['S', 'M', 'L'], status: 'coming soon' }
         ];
 
         let cart = [];
@@ -584,18 +584,20 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
 
 
             function enterSite() {
-    // Remove the scroll lock from the body
-    document.body.classList.remove('no-scroll');
+    const trigger = document.querySelector('.enter-trigger');
+    trigger.innerText = "AUTHENTICATING..."; // Change text to feel technical
     
-    // Hide the gateway
-    document.getElementById('gateway').classList.add('hidden');
-    
-    // Reveal navigation and trigger animations
-    document.getElementById('main-nav').style.opacity = "1";
-    triggerHomeAnims();
+    setTimeout(() => {
+        document.body.classList.remove('no-scroll');
+        document.getElementById('gateway').classList.add('hidden');
+        document.getElementById('main-nav').style.opacity = "1";
+        // ... rest of your logic
+         triggerHomeAnims();
     initScrollEngine();
     initObserver();
-        }
+    }, 1500); 
+}
+       
 
         function triggerHomeAnims() {
             const left = document.querySelector('.hero-split-left');
@@ -1078,6 +1080,11 @@ function closeModal() {
             document.querySelectorAll('.product-item, .reveal-on-scroll').forEach(el => obs.observe(el));
         }
 
+       
+
     </script>
+
+   
+
 </body>
 </html>
