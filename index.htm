@@ -16,270 +16,333 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;600;800;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     
-    <style>
-        :root {
-            --bg: #fffff5;
-            --text: #000000;
-             
-            --ease-heavy: cubic-bezier(0.9, 0, 0.1, 1);
-            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-            --ios-blur: blur(20px);
-            
-   
-            
-        --vault-lock-display: flex; /* Set to 'none' to unlock */
-    --vault-blur: 30px;
-    --vault-opacity: 0.2;
-}
-
-/* Blurs the entire shop page content */
-#shop.vault-active {
-    filter: blur(var(--vault-blur));
-    opacity: var(--vault-opacity);
-    pointer-events: none;
-}
-
-/* Specifically dims and locks the Bag button */
-.cart-locked {
-    opacity: 0.2 !important;
-    pointer-events: none !important;
-    cursor: not-allowed;
-}
-
-/* Vault text styling */
-#vault-overlay {
-    display: none; 
-    position: fixed; 
-    inset: 0; 
-    z-index: 1500;
-    pointer-events: none; /* Allows clicking the Nav/Home button through the overlay */
-    align-items: center; 
-    justify-content: center; 
-    flex-direction: column;
-}
-
-#vault-countdown {
-    pointer-events: auto; /* The text itself can still be interacted with if needed */
-}
-
-        body {
-            background-color: var(--bg); color: var(--text);
-            font-family: 'Inter', sans-serif; overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .font-heading { font-family: 'Space Grotesk', sans-serif; }
-
-        /* --- VORTEX TRANSITION SYSTEM --- */
-        #transition-grid {
-            position: fixed; inset: 0; display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            grid-template-rows: repeat(10, 1fr);
-            z-index: 5000; pointer-events: none;
-        }
-        .pixel-block {
-            background: #000; transform: scale(0) rotate(-45deg);
-            transition: all 0.6s var(--ease-heavy);
-        }
-        #transition-grid.active .pixel-block {
-            transform: scale(1.1) rotate(0deg);
-        }
-
-        /* --- GATEWAY SCREEN --- */
-        #gateway {
-            position: fixed; inset: 0; background: #000;
-            z-index: 2000; display: flex; align-items: center; justify-content: center;
-            transition: opacity 1s var(--ease-heavy);
-        }
-        #gateway.hidden { opacity: 0; pointer-events: none; }
+   <style>
+    :root {
+        /* Updated for 1A1A1B Background */
+        --bg: #1A1A1B; 
+        --text: #ffffff;
+         
+        --ease-heavy: cubic-bezier(0.9, 0, 0.1, 1);
+        --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        --ios-blur: blur(20px);
         
-        @keyframes glowPulse {
-            0% { text-shadow: 0 0 5px rgba(255,255,255,0.2); opacity: 0.6; }
-            50% { text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.4); opacity: 1; }
-            100% { text-shadow: 0 0 5px rgba(255,255,255,0.2); opacity: 0.6; }
-        }
-        .enter-trigger { animation: glowPulse 2s infinite ease-in-out; }
+        --vault-lock-display: flex; 
+        --vault-blur: 30px;
+        --vault-opacity: .2;
+    }
 
-        /* --- HERO ANIMATIONS --- */
-        @keyframes splitRevealLeft {
-            0% { transform: translateX(-60vw); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes splitRevealRight {
-            0% { transform: translateX(60vw); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-        
-        .hero-split-left { animation: splitRevealLeft 1.2s var(--ease-heavy) 0.5s forwards; opacity: 0; }
-        .hero-split-right { animation: splitRevealRight 1.2s var(--ease-heavy) 0.5s forwards; opacity: 0; }
-        .hero-fade-up { transform: translateY(20px); opacity: 0; transition: all 1s var(--ease-out) 1.2s; }
-        .hero-fade-up.active { transform: translateY(0); opacity: 1; }
+    /* Blurs the entire shop page content */
+    #shop.vault-active {
+        filter: blur(var(--vault-blur));
+        opacity: var(--vault-opacity);
+        pointer-events: none;
+    }
 
-        /* --- STATUS STYLING --- */
-        .status-badge {
-            position: absolute; top: 20px; right: 20px; z-index: 30;
-            background: #000; color: #fff; padding: 4px 12px;
-            font-size: 8px; font-weight: 900; text-transform: uppercase;
-            letter-spacing: 0.2em; border-radius: 4px;
-        }
-        
-        .coming-soon-blur {
-            filter: blur(25px) grayscale(1);
-            transform: scale(1.1);
-        }
+    /* Specifically dims and locks the Bag button */
+    .cart-locked {
+        opacity: 0.2 !important;
+        pointer-events: none !important;
+        cursor: not-allowed;
+    }
 
-        .variant-oos {
-            opacity: 0.1 !important;
-            pointer-events: none !important;
-            filter: grayscale(1);
-            text-decoration: line-through;
-        }
+    /* Vault text styling */
+    #vault-overlay {
+        display: none; 
+        position: fixed; 
+        inset: 0; 
+        z-index: 1500;
+        pointer-events: none; 
+        align-items: center; 
+        justify-content: center; 
+        flex-direction: column;
+    }
 
-        /* COLORS */
-        .color-black { background: #000; }
-        .color-white { background: #fff; border: 1px solid #ddd; }
-        .color-marron { background: #800000; }
-        .color-purple { background: #6b21a8; }
-        .color-beige { background: #f5f5dc; }
-        .color-darkgreen { background: #064e3b; }
-        .color-navyblue { background: #1e3a8a; }
-        .color-pink { background: #f472b6; }
-        .color-lightblue { background: #bae6fd; }
+    #vault-countdown {
+        pointer-events: auto; 
+    }
 
-        /* --- PIXEL REVEAL --- */
-        .pixel-mask {
-            display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(8, 1fr);
-            position: absolute; inset: 0; z-index: 10; pointer-events: none;
-        }
-        .reveal-pixel {
-            background: #ebebeb; transition: transform 0.6s var(--ease-heavy);
-        }
-        .revealed .reveal-pixel { transform: scale(0); }
+    body {
+        background-color: var(--bg); color: var(--text);
+        font-family: 'Inter', sans-serif; overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+    }
 
-        .home-bg-accents {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            overflow: hidden; pointer-events: none; z-index: -1;
-        }
-        .accent-blur {
-            position: absolute; width: 80vw; height: 80vw; background: rgba(0,0,0,0.03);
-            filter: blur(150px); border-radius: 50%; animation: float 20s infinite alternate;
-        }
-        @keyframes float {
-            0% { transform: translate(-10%, -10%) scale(1); }
-            100% { transform: translate(10%, 10%) scale(1.2); }
-        }
+    .font-heading { font-family: 'Space Grotesk', sans-serif; }
 
-        /* --- NAVIGATION --- */
-        nav { transition: all 0.5s var(--ease-out); z-index: 1000 !important; }
-        .scrolled .nav-pill {
-            background: rgba(255, 255, 255, 0.8); padding: 12px 28px;
-            border-radius: 40px; backdrop-filter: var(--ios-blur);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        }
+    /* --- VORTEX TRANSITION SYSTEM --- */
+    #transition-grid {
+        position: fixed; inset: 0; display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        grid-template-rows: repeat(10, 1fr);
+        z-index: 5000; pointer-events: none;
+    }
+    .pixel-block {
+        background: #fff; transform: scale(0) rotate(-45deg);
+        transition: all 0.6s var(--ease-heavy);
+    }
+    #transition-grid.active .pixel-block {
+        transform: scale(1.1) rotate(0deg);
+    }
 
-        .product-item, .reveal-on-scroll { opacity: 0; transform: translateY(40px); transition: all 1s var(--ease-out); }
-        .product-item.revealed, .reveal-on-scroll.revealed { opacity: 1; transform: translateY(0); }
-        .img-container { background: #ebebeb; overflow: hidden; position: relative; transition: transform 0.6s var(--ease-out); }
-        .product-item:hover .img-container { transform: translateY(-8px); }
+    /* --- GATEWAY SCREEN --- */
+    #gateway {
+        position: fixed; inset: 0; background: #000;
+        z-index: 9999; display: flex; align-items: center; justify-content: center;
+        transition: opacity 1s var(--ease-heavy);
+    }
+    #gateway.hidden { opacity: 0; pointer-events: none; }
+    
+    @keyframes glowPulse {
+        0% { text-shadow: 0 0 5px rgba(255,255,255,0.2); opacity: 0.6; }
+        50% { text-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.4); opacity: 1; }
+        100% { text-shadow: 0 0 5px rgba(255,255,255,0.2); opacity: 0.6; }
+    }
+    .enter-trigger { animation: glowPulse 2s infinite ease-in-out; }
 
-        .color-opt {
-            width: 22px; height: 22px; border-radius: 50%; cursor: pointer; transition: 0.4s var(--ease-out);
-        }
-        .color-opt.selected { transform: scale(1.4); outline: 2px solid #000; outline-offset: 4px; }
-        .size-btn {
-            background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.08);
-            padding: 8px 16px; font-size: 11px; font-weight: 900; border-radius: 6px;
-            transition: all 0.3s var(--ease-out);
-        }
-        .size-btn.selected { background: #1A1A1B; color: #fff; }
+    /* --- HERO ANIMATIONS --- */
+    @keyframes splitRevealLeft {
+        0% { transform: translateX(-60vw); opacity: 0; }
+        100% { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes splitRevealRight {
+        0% { transform: translateX(60vw); opacity: 0; }
+        100% { transform: translateX(0); opacity: 1; }
+    }
+    
+    .hero-split-left { animation: splitRevealLeft 1.2s var(--ease-heavy) 0.5s forwards; opacity: 0; }
+    .hero-split-right { animation: splitRevealRight 1.2s var(--ease-heavy) 0.5s forwards; opacity: 0; }
+    .hero-fade-up { transform: translateY(20px); opacity: 0; transition: all 1s var(--ease-out) 1.2s; }
+    .hero-fade-up.active { transform: translateY(0); opacity: 1; }
 
-        /* --- BAG SIDEBAR --- */
-        #cart-sidebar {
-            position: fixed; right: -100%; top: 0; width: 100%; max-width: 420px;
-            height: 100vh; background: #f5f5f5; z-index: 2100;
-            transition: right 0.8s var(--ease-heavy); padding: 0;
-            display: flex; flex-direction: column;
-        }
-        #cart-sidebar.open { right: 0; }
-        .bag-header { padding: 40px 30px 20px; flex-shrink: 0; }
-        .bag-items { flex-grow: 1; overflow-y: auto; padding: 0 30px; }
-        .bag-footer { padding: 20px 30px 40px; background: #f5f5f5; border-top: 1px solid rgba(0,0,0,0.05); }
+    /* --- STATUS STYLING --- */
+    .status-badge {
+        position: absolute; top: 20px; right: 20px; z-index: 30;
+        background: #fff; color: #000; padding: 4px 12px;
+        font-size: 8px; font-weight: 900; text-transform: uppercase;
+        letter-spacing: 0.2em; border-radius: 4px;
+    }
+    
+    .coming-soon-blur {
+        filter: blur(25px) grayscale(1);
+        transform: scale(1.1);
+    }
 
-        #checkout-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-            z-index: 3000; display: none; align-items: center; justify-content: center;
-        }
-        #checkout-modal.active { display: flex; opacity: 1; }
+    .variant-oos {
+        opacity: 0.1 !important;
+        pointer-events: none !important;
+        filter: grayscale(1);
+        text-decoration: line-through;
+    }
 
-        .page { width: 100%; }
+    /* COLORS */
+    .color-black { background: #000; }
+    .color-white { background: #fff; border: 1px solid #ddd; }
+    .color-marron { background: #800000; }
+    .color-purple { background: #6b21a8; }
+    .color-beige { background: #f5f5dc; }
+    .color-darkgreen { background: #064e3b; }
+    .color-navyblue { background: #1e3a8a; }
+    .color-pink { background: #f472b6; }
+    .color-lightblue { background: #bae6fd; }
 
-        /* TICKER */
-        .ticker-container {
-            width: 100%; overflow: hidden; background: #000; color: #fff;
-            padding: 10px 0; white-space: nowrap;
-        }
-        .ticker-content {
-            display: inline-block; animation: ticker 30s linear infinite;
-            font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5em;
-        }
-        @keyframes ticker {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+    /* --- PIXEL REVEAL --- */
+    .pixel-mask {
+        display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(8, 1fr);
+        position: absolute; inset: 0; z-index: 10; pointer-events: none;
+    }
+    .reveal-pixel {
+        background: #ffffff; transition: transform 0.6s var(--ease-heavy);
+    }
+    .revealed .reveal-pixel { transform: scale(0); }
 
-        /* GHOST IMAGE ANIMATION */
-        .ghost-img {
-            position: fixed; z-index: 9999; pointer-events: none;
-            width: 80px; height: 110px; border-radius: 12px;
-            object-fit: cover; opacity: 0.8;
-            transition: all 0.8s var(--ease-heavy);
-        }
+    .home-bg-accents {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        overflow: hidden; pointer-events: none; z-index: -1;
+    }
+    .accent-blur {
+        position: absolute; width: 80vw; height: 80vw; background: rgba(255,255,255,0.02);
+        filter: blur(150px); border-radius: 50%; animation: float 20s infinite alternate;
+    }
+    @keyframes float {
+        0% { transform: translate(-10%, -10%) scale(1); }
+        100% { transform: translate(10%, 10%) scale(1.2); }
+    }
 
-        /* INDICATOR ANIMATION */
-        @keyframes bounceDown {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-        .scroll-indicator {
-            animation: bounceDown 2s infinite;
-        }
-        /* --- GLOBAL WATERMARK --- */
-.global-watermark {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-15deg); /* Slight tilt for a blueprint look */
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 900;
-    font-size: 40vw; /* Massive scale */
-    color: rgba(0, 0, 0, 0.02); /* Extremely faint so it doesn't distract */
-    letter-spacing: -0.05em;
-    pointer-events: none; /* User can click through it */
-    z-index: -1;
-    white-space: nowrap;
-    user-select: none;
-}
+    /* --- NAVIGATION --- */
+    nav { transition: all 0.5s var(--ease-out); z-index: 1000 !important; }
+    .scrolled .nav-pill {
+        background: rgba(26, 26, 27, 0.8); padding: 12px 28px;
+        border-radius: 40px; backdrop-filter: var(--ios-blur);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-        /* Prevent scrolling while on gateway */
-.no-scroll {
-    overflow: hidden !important;
-    height: 100vh;
-}
+    .product-item, .reveal-on-scroll { opacity: 0; transform: translateY(40px); transition: all 1s var(--ease-out); }
+    .product-item.revealed, .reveal-on-scroll.revealed { opacity: 1; transform: translateY(0); }
+    
+    .img-container { 
+        background: #252526; 
+        overflow: hidden; 
+        position: relative; 
+        transition: transform 0.6s var(--ease-out); 
+    }
+    .product-item:hover .img-container { transform: translateY(-8px); }
 
-/* Ensure the gateway stays on top of everything */
-#gateway {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    z-index: 9999; /* Higher than nav and transition grid */
+    .color-opt {
+        width: 22px; height: 22px; border-radius: 50%; cursor: pointer; transition: 0.4s var(--ease-out);
+    }
+    .color-opt.selected { transform: scale(1.4); outline: 2px solid #fff; outline-offset: 4px; }
+    
+    .size-btn {
+        background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 8px 16px; font-size: 11px; font-weight: 900; border-radius: 6px;
+        transition: all 0.3s var(--ease-out);
+        color: #fff;
+    }
+    .size-btn.selected { background: #fff; color: #1A1A1B; }
+
+    /* --- BAG SIDEBAR --- */
+    #cart-sidebar {
+        position: fixed; right: -100%; top: 0; width: 100%; max-width: 420px;
+        height: 100vh; background: #1A1A1B; z-index: 2100;
+        transition: right 0.8s var(--ease-heavy); padding: 0;
+        display: flex; flex-direction: column;
+        border-left: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    #cart-sidebar.open { right: 0; }
+    .bag-header { padding: 40px 30px 20px; flex-shrink: 0; }
+    .bag-items { flex-grow: 1; overflow-y: auto; padding: 0 30px; }
+    .bag-footer { 
+        padding: 20px 30px 40px; 
+        background: #1A1A1B; 
+        border-top: 1px solid rgba(255, 255, 255, 0.05); 
+    }
+
+    /* --- CHECKOUT MODAL --- */
+    #checkout-modal {
+        position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+        z-index: 3000; display: none; align-items: center; justify-content: center;
+    }
+    #checkout-modal.active { display: flex; opacity: 1; }
+    #checkout-modal .bg-white {
+        background-color: #252526 !important;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    input, select, textarea {
+        background-color: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+    }
+
+    .page { width: 100%; }
+
+    /* TICKER */
+    .ticker-container {
+        width: 100%; overflow: hidden; background: #fff; color: #000;
+        padding: 10px 0; white-space: nowrap;
+    }
+    .ticker-content {
+        display: inline-block; animation: ticker 30s linear infinite;
+        font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5em;
+    }
+    @keyframes ticker {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+
+    /* GHOST IMAGE ANIMATION */
+    .ghost-img {
+        position: fixed; z-index: 9999; pointer-events: none;
+        width: 80px; height: 110px; border-radius: 12px;
+        object-fit: cover; opacity: 0.8;
+        transition: all 0.8s var(--ease-heavy);
+    }
+
+    /* INDICATOR ANIMATION */
+    @keyframes bounceDown {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+    .scroll-indicator {
+        animation: bounceDown 2s infinite;
+    }
+
+    /* --- GLOBAL WATERMARK --- */
+    .global-watermark {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-15deg);
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 900;
+        font-size: 40vw;
+        color: rgba(255, 255, 255, 0.02);
+        letter-spacing: -0.05em;
+        pointer-events: none;
+        z-index: -1;
+        white-space: nowrap;
+        user-select: none;
+    }
+
+    .no-scroll {
+        overflow: hidden !important;
+        height: 100vh;
+    }
+
+    #scroll-progress {
+        background: #ffffff;
+    }
+
+            /* --- CART/BAG ITEM VISIBILITY --- */
+
+/* --- DARK BAG ITEM STYLING --- */
+.bag-item-card {
+    background: #252526 !important; /* Slightly lighter than the sidebar bg */
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 20px;
+    border-radius: 16px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    transition: opacity 1s var(--ease-heavy);
+    transition: transform 0.3s ease;
 }
-            
-    </style>
+
+.bag-item-info h4 {
+    color: #ffffff !important;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+}
+
+.bag-item-meta {
+    color: rgba(255, 255, 255, 0.4) !important;
+    font-size: 9px;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+/* Close/Drop Button */
+.drop-btn {
+    color: #ff4444 !important;
+    font-size: 9px;
+    font-weight: 900;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(255, 68, 68, 0.1);
+    transition: all 0.2s ease;
+}
+
+.drop-btn:hover {
+    background: #ff4444;
+    color: white !important;
+}
+</style>          
+    
 </head>
 
     
@@ -348,14 +411,14 @@
 
             <div id="hero-meta" class="hero-fade-up z-10 text-center flex flex-col items-center gap-4">
                 <div class="flex items-center gap-6">
-                    <span class="text-[8px] font-black uppercase tracking-[0.5em] text-black/30">{KO}</span>
+                    <span class="text-[8px] font-black uppercase tracking-[0.5em] text-white/30">{KO}</span>
                     
-                    <span class="text-[8px] font-black uppercase tracking-[0.5em] text-black/30">{Chey}</span>
+                    <span class="text-[8px] font-black uppercase tracking-[0.5em] text-white/30">{Chey}</span>
                 </div>
                 
-                <h2 class="text-[10px] md:text-[12px] uppercase font-medium tracking-[1em] text-black/80">Structural Wear</h2>
+                <h2 class="text-[10px] md:text-[12px] uppercase font-medium tracking-[1em] text-white/80">Structural Wear</h2>
                 
-                <button onclick="navigate('shop')" class="mt-4 px-20 py-6 border border-black text-black font-black uppercase text-[10px] tracking-[0.4em] rounded-full hover:bg-black hover:text-white transition-all transform hover:scale-110 active:scale-95">
+                <button onclick="navigate('shop')" class="mt-4 px-20 py-6 border border-black text-white font-black uppercase text-[10px] tracking-[0.4em] rounded-full hover:bg-white hover:text-black transition-all transform hover:scale-110 active:scale-95">
                     Enter Archive
                 </button>
             </div>
@@ -370,8 +433,8 @@
         <!-- TICKER STRIP -->
         <div class="ticker-container">
             <div class="ticker-content">
-                &nbsp; STRUCTURAL INTEGRITY // NOISE SUPPRESSION // BRUTALIST AESTHETICS // KENYA METROPOLIS //  QUALITY ASSURANCE //  
-                &nbsp; STRUCTURAL INTEGRITY // NOISE SUPPRESSION // BRUTALIST AESTHETICS // KENYA METROPOLIS //  QUALITY ASSURANCE //  
+                &nbsp; STRUCTURAL INTEGRITY // NOISE SUPPRESSION // BRUTALIST AESTHETICS // KENYA METROPOLIS //  FREE SHIPPING ON ORDERS OVER KSh 1,600 //  
+                &nbsp; STRUCTURAL INTEGRITY // NOISE SUPPRESSION // BRUTALIST AESTHETICS // KENYA METROPOLIS //  FREE SHIPPING ON ORDERS OVER KSh 1,600 //  
             </div>
         </div>
 
@@ -382,12 +445,14 @@
                 <div class="lg:col-span-7 reveal-on-scroll">
                     <span class="text-[9px] font-black uppercase tracking-[1em] opacity-20 block mb-10">CORE_LOGIC</span>
                     <h3 class="font-heading font-bold text-6xl md:text-8xl tracking-tighter uppercase leading-[0.85] mb-12">Suppressing noise.</h3>
-                    <p class="text-xs uppercase tracking-widest leading-loose opacity-40">
+                    
                        <b><h4>  I. THE CORE PROBLEM: VISUAL NOISE & FABRIC DECAY</h4></b>
+                        <p class="text-xs uppercase tracking-widest leading-loose opacity-40">
 Modern fashion is currently in a state of chaos. We call this "Visual Noise." It is the constant bombardment of loud, meaningless graphics and "hype" that expires within weeks. This noise creates a cycle of Fast-Fashion Fatigue, where clothes aren’t designed to last—physically or aesthetically. Most apparel loses its silhouette after a few washes and its relevance before the season is even over. </p>
                     <br>
-<p class="text-xs uppercase tracking-widest leading-loose opacity-40">
+
    <b><h4> II. THE SOLUTION: NOISE SUPPRESSION & UNIVERSAL DESIGN</h4></b>
+    <p class="text-xs uppercase tracking-widest leading-loose opacity-40">
 KÖCE functions as a Noise Suppression System. We strip away the unnecessary until only the "Signal" remains. Our pieces solve the issue of garment longevity through Structural Engineering.
 
                     </p>
@@ -444,6 +509,9 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
     <div id="shop" class="page" style="display:none">
         <header class="h-screen flex flex-col justify-center items-center px-10 text-center relative">
             <h3 class="text-[10vw] font-heading font-black uppercase tracking-tighter">THE ARCHIVE</h3>
+            <span class="text-[10px] font-black uppercase tracking-[0.5em] opacity-40 mt-4">
+            Free Shipping on Orders ≥ KSh 1,600
+        </span>
             <div id="shop-scroll-indicator" class="flex flex-col items-center gap-2 mt-12 pointer-events-none transition-opacity duration-1000">
                 <span class="text-[8px] uppercase font-bold tracking-[0.5em] opacity-30">Scroll</span>
                 <svg class="scroll-indicator w-4 h-4 opacity-30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -452,7 +520,7 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
             </div>
         </header>
         <main class="container mx-auto px-10 pb-60">
-            <div id="shop-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-48"></div>
+           <div id="shop-grid" class="grid grid-cols-2 lg:grid-cols-4 gap-x-4 md:gap-x-12 gap-y-20 md:gap-y-48"></div>
         </main>
     </div>
 
@@ -508,11 +576,11 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
         </button>
 
         <div class="py-4 px-2">
-            <p class="text-[9px] text-black/40 uppercase tracking-[0.2em] leading-loose">
+            <p class="text-[9px] text-white/50 uppercase tracking-[0.2em] leading-loose">
                 1. Click the button above to copy message<br>
         </div>
         
-        <button onclick="backToShipping()" class="w-full py-4 text-[10px] font-black uppercase tracking-[0.4em] text-black/30 hover:text-black transition-colors">Edit Details</button>
+        <button onclick="backToShipping()" class="w-full py-4 text-[10px] font-black uppercase tracking-[0.4em] text-white/50 hover:text-black transition-colors">Edit Details</button>
     </div>
 </div>
 
@@ -595,7 +663,7 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
          triggerHomeAnims();
     initScrollEngine();
     initObserver();
-    }, 1500); 
+    }, 1200); 
 }
        
 
@@ -716,58 +784,58 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
         }
 
         function renderShop() {
-            const grid = document.getElementById('shop-grid');
-            grid.innerHTML = products.map((p) => {
-                const inventory = parseInventory(p.status, p.colors, p.sizes);
-                const isEntirelySO = p.status === 'sold-out' || p.status === 'out-of-stock';
-                const isCS = p.status === 'coming soon';
-                
-                let defaultColor = p.colors.find(c => !inventory.disabledColors.includes(c)) || p.colors;
-                if(!selections[p.id]) selections[p.id] = { color: defaultColor };
+    const grid = document.getElementById('shop-grid');
+    grid.innerHTML = products.map((p) => {
+        const inventory = parseInventory(p.status, p.colors, p.sizes);
+        const isEntirelySO = p.status === 'sold-out' || p.status === 'out-of-stock';
+        const isCS = p.status === 'coming soon';
+        
+        let defaultColor = p.colors.find(c => !inventory.disabledColors.includes(c)) || p.colors;
+        if(!selections[p.id]) selections[p.id] = { color: defaultColor };
 
-                let pixelMask = `<div class="pixel-mask">`;
-                for(let i=0; i<48; i++) pixelMask += `<div class="reveal-pixel" style="transition-delay: ${Math.random() * 500}ms"></div>`;
-                pixelMask += `</div>`;
+        let pixelMask = `<div class="pixel-mask">`;
+        for(let i=0; i<48; i++) pixelMask += `<div class="reveal-pixel" style="transition-delay: ${Math.random() * 500}ms"></div>`;
+        pixelMask += `</div>`;
 
-                let badge = '';
-                if(isEntirelySO) badge = '<div class="status-badge">OUT OF STOCK</div>';
-                else if(isCS) badge = '<div class="status-badge bg-white !text-black">COMING SOON</div>';
+        let badge = '';
+        if(isEntirelySO) badge = '<div class="status-badge">OUT OF STOCK</div>';
+        else if(isCS) badge = '<div class="status-badge bg-white !text-black">COMING SOON</div>';
 
-                return `
-                <div class="product-item scroll-reveal" data-id="${p.id}" id="card-${p.id}">
-                    ${badge}
-                    <div class="img-container aspect-[3/4] mb-12 rounded-2xl ${isEntirelySO ? 'opacity-30 grayscale' : ''}">
-                        ${pixelMask}
-                        <img id="img-${p.id}" src="${p.img[defaultColor]}?w=800" class="product-visual w-full h-full object-cover transition-all duration-700 ${isCS ? 'coming-soon-blur' : ''}">
+        return `
+        <div class="product-item scroll-reveal" data-id="${p.id}" id="card-${p.id}">
+            ${badge}
+            <div class="img-container aspect-[3/4] mb-6 md:mb-12 rounded-2xl ${isEntirelySO ? 'opacity-30 grayscale' : ''}">
+                ${pixelMask}
+                <img id="img-${p.id}" src="${p.img[defaultColor]}?w=800" class="product-visual w-full h-full object-cover transition-all duration-700 ${isCS ? 'coming-soon-blur' : ''}">
+            </div>
+            <div class="px-1 md:px-2">
+                <div class="flex flex-col md:flex-row justify-between items-start mb-4 md:mb-8">
+                    <h4 class="font-heading font-black text-lg md:text-2xl uppercase tracking-tighter">${p.name}</h4>
+                    <span class="text-[10px] md:text-sm font-black opacity-30">KSh ${p.price.toLocaleString()}</span>
+                </div>
+                <div class="mb-4 md:mb-8 flex flex-col gap-4 md:flex-row justify-between items-center">
+                    <div class="flex gap-2 md:gap-4">
+                        ${p.colors.map(c => {
+                            const isDisabled = inventory.disabledColors.includes(c);
+                            const isSelected = c === defaultColor ? 'selected' : '';
+                            return `<div class="color-opt color-${c} ${isSelected} ${isDisabled ? 'variant-oos' : ''}" 
+                                onclick="selectOpt('${p.id}', 'color', '${c}', this)"></div>`
+                        }).join('')}
                     </div>
-                    <div class="px-2">
-                        <div class="flex justify-between items-start mb-8">
-                            <h4 class="font-heading font-black text-2xl uppercase tracking-tighter">${p.name}</h4>
-                            <span class="text-sm font-black opacity-30">KSh ${p.price.toLocaleString()}</span>
-                        </div>
-                        <div class="mb-8 flex justify-between items-center">
-                            <div class="flex gap-4">
-                                ${p.colors.map(c => {
-                                    const isDisabled = inventory.disabledColors.includes(c);
-                                    const isSelected = c === defaultColor ? 'selected' : '';
-                                    return `<div class="color-opt color-${c} ${isSelected} ${isDisabled ? 'variant-oos' : ''}" 
-                                        onclick="selectOpt('${p.id}', 'color', '${c}', this)"></div>`
-                                }).join('')}
-                            </div>
-                            <div id="sizes-${p.id}" class="flex gap-2">
-                                ${p.sizes.map(s => {
-                                    const isOOS = (inventory.colorSpecificOOS[defaultColor] || []).includes(s.toLowerCase());
-                                    return `<button class="size-btn ${isOOS ? 'variant-oos' : ''}" onclick="selectOpt('${p.id}', 'size', '${s}', this)">${s}</button>`
-                                }).join('')}
-                            </div>
-                        </div>
-                        <button onclick="handleAddToCart('${p.id}', this)" class="add-btn w-full py-5 border border-black/10 text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-black hover:text-white transition-all ${isEntirelySO || isCS ? 'opacity-20 pointer-events-none' : ''}">
-                            ${isEntirelySO ? 'UNIT DEPLETED' : isCS ? 'PENDING DROP' : 'Secure Unit'}
-                        </button>
+                    <div id="sizes-${p.id}" class="flex gap-1 md:gap-2">
+                        ${p.sizes.map(s => {
+                            const isOOS = (inventory.colorSpecificOOS[defaultColor] || []).includes(s.toLowerCase());
+                            return `<button class="size-btn !px-2 !py-1 md:!px-4 md:!py-2 ${isOOS ? 'variant-oos' : ''}" onclick="selectOpt('${p.id}', 'size', '${s}', this)">${s}</button>`
+                        }).join('')}
                     </div>
-                </div>`;
-            }).join('');
-        }
+                </div>
+                <button onclick="handleAddToCart('${p.id}', this)" class="add-btn w-full py-3 md:py-5 border border-black/10 text-[8px] md:text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-black hover:text-white transition-all ${isEntirelySO || isCS ? 'opacity-20 pointer-events-none' : ''}">
+                    ${isEntirelySO ? 'UNIT DEPLETED' : isCS ? 'PENDING DROP' : 'Secure Unit'}
+                </button>
+            </div>
+        </div>`;
+    }).join('');
+}
 
         function selectOpt(id, type, val, el) {
             if(el.classList.contains('variant-oos')) return;
@@ -842,18 +910,34 @@ KÖCE functions as a Noise Suppression System. We strip away the unnecessary unt
             setTimeout(() => { btn.innerText = "Secure Unit"; }, 1500);
         }
 
-        function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
-            document.getElementById('cart-list').innerHTML = cart.map(i => `
-                <div class="p-5 bg-white border border-black/5 rounded-2xl flex justify-between items-center">
-                    <div>
-                        <h4 class="font-black text-xs uppercase">${i.name}</h4>
-                        <p class="text-[8px] opacity-30 uppercase">${i.selectedSize} / ${i.selectedColor}</p>
-                    </div>
-                    <button onclick="removeItem(${i.cartId})" class="text-[8px] font-black text-red-500 uppercase px-3 py-1 hover:bg-red-50 rounded-lg">Drop</button>
-                </div>`).join('');
-            document.getElementById('cart-total').innerText = `KSh ${cart.reduce((a, b) => a + b.price, 0).toLocaleString()}`;
-        }
+       function updateCartUI() {
+    document.getElementById('cart-count').innerText = cart.length;
+    const cartList = document.getElementById('cart-list');
+    
+    if (cart.length === 0) {
+        cartList.innerHTML = `<div class="py-20 text-center opacity-20 text-[10px] uppercase font-black tracking-widest">Bag Empty</div>`;
+    } else {
+        cartList.innerHTML = cart.map(i => `
+            <div class="bag-item-card">
+                <div class="bag-item-info">
+                    <h4>${i.name}</h4>
+                    <p class="bag-item-meta">${i.selectedSize} // ${i.selectedColor}</p>
+                </div>
+                <button onclick="removeItem(${i.cartId})" class="drop-btn">Drop</button>
+            </div>`).join('');
+    }
+    
+    const total = cart.reduce((a, b) => a + b.price, 0);
+    const isFreeShipping = total >= 1600;
+    
+    // Update Total and add Free Shipping Badge if applicable
+    document.getElementById('cart-total').innerHTML = `
+        <div class="flex flex-col items-end">
+            ${isFreeShipping ? '<span class="text-[8px] text-green-500 font-black tracking-widest mb-1">FREE SHIPPING ELIGIBLE</span>' : ''}
+            <span>KSh ${total.toLocaleString()}</span>
+        </div>
+    `;
+}
 
         function removeItem(cid) { cart = cart.filter(x => x.cartId !== cid); updateCartUI(); }
         function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('open'); }
@@ -902,7 +986,7 @@ function toggleCityView() {
         locationField.placeholder = "SPECIFIC LOCATION (PIN DROP, HOUSE NO, OR APARTMENT NAME)";
     } else {
         cityContainer.classList.remove('hidden');
-        locationField.placeholder = "NEAREST COURIER OFFICE (E.G., G4S OFFICE, TOWN CENTER)";
+        locationField.placeholder = "NEAREST COURIER OFFICE (E.G., MOLOLINE, 2NK)";
     }
 }
 
@@ -927,7 +1011,8 @@ function generateOrderHash() {
         : 'NAIROBI';
 
     const orderID = `KOCE-${Math.random().toString(36).substr(2,6).toUpperCase()}`;
-    const total = cart.reduce((a, b) => a + b.price, 0).toLocaleString();
+    const total = cart.reduce((a, b) => a + b.price, 0);
+    const shippingStatus = total >= 1600 ? "FREE" : "STANDARD RATES APPLY";
     
     let m = `[KÖCE STRUCTURAL WEAR ORDER]\n`;
     m += `ID: #${orderID}\n`;
@@ -935,14 +1020,14 @@ function generateOrderHash() {
     m += `RECIPIENT: ${name.toUpperCase()}\n`;
     m += `PHONE: ${phone}\n`;
     m += `LOCATION: ${finalCity} - ${location.toUpperCase()}\n`;
+    m += `SHIPPING: ${shippingStatus}\n`; // Added to the order summary
     m += `--------------------------\n`;
     cart.forEach(it => {
         m += `• ${it.id} (${it.selectedSize}/${it.selectedColor})\n`;
     });
     m += `--------------------------\n`;
-    m += `TOTAL: KSh ${total}\n`;
+    m += `TOTAL: KSh ${total.toLocaleString()}\n`;
     m += `--------------------------\n`;
-    m += `PASTE THIS IN THE DM`;
 
     document.getElementById('order-hash-container').innerText = m;
     document.getElementById('phase-shipping').classList.add('hidden');
